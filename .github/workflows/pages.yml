@@ -23,6 +23,14 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Inject Groq API key into reports
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: |
+          find reports -name "*.html" -print0 \
+            | xargs -0 sed -i "s/YOUR_GROQ_API_KEY/${GROQ_API_KEY}/g"
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
