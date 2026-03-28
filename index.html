@@ -295,7 +295,7 @@
           <ul class="report-list" role="list">
             ${reports.map(r => `
               <li class="report-item">
-                <a href="${esc(r.file)}" target="_blank" rel="noopener noreferrer" class="report-link">
+                <a href="viewer.html?file=${esc(r.file)}&name=${esc(encodeURIComponent(r.name))}" target="_blank" rel="noopener noreferrer" class="report-link">
                   <span class="report-name" title="${esc(r.name)}">${esc(r.name)}</span>
                   <span class="report-meta">
                     <span class="report-time">${esc(formatTime(r.timestamp))}</span>
