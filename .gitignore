@@ -1,0 +1,10 @@
+# Ignore editor and OS files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Temporary files
+_reports_site/
