@@ -1,5 +1,11 @@
 [
   {
+    "name": "Build #51",
+    "date": "2026-03-28",
+    "file": "reports/2026-03-28/report_51.html",
+    "timestamp": "2026-03-28T15:40:24Z"
+  },
+  {
     "name": "Build #1 \u2014 smoke test",
     "date": "2026-03-28",
     "file": "reports/2026-03-28/sample-report.html",

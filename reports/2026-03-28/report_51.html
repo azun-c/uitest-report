@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>i-Reporter UI Test Report</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23fff' d='M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z'/></svg>">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:#0f172a;line-height:1.45;-webkit-font-smoothing:antialiased}
+.page{max-width:940px;margin:0 auto;padding:28px 16px 52px}
+.header{background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 65%,#60a5fa 100%);border-radius:16px;padding:28px 32px;margin-bottom:16px;color:#fff;position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none}
+.header::after{content:'';position:absolute;bottom:-60px;left:-20px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
+.header h1{font-size:1.8rem;font-weight:800;letter-spacing:-.035em;position:relative}
+.header p{color:rgba(255,255,255,.72);font-size:.95rem;margin-top:6px;position:relative}
+.banner{border-radius:12px;padding:15px 22px;margin-bottom:16px;font-size:1.05rem;font-weight:700;border:1.5px solid transparent;display:flex;align-items:center;gap:8px}
+.banner.pass{background:#f0fdf4;color:#15803d;border-color:#86efac}
+.banner.fail{background:#fff1f2;color:#b91c1c;border-color:#fca5a5}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:22px}
+.stat{background:#fff;border-radius:12px;padding:18px 12px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.07);border:1px solid #e2e8f0}
+.stat-icon{font-size:1.4rem;line-height:1;margin-bottom:8px}
+.stat .val{font-size:1.9rem;font-weight:800;line-height:1.05;letter-spacing:-.02em}
+.stat .lbl{font-size:.68rem;color:#94a3b8;margin-top:5px;text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+.stat.green .val{color:#16a34a}.stat.red .val{color:#dc2626}.stat.blue .val{color:#2563eb}.stat.slate .val{color:#64748b}.stat.purple .val{color:#7c3aed}
+.cards-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;margin:0 0 10px 38px}
+.cards{display:flex;flex-direction:column;gap:7px}
+.card-row{display:flex;align-items:flex-start;gap:8px}
+.step-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;flex-shrink:0;margin-top:12px;letter-spacing:0}
+.step-num.pass{background:#dcfce7;color:#15803d}
+.step-num.fail{background:#fee2e2;color:#b91c1c}
+.card{background:#fff;border-radius:12px;padding:13px 18px;flex:1;border:1px solid #e2e8f0;border-left:4px solid transparent;box-shadow:0 1px 4px rgba(0,0,0,.06);transition:box-shadow .15s,border-color .15s}
+.card:hover{box-shadow:0 4px 16px rgba(0,0,0,.1)}
+.card.pass{border-left-color:#22c55e}.card.fail{border-left-color:#ef4444}
+.card-top{display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none;-webkit-user-select:none}
+.chev{font-size:.58rem;color:#94a3b8;flex-shrink:0;width:10px;transition:transform .22s ease}
+.status-pill{font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.04em;white-space:nowrap;flex-shrink:0}
+.status-pill.pass{background:#dcfce7;color:#15803d}
+.status-pill.fail{background:#fee2e2;color:#b91c1c}
+.card-name{font-weight:700;font-size:.97rem;flex:1;color:#0f172a;transition:color .12s}
+.card-top:hover .card-name{color:#2563eb}
+.card-badge{font-size:.76rem;color:#64748b;background:#f1f5f9;padding:2px 10px;border-radius:20px;white-space:nowrap;border:1px solid #e2e8f0;flex-shrink:0}
+.dur-badge{font-size:.76rem;color:#7c3aed;background:#f5f3ff;padding:2px 10px;border-radius:20px;white-space:nowrap;border:1px solid #ede9fe;flex-shrink:0}
+.card-body{overflow:hidden;max-height:0;transition:max-height .3s ease}
+.card-body-inner{padding-top:14px}
+.ai-summary{background:linear-gradient(135deg,#faf5ff,#f5f3ff);border-left:3px solid #8b5cf6;border-radius:0 8px 8px 0;padding:11px 15px;margin-bottom:12px}
+.ai-label{display:inline-flex;align-items:center;gap:6px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#fff;background:#7c3aed;padding:2px 10px;border-radius:20px;margin-bottom:8px}
+.ai-tool-tag{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#7c3aed;background:#ede9fe;padding:1px 7px;border-radius:10px}
+.ai-status{font-size:.875rem;color:#7c3aed;font-style:italic;min-height:1.2em}
+.ai-text{font-size:.875rem;color:#3b1f6e;white-space:pre-line;line-height:1.65}
+.asserts{display:flex;flex-direction:column;gap:3px;margin-bottom:10px}
+.aline{font-size:.83rem;padding:4px 10px;border-radius:5px;font-family:ui-monospace,'Cascadia Code',Menlo,monospace;border-left:2px solid transparent}
+.aline.ok{color:#166534;background:#f0fdf4;border-left-color:#86efac}
+.aline.ng{color:#991b1b;background:#fff1f2;border-left-color:#fca5a5}
+.logblock{background:#0f172a;color:#8da3b8;border-radius:8px;padding:14px 16px;font-family:ui-monospace,'Cascadia Code',Menlo,monospace;font-size:.78rem;line-height:1.7;white-space:pre-wrap;word-break:break-all;max-height:300px;overflow-y:auto;margin-top:8px}
+.video-name{margin-top:12px;font-size:.8rem;font-weight:600;color:#334155;font-family:ui-monospace,'Cascadia Code',Menlo,monospace;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;padding:5px 11px;display:flex;align-items:center;gap:6px}
+.video-link{color:#334155;text-decoration:none;border-bottom:1.5px solid #94a3b8;transition:color .12s,border-color .12s}
+.video-link:hover{color:#2563eb;border-bottom-color:#2563eb}
+.log-section{margin-top:30px}
+.log-toggle{font-size:.88rem;font-weight:600;color:#64748b;cursor:pointer;user-select:none;-webkit-user-select:none;padding:10px 0;display:flex;align-items:center;gap:7px;transition:color .12s}
+.log-toggle:hover{color:#1e293b}
+.logblock.full-log{display:none;max-height:600px}
+.logblock.full-log.open{display:block}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="header">
+  <h1>i-Reporter UI Test Report</h1>
+  <p>2026-03-28 15:40:04 UTC &nbsp;&bull;&nbsp; &#x23F1; 2m 2s total run time</p>
+</div>
+<div class="banner pass">&#x2705;&nbsp;&nbsp;All 1 tests passed</div>
+<div class="stats">
+  <div class="stat green"><div class="stat-icon">&#x2705;</div><div class="val">1</div><div class="lbl">Tests Passed</div></div>
+  <div class="stat slate"><div class="stat-icon">&#x274C;</div><div class="val">0</div><div class="lbl">Tests Failed</div></div>
+  <div class="stat blue"><div class="stat-icon">&#x1F3AF;</div><div class="val">16</div><div class="lbl">Assertions OK</div></div>
+  <div class="stat slate"><div class="stat-icon">&#x26A0;&#xFE0F;</div><div class="val">0</div><div class="lbl">Assertions Failed</div></div>
+  <div class="stat purple"><div class="stat-icon">&#x23F1;</div><div class="val">2m 2s</div><div class="lbl">Run Time</div></div>
+</div>
+<div class="cards-label">Test Runs — execution order</div>
+<div class="cards">
+<div class="card-row">
+<div class="step-num pass">1</div>
+<div class="card pass" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;&quot;$SCRIPT_DIR/relaunch-app.sh&quot;&#10;log_step &quot;Waiting for Home screen...&quot;&#10;wait_for_home_screen 5&#10;tap_alert_button_if_present &quot;$LABEL_BUTTON_CANCEL&quot;&#10;setup_server_login&#10;log_step &quot;Tapping ConMas Server tab&quot;&#10;axe_touch_delay --label &quot;$LABEL_CONMAS_SERVER&quot;&#10;assert &quot;ConMas Server page loaded&quot; wait_for_element_having_label &quot;$LABEL_ALL_REPORTS&quot; 10&#10;assert_visible &quot;$LABEL_HOME_INFO&quot;&#10;assert_visible &quot;$LABEL_CREATE_NEW&quot;&#10;assert_visible &quot;$LABEL_ALL_REPORTS&quot;&#10;assert_visible &quot;$LABEL_BEFORE_INPUT&quot;&#10;assert_visible &quot;$LABEL_EDITING&quot;&#10;assert_visible &quot;$LABEL_COMPLETED&quot;&#10;assert_visible &quot;$LABEL_WAITING_FOR_APPROVAL&quot;&#10;assert_visible &quot;$LABEL_REJECTED&quot;&#10;assert_visible &quot;$LABEL_APPLYING&quot;&#10;assert_visible &quot;$LABEL_SCHEDULE&quot;&#10;assert_visible &quot;$LABEL_CUSTOM_MENU&quot;&#10;assert_visible &quot;$LABEL_COMMON_LIBRARY&quot;&#10;assert_visible &quot;$LABEL_CUSTOM_MASTER&quot;&#10;assert_visible &quot;$LABEL_THIS_DEVICE&quot;&#10;assert_visible &quot;$LABEL_CONMAS_SERVER&quot;&#10;log_step &quot;✅ Done!&quot;">
+<div class="card-top">
+<span class="chev">&#x25B6;</span>
+<span class="status-pill pass">&#x2705; PASS</span>
+<span class="card-name">home_comnas_server_section.sh</span>
+<span class="card-badge">16/16 assertions</span>
+<span class="dur-badge">&#x23F1; 1m 55s</span>
+</div>
+<div class="card-body">
+<div class="card-body-inner">
+<div class="ai-summary">
+<div class="ai-label">&#x2728; AI Summary</div>
+<div class="ai-status"></div>
+<div class="ai-text" style="display:none"></div></div>
+<div class="asserts">
+<div class="aline ok">   ✅ PASS: ConMas Server page loaded</div>
+<div class="aline ok">   ✅ PASS: element visible: "info"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Create New"</div>
+<div class="aline ok">   ✅ PASS: element visible: "All Reports"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Before Input"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Editing"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Completed"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Waiting for your approval"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Rejected"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Applying"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Schedule"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Custom Menu"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Common Library"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Custom Master"</div>
+<div class="aline ok">   ✅ PASS: element visible: "This Device"</div>
+<div class="aline ok">   ✅ PASS: element visible: "ConMas Server"</div>
+</div>
+<div class="video-name">&#x1F3AC; <a class="video-link" href="https://app.bitrise.io/build/522923ff-0442-4bfd-8ceb-534c53cec8da?tab=artifacts" target="_blank">i-Reporter-UITest-home_comnas_server_section-20260328-153804.mp4</a></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="log-section">
+<div class="log-toggle"><span class="chev">&#x25B6;</span>&nbsp; Show full run log</div>
+<div class="logblock full-log">[15:37:54]
+   🧹 Clearing simulator state...
+[15:37:54]
+   ℹ️  No simulator state file found.
+[15:37:54]
+   🔍 Looking up simulator: "iPad Air 11-inch (M3)" (iOS 26.0)
+[15:37:54]
+   ✅ Found UDID: E095FD78-A5C9-4210-BA37-4EFEF61607B7
+[15:37:54]
+   💾 Saved DEVICE_UDID to state file.
+[15:37:54]
+   📱 Opening Simulator app...
+[15:37:54]
+   ⏳ Waiting for Simulator app to launch...
+[15:37:55]
+   ✅ Simulator app is running.
+[15:37:55]
+   ✅ Simulator "iPad Air 11-inch (M3)" is already booted.
+[15:37:55]
+   ⏳ Waiting for simulator services to be ready...
+Monitoring boot status for iPad Air 11-inch (M3) (E095FD78-A5C9-4210-BA37-4EFEF61607B7).
+Device already booted, nothing to do.
+
+[15:37:55]
+   ✅ Simulator services are ready.
+[15:37:56]
+   ✅ Keyboard auto-correct disabled.
+[15:37:56]
+   ✅ Save-password prompts should be disabled (if supported by this iOS version).
+[15:37:56] [log_step:76]
+   📣 📦 Installing app from: ./build/Build/Products/Debug-iphonesimulator/i-Reporter.app
+[15:38:01] [log_step:80]
+   📣 🔐 Configuring permissions for jp.conmas.i-Reporter...
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶  home_comnas_server_section.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:38:04]
+   🧹 Clearing simulator state...
+[15:38:04]
+   🧹 Simulator state cleared.
+[15:38:04]
+   🔍 Looking up simulator: "iPad Air 11-inch (M3)" (iOS 26.0)
+Recording simulator E095FD78-A5C9-4210-BA37-4EFEF61607B7 to /Users/vagrant/deploy/i-Reporter-UITest-home_comnas_server_section-20260328-153804.mp4
+Press Ctrl+C to stop recording
+[15:38:05]
+   ✅ Found UDID: E095FD78-A5C9-4210-BA37-4EFEF61607B7
+[15:38:05]
+   💾 Saved DEVICE_UDID to state file.
+[15:38:05]
+   📱 Simulator app is already running.
+IOServiceMatchingfailed for: AppleM2ScalerParavirtDriver
+[15:38:05]
+   ✅ Simulator "iPad Air 11-inch (M3)" is already booted.
+[15:38:05]
+   ⏳ Waiting for simulator services to be ready...
+Monitoring boot status for iPad Air 11-inch (M3) (E095FD78-A5C9-4210-BA37-4EFEF61607B7).
+Device already booted, nothing to do.
+
+[15:38:05]
+   ✅ Simulator services are ready.
+[15:38:06]
+   ✅ Keyboard auto-correct disabled.
+[15:38:06]
+   ✅ Save-password prompts should be disabled (if supported by this iOS version).
+[15:38:06]
+   🔍 Looking up booted simulator: "iPad Air 11-inch (M3)"
+[15:38:06]
+   ✅ Using persisted UDID: E095FD78-A5C9-4210-BA37-4EFEF61607B7
+[15:38:06]
+   🛑 Terminating app: jp.conmas.i-Reporter
+[15:38:07]
+   ⚠️  App "jp.conmas.i-Reporter" was not running or could not be terminated.
+[15:38:07]
+   🔍 Looking up booted simulator: "iPad Air 11-inch (M3)"
+[15:38:07]
+   ✅ Using persisted UDID: E095FD78-A5C9-4210-BA37-4EFEF61607B7
+[15:38:07]
+   🪪 Injected TerminalID: DUMMY-AUTOMATION-TEST
+[15:38:07]
+   🚀 Launching app: jp.conmas.i-Reporter
+jp.conmas.i-Reporter: 19257
+[15:38:07]
+   ✅ App "jp.conmas.i-Reporter" launched.
+[15:38:08] [log_step:25]
+   📣 Waiting for Home screen...
+[15:38:17] [log_step:34]
+   📣 Waiting for Home screen...
+[15:38:17] [log_step:104]
+   📣 Tapping nav button 'settings' in 'Home'
+[15:38:18]
+   axe_touch at (40, 54) with delay 0.3s (label='')
+[15:38:19] [log_step:64]
+   📣 Navigating to Server settings
+[15:38:20]
+   axe_touch at (170, 143) with delay 0.3s (label='Server')
+[15:38:21] [log_step:73]
+   📣 Checking if 'NEXT-SERVER' is already selected...
+[15:38:28] [log_step:85]
+   📣 Server 'NEXT-SERVER' not selected — opening Server connection list
+[15:38:28]
+   axe_touch at (575, 143) with delay 0.3s (label='')
+[15:38:29] [log_step:98]
+   📣 Selecting connection 'NEXT-SERVER'
+[15:38:33] [log_step:100]
+   📣 Connection 'NEXT-SERVER' not found — creating it
+[15:38:33] [log_step:102]
+   📣 Tapping Add new connection
+[15:38:34]
+   axe_touch at (575, 247) with delay 0.3s (label='Add new connection')
+[15:38:34] [log_step:110]
+   📣 Filling in connection form for 'NEXT-SERVER'
+[15:38:35]
+   axe_touch at (410, 386) with delay 0.3s (label='Server connection')
+[15:38:37] [log_step:20]
+   📣 Filling in field Server connection with value NEXT-SERVER
+[15:38:45]
+   axe_touch at (410, 397) with delay 0.3s (label='Connect to')
+[15:38:46] [log_step:20]
+   📣 Filling in field Connect to with value https://ircl-sup001kcy.conmas-i-reporter.com/ConMasWebNEXT/Rests/ConMasIReporter.aspx
+[15:39:18]
+   axe_touch at (410, 518) with delay 0.3s (label='User ID')
+[15:39:19] [log_step:20]
+   📣 Filling in field User ID with value azun
+[15:39:21]
+   axe_touch at (410, 562) with delay 0.3s (label='Password')
+[15:39:22] [log_step:20]
+   📣 Filling in field Password with value azun
+[15:39:24] [log_step:117]
+   📣 Enabling 'change server when local reports exist'
+[15:39:24] [log_step:62]
+   📣 Tapping switch 'Enable to change server when local reports exist'
+[15:39:24]
+   axe_touch at (643, 606) with delay 0.3s (label='')
+[15:39:25] [log_step:121]
+   📣 Saving connection
+[15:39:25] [log_step:104]
+   📣 Tapping nav button 'Save' in 'Input Connection'
+[15:39:28]
+   axe_touch at (659, 302) with delay 0.3s (label='')
+[15:39:29] [log_step:125]
+   📣 Selecting connection 'NEXT-SERVER'
+[15:39:30] [log_step:133]
+   📣 Activating 'NEXT-SERVER' connection
+[15:39:30]
+   axe_touch at (575, 211) with delay 0.3s (label='NEXT-SERVER')
+[15:39:34] [log_step:197]
+   📣 Alert button 'Change' appeared — tapping
+[15:39:38]
+   axe_touch at (372, 54) with delay 0.3s (label='Back')
+[15:39:39] [log_step:99]
+   📣 Turning 'Auto login' on
+[15:39:39]
+   axe_touch at (747, 187) with delay 0.3s (label='')
+[15:39:41]
+   axe_touch at (48, 54) with delay 0.3s (label='Close')
+[15:39:43] [log_step:37]
+   📣 Tapping ConMas Server tab
+[15:39:43]
+   axe_touch at (340, 1135) with delay 0.3s (label='ConMas Server')
+[15:39:56] [assert:41]
+   ✅ PASS: ConMas Server page loaded
+[15:39:56] [assert_visible:48]
+   ✅ PASS: element visible: "info"
+[15:39:56] [assert_visible:54]
+   ✅ PASS: element visible: "Create New"
+[15:39:56] [assert_visible:60]
+   ✅ PASS: element visible: "All Reports"
+[15:39:57] [assert_visible:61]
+   ✅ PASS: element visible: "Before Input"
+[15:39:57] [assert_visible:62]
+   ✅ PASS: element visible: "Editing"
+[15:39:57] [assert_visible:63]
+   ✅ PASS: element visible: "Completed"
+[15:39:57] [assert_visible:64]
+   ✅ PASS: element visible: "Waiting for your approval"
+[15:39:58] [assert_visible:65]
+   ✅ PASS: element visible: "Rejected"
+[15:39:58] [assert_visible:66]
+   ✅ PASS: element visible: "Applying"
+[15:39:58] [assert_visible:67]
+   ✅ PASS: element visible: "Schedule"
+[15:39:58] [assert_visible:73]
+   ✅ PASS: element visible: "Custom Menu"
+[15:39:58] [assert_visible:74]
+   ✅ PASS: element visible: "Common Library"
+[15:39:59] [assert_visible:75]
+   ✅ PASS: element visible: "Custom Master"
+[15:39:59] [assert_visible:81]
+   ✅ PASS: element visible: "This Device"
+[15:39:59] [assert_visible:82]
+   ✅ PASS: element visible: "ConMas Server"
+[15:39:59] [log_step:84]
+   📣 ✅ Done!
+Recording saved to /Users/vagrant/deploy/i-Reporter-UITest-home_comnas_server_section-20260328-153804.mp4
+/Users/vagrant/deploy/i-Reporter-UITest-home_comnas_server_section-20260328-153804.mp4
+✅ PASS  home_comnas_server_section.sh  (16/16 assertions passed, 115s)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Tests:      ✅ 1 passed  ❌ 0 failed  (total: 1)
+  Assertions: ✅ 16 passed  ❌ 0 failed  (total: 16)
+  Duration:   2m 2s
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+</div></div>
+</div>
+<script>
+var _groqKey='YOUR_GROQ_API_KEY';
+async function _loadAiSummary(card){
+  var src=card.dataset.source;
+  if(!src)return;
+  var aiDiv=card.querySelector('.ai-summary');
+  if(!aiDiv||aiDiv.dataset.loaded)return;
+  aiDiv.dataset.loaded='1';
+  var st=aiDiv.querySelector('.ai-status'),tx=aiDiv.querySelector('.ai-text'),lb=aiDiv.querySelector('.ai-label');
+  st.textContent='Generating\u2026';
+  var prompt='iOS UI automation test source (bash):\n```\n'+src+'\n```\nReply with exactly:\nPURPOSE: one sentence stating what feature this test verifies.\nSTEPS:\n\u2022 action/verification (3-5 bullets, no extra text)';
+  try{
+    if(!_groqKey)throw new Error('no key');
+    var r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Authorization':'Bearer '+_groqKey,'Content-Type':'application/json'},body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:[{role:'user',content:prompt}],max_tokens:200})});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    var result=(await r.json()).choices[0].message.content;
+    st.style.display='none';
+    tx.textContent=result;
+    tx.style.display='';
+    lb.innerHTML='&#x2728; AI Summary <span class="ai-tool-tag">Groq</span>';
+    var body=card.querySelector('.card-body');
+    if(body)body.style.maxHeight=body.scrollHeight+'px';
+  }catch(e){st.textContent='AI summary unavailable.';}
+}
+document.querySelectorAll('.card-top').forEach(function(t){
+  t.addEventListener('click',function(){
+    var card=this.closest('.card');
+    var b=this.parentElement.querySelector('.card-body');
+    var c=this.querySelector('.chev');
+    if(!b)return;
+    if(b.style.maxHeight&&b.style.maxHeight!='0px'){
+      b.style.maxHeight='0';
+      if(c)c.style.transform='';
+    }else{
+      b.style.maxHeight=b.scrollHeight+'px';
+      if(c)c.style.transform='rotate(90deg)';
+      if(card)_loadAiSummary(card);
+    }
+  });
+});
+var lt=document.querySelector('.log-toggle');
+if(lt){
+  lt.addEventListener('click',function(){
+    var l=document.querySelector('.logblock.full-log');
+    var c=this.querySelector('.chev');
+    if(!l)return;
+    l.classList.toggle('open');
+    if(c)c.style.transform=l.classList.contains('open')?'rotate(90deg)':'';
+  });
+}
+</script>
+</body>
+</html>
