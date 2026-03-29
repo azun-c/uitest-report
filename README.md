@@ -2,23 +2,21 @@
 
 GitHub Pages host for UI test reports.
 
-## Report links
+## Viewing a report
 
-Each report is accessible directly at:
+Reports are served directly at:
 
 ```
-https://<owner>.github.io/uitest-report/reports/report_<n>.html
+https://azun-c.github.io/uitest-report/reports/report_<n>.html
 ```
 
-For example: `https://<owner>.github.io/uitest-report/reports/report_42.html`
+## Publishing a report
 
-## Publishing a report from CI
+Push a file named `report_<n>.html` into the `reports/` folder. GitHub Pages deploys automatically on every push to `main`.
 
-1. Generate your report as `report_<run_number>.html`
-2. Push it to `reports/` in this repo
-
-See `.github/workflows/example-ci.yml` for a ready-to-adapt workflow.
-
-### Prerequisites
-
-Create a PAT with `repo` scope (or a fine-grained token with **Contents: Read & Write**) and add it as `REPORTS_PUSH_TOKEN` in your project repo's secrets.
+```bash
+cp my-test-report.html reports/report_<n>.html
+git add reports/report_<n>.html
+git commit -m "add report_<n>"
+git push
+```
