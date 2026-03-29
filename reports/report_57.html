@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>i-Reporter UI Test Report</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23fff' d='M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z'/></svg>">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:#0f172a;line-height:1.45;-webkit-font-smoothing:antialiased}
+.page{max-width:940px;margin:0 auto;padding:28px 16px 52px}
+.header{background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 65%,#60a5fa 100%);border-radius:16px;padding:28px 32px;margin-bottom:16px;color:#fff;position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none}
+.header::after{content:'';position:absolute;bottom:-60px;left:-20px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
+.header h1{font-size:1.8rem;font-weight:800;letter-spacing:-.035em;position:relative}
+.header p{color:rgba(255,255,255,.72);font-size:.95rem;margin-top:6px;position:relative}
+.banner{border-radius:12px;padding:15px 22px;margin-bottom:16px;font-size:1.05rem;font-weight:700;border:1.5px solid transparent;display:flex;align-items:center;gap:8px}
+.banner.pass{background:#f0fdf4;color:#15803d;border-color:#86efac}
+.banner.fail{background:#fff1f2;color:#b91c1c;border-color:#fca5a5}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:22px}
+.stat{background:#fff;border-radius:12px;padding:18px 12px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.07);border:1px solid #e2e8f0}
+.stat-icon{font-size:1.4rem;line-height:1;margin-bottom:8px}
+.stat .val{font-size:1.9rem;font-weight:800;line-height:1.05;letter-spacing:-.02em}
+.stat .lbl{font-size:.68rem;color:#94a3b8;margin-top:5px;text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+.stat.green .val{color:#16a34a}.stat.red .val{color:#dc2626}.stat.blue .val{color:#2563eb}.stat.slate .val{color:#64748b}.stat.purple .val{color:#7c3aed}
+.cards-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;margin:0 0 10px 38px}
+.cards{display:flex;flex-direction:column;gap:7px}
+.card-row{display:flex;align-items:flex-start;gap:8px}
+.step-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;flex-shrink:0;margin-top:12px;letter-spacing:0}
+.step-num.pass{background:#dcfce7;color:#15803d}
+.step-num.fail{background:#fee2e2;color:#b91c1c}
+.card{background:#fff;border-radius:12px;padding:13px 18px;flex:1;border:1px solid #e2e8f0;border-left:4px solid transparent;box-shadow:0 1px 4px rgba(0,0,0,.06);transition:box-shadow .15s,border-color .15s}
+.card:hover{box-shadow:0 4px 16px rgba(0,0,0,.1)}
+.card.pass{border-left-color:#22c55e}.card.fail{border-left-color:#ef4444}
+.card-top{display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none;-webkit-user-select:none}
+.chev{font-size:.58rem;color:#94a3b8;flex-shrink:0;width:10px;transition:transform .22s ease}
+.status-pill{font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.04em;white-space:nowrap;flex-shrink:0}
+.status-pill.pass{background:#dcfce7;color:#15803d}
+.status-pill.fail{background:#fee2e2;color:#b91c1c}
+.card-name{font-weight:700;font-size:.97rem;flex:1;color:#0f172a;transition:color .12s}
+.card-top:hover .card-name{color:#2563eb}
+.card-badge{font-size:.76rem;color:#64748b;background:#f1f5f9;padding:2px 10px;border-radius:20px;white-space:nowrap;border:1px solid #e2e8f0;flex-shrink:0}
+.dur-badge{font-size:.76rem;color:#7c3aed;background:#f5f3ff;padding:2px 10px;border-radius:20px;white-space:nowrap;border:1px solid #ede9fe;flex-shrink:0}
+.card-body{overflow:hidden;max-height:0;transition:max-height .3s ease}
+.card-body-inner{padding-top:14px}
+.ai-summary{background:linear-gradient(135deg,#faf5ff,#f5f3ff);border-left:3px solid #8b5cf6;border-radius:0 8px 8px 0;padding:11px 15px;margin-bottom:12px}
+.ai-label{display:inline-flex;align-items:center;gap:6px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#fff;background:#7c3aed;padding:2px 10px;border-radius:20px;margin-bottom:8px}
+.ai-tool-tag{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#7c3aed;background:#ede9fe;padding:1px 7px;border-radius:10px}
+.ai-status{font-size:.875rem;color:#7c3aed;font-style:italic;min-height:1.2em}
+.ai-text{font-size:.875rem;color:#3b1f6e;white-space:pre-line;line-height:1.65}
+.asserts{display:flex;flex-direction:column;gap:3px;margin-bottom:10px}
+.aline{font-size:.83rem;padding:4px 10px;border-radius:5px;font-family:ui-monospace,'Cascadia Code',Menlo,monospace;border-left:2px solid transparent}
+.aline.ok{color:#166534;background:#f0fdf4;border-left-color:#86efac}
+.aline.ng{color:#991b1b;background:#fff1f2;border-left-color:#fca5a5}
+.logblock{background:#0f172a;color:#8da3b8;border-radius:8px;padding:14px 16px;font-family:ui-monospace,'Cascadia Code',Menlo,monospace;font-size:.78rem;line-height:1.7;white-space:pre-wrap;word-break:break-all;max-height:300px;overflow-y:auto;margin-top:8px}
+.video-name{margin-top:12px;font-size:.8rem;font-weight:600;color:#334155;font-family:ui-monospace,'Cascadia Code',Menlo,monospace;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;padding:5px 11px;display:flex;align-items:center;gap:6px}
+.video-link{color:#334155;text-decoration:none;border-bottom:1.5px solid #94a3b8;transition:color .12s,border-color .12s}
+.video-link:hover{color:#2563eb;border-bottom-color:#2563eb}
+.log-section{margin-top:30px}
+.log-toggle{font-size:.88rem;font-weight:600;color:#64748b;cursor:pointer;user-select:none;-webkit-user-select:none;padding:10px 0;display:flex;align-items:center;gap:7px;transition:color .12s}
+.log-toggle:hover{color:#1e293b}
+.logblock.full-log{display:none;max-height:600px}
+.logblock.full-log.open{display:block}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="header">
+  <h1>i-Reporter UI Test Report</h1>
+  <p>2026-03-29 03:13:25 UTC &nbsp;&bull;&nbsp; &#x23F1; 8m 41s total run time</p>
+</div>
+<div class="banner pass">&#x2705;&nbsp;&nbsp;All 4 tests passed</div>
+<div class="stats">
+  <div class="stat green"><div class="stat-icon">&#x2705;</div><div class="val">4</div><div class="lbl">Tests Passed</div></div>
+  <div class="stat slate"><div class="stat-icon">&#x274C;</div><div class="val">0</div><div class="lbl">Tests Failed</div></div>
+  <div class="stat blue"><div class="stat-icon">&#x1F3AF;</div><div class="val">28</div><div class="lbl">Assertions OK</div></div>
+  <div class="stat slate"><div class="stat-icon">&#x26A0;&#xFE0F;</div><div class="val">0</div><div class="lbl">Assertions Failed</div></div>
+  <div class="stat purple"><div class="stat-icon">&#x23F1;</div><div class="val">8m 41s</div><div class="lbl">Run Time</div></div>
+</div>
+<div class="cards-label">Test Runs — execution order</div>
+<div class="cards">
+<div class="card-row">
+<div class="step-num pass">1</div>
+<div class="card pass" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;draw_slashes_and_back() {&#10;  log_step &quot;Entering FreeDraw drawing mode&quot;&#10;  tap_on_first_half_center&#10;  sleep 0.3&#10;  log_step &quot;Selecting brush tool&quot;&#10;  tap_fd_toolbar_button &quot;$LABEL_FD_BRUSH&quot;&#10;  assert_visible &quot;$LABEL_FD_COLOR_PICKER&quot;    # confirm drawing toolbar is visible&#10;  local pen_color=${1:-black}&#10;  local base_y=${2:-350}&#10;  select_free_draw_color &quot;$pen_color&quot;&#10;  log_step &quot;Drawing row of slashes&quot;&#10;  draw_slash_row &quot;$base_y&quot;&#10;  sleep 0.3&#10;  log_step &quot;Going back from FreeDraw drawing mode&quot;&#10;  axe_touch_delay --label &quot;$LABEL_FD_BACK&quot;&#10;  sleep 2&#10;  assert_absent &quot;$LABEL_FD_BACK&quot; 3           # confirm we exited drawing mode&#10;}&#10;create_new_report_of &quot;$TEMPLATE_FREEDRAW&quot; || exit 1&#10;log_step &quot;Drawing row of slashes&quot;&#10;draw_slashes_and_back black 350&#10;log_step &quot;Drawing new row of slashes&quot;&#10;draw_slashes_and_back blue 800&#10;log_step &quot;✅ Done!&quot;">
+<div class="card-top">
+<span class="chev">&#x25B6;</span>
+<span class="status-pill pass">&#x2705; PASS</span>
+<span class="card-name">freedraw_continue_editing.sh</span>
+<span class="card-badge">4/4 assertions</span>
+<span class="dur-badge">&#x23F1; 3m 53s</span>
+</div>
+<div class="card-body">
+<div class="card-body-inner">
+<div class="ai-summary">
+<div class="ai-label">&#x2728; AI Summary</div>
+<div class="ai-status"></div>
+<div class="ai-text" style="display:none"></div></div>
+<div class="asserts">
+<div class="aline ok">   ✅ PASS: element visible: "fd colorpicker"</div>
+<div class="aline ok">   ✅ PASS: element absent: "fd back"</div>
+<div class="aline ok">   ✅ PASS: element visible: "fd colorpicker"</div>
+<div class="aline ok">   ✅ PASS: element absent: "fd back"</div>
+</div>
+<div class="video-name">&#x1F3AC; <a class="video-link" href="https://app.bitrise.io/build/9451d24e-0239-412b-a248-8ff31406a7b8?tab=artifacts" target="_blank">i-Reporter-UITest-freedraw_continue_editing-20260329-030445.mp4</a></div>
+</div>
+</div>
+</div>
+</div>
+<div class="card-row">
+<div class="step-num pass">2</div>
+<div class="card pass" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;draw_mouse() {&#10;  local deltaX=${1:-0}&#10;  local deltaY=${2:-0}&#10;  log_step &quot;Drawing mouse head from mouse.svg...&quot;&#10;  log_step &quot;Stroke 1/9: Head&quot;&#10;  draw_stroke_offset &quot;$deltaX&quot; &quot;$deltaY&quot; \&#10;    260 590 \&#10;    291 682 \&#10;    372 735 \&#10;    469 728 \&#10;    541 663 \&#10;    558 567 \&#10;    513 481 \&#10;    425 441 \&#10;    331 463 \&#10;    269 538 \&#10;    260 590&#10;  sleep 0.2&#10;  log_step &quot;Stroke 2/9: Left ear&quot;&#10;  draw_stroke_offset &quot;$deltaX&quot; &quot;$deltaY&quot; \&#10;    260 452 \&#10;    276 494 \&#10;    315 515 \&#10;    358 504 \&#10;    383 467 \&#10;    378 423 \&#10;    345 394 \&#10;    300 394 \&#10;    267 423 \&#10;    260 452&#10;  sleep 0.2&#10;  log_step &quot;Stroke 3/9: Right ear&quot;&#10;  draw_stroke_offset &quot;$deltaX&quot; &quot;$deltaY&quot; \&#10;    435 452 \&#10;    451 494 \&#10;    490 515 \&#10;    533 504 \&#10;    558 467 \&#10;    553 423 \&#10;    520 394 \&#10;    475 394 \&#10;    442 423 \&#10;    435 452&#10;  sleep 0.2&#10;  log_step &quot;Stroke 4/9: Left eye&quot;&#10;  draw_stroke_offset &quot;$deltaX&quot; &quot;$deltaY&quot; \&#10;    345 565 \&#10;    352 578 \&#10;    368 578 \&#10;    375 565 \&#10;    368 552 \&#10;    352 552 \&#10;    345 565&#10;  sleep 0.2&#10;  log_step &quot;Stroke 5/9: Right eye&quot;&#10;  draw_stroke_offset &quot;$deltaX&quot;">
+<div class="card-top">
+<span class="chev">&#x25B6;</span>
+<span class="status-pill pass">&#x2705; PASS</span>
+<span class="card-name">freedraw_sample.sh</span>
+<span class="card-badge">3/3 assertions</span>
+<span class="dur-badge">&#x23F1; 2m 10s</span>
+</div>
+<div class="card-body">
+<div class="card-body-inner">
+<div class="ai-summary">
+<div class="ai-label">&#x2728; AI Summary</div>
+<div class="ai-status"></div>
+<div class="ai-text" style="display:none"></div></div>
+<div class="asserts">
+<div class="aline ok">   ✅ PASS: element visible: "fd colorpicker"</div>
+<div class="aline ok">   ✅ PASS: app is running</div>
+<div class="aline ok">   ✅ PASS: app is running</div>
+</div>
+<div class="video-name">&#x1F3AC; <a class="video-link" href="https://app.bitrise.io/build/9451d24e-0239-412b-a248-8ff31406a7b8?tab=artifacts" target="_blank">i-Reporter-UITest-freedraw_sample-20260329-030843.mp4</a></div>
+</div>
+</div>
+</div>
+</div>
+<div class="card-row">
+<div class="step-num pass">3</div>
+<div class="card pass" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;create_new_report_of &quot;$TEMPLATE_FREETEXT&quot; || exit 1&#10;log_step &quot;Tapping FreeText cluster&quot;&#10;tap_on_first_half_center   # focus the FreeText cluster&#10;sleep 0.4 # wait for the animations to finish&#10;ft_enter_edit_mode           # turns on drawing mode&#10;assert_visible &quot;$LABEL_FT_EDIT_MODE_ACTIVE&quot;   # drawing mode is now active&#10;draw_slash_row 450 30 50 100&#10;sleep 0.3&#10;assert_app_running   # verify no crash during drawing&#10;ft_exit_edit_mode           # turns off drawing mode&#10;assert_absent &quot;$LABEL_FT_EDIT_MODE_ACTIVE&quot; 3  # drawing mode has exited&#10;tap_top_toolbar_button &quot;$TOOLBAR_BTN_MORE&quot;&#10;sleep 0.4  # wait for More popover to appear&#10;log_step &quot;Turning on Split display&quot;&#10;tap_split_display_switch&#10;sleep 3&#10;log_step &quot;Select a dummy point to split&quot;&#10;tap_screen_center&#10;sleep 0.1&#10;log_step &quot;Re-opening More popover to toggle Split display off&quot;&#10;tap_top_toolbar_button &quot;$TOOLBAR_BTN_MORE&quot;&#10;sleep 0.4&#10;log_step &quot;Turning off Split display&quot;&#10;tap_split_display_switch&#10;sleep 0.4&#10;tap_top_toolbar_button &quot;$TOOLBAR_BTN_FIT&quot; # to trigger a UI refresh and show the drawn items&#10;sleep 0.4">
+<div class="card-top">
+<span class="chev">&#x25B6;</span>
+<span class="status-pill pass">&#x2705; PASS</span>
+<span class="card-name">freetext_split_undo.sh</span>
+<span class="card-badge">5/5 assertions</span>
+<span class="dur-badge">&#x23F1; 1m 48s</span>
+</div>
+<div class="card-body">
+<div class="card-body-inner">
+<div class="ai-summary">
+<div class="ai-label">&#x2728; AI Summary</div>
+<div class="ai-status"></div>
+<div class="ai-text" style="display:none"></div></div>
+<div class="asserts">
+<div class="aline ok">   ✅ PASS: element visible: "free on"</div>
+<div class="aline ok">   ✅ PASS: app is running</div>
+<div class="aline ok">   ✅ PASS: element absent: "free on"</div>
+<div class="aline ok">   ✅ PASS: app is running</div>
+<div class="aline ok">   ✅ PASS: app is running</div>
+</div>
+<div class="video-name">&#x1F3AC; <a class="video-link" href="https://app.bitrise.io/build/9451d24e-0239-412b-a248-8ff31406a7b8?tab=artifacts" target="_blank">i-Reporter-UITest-freetext_split_undo-20260329-031057.mp4</a></div>
+</div>
+</div>
+</div>
+</div>
+<div class="card-row">
+<div class="step-num pass">4</div>
+<div class="card pass" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;&quot;$SCRIPT_DIR/relaunch-app.sh&quot;&#10;log_step &quot;Waiting for Home screen...&quot;&#10;wait_for_home_screen 5&#10;tap_alert_button_if_present &quot;$LABEL_BUTTON_CANCEL&quot;&#10;setup_server_login&#10;log_step &quot;Tapping ConMas Server tab&quot;&#10;axe_touch_delay --label &quot;$LABEL_CONMAS_SERVER&quot;&#10;assert &quot;ConMas Server page loaded&quot; wait_for_element_having_label &quot;$LABEL_ALL_REPORTS&quot; 10&#10;assert_visible &quot;$LABEL_HOME_INFO&quot;&#10;assert_visible &quot;$LABEL_CREATE_NEW&quot;&#10;assert_visible &quot;$LABEL_ALL_REPORTS&quot;&#10;assert_visible &quot;$LABEL_BEFORE_INPUT&quot;&#10;assert_visible &quot;$LABEL_EDITING&quot;&#10;assert_visible &quot;$LABEL_COMPLETED&quot;&#10;assert_visible &quot;$LABEL_WAITING_FOR_APPROVAL&quot;&#10;assert_visible &quot;$LABEL_REJECTED&quot;&#10;assert_visible &quot;$LABEL_APPLYING&quot;&#10;assert_visible &quot;$LABEL_SCHEDULE&quot;&#10;assert_visible &quot;$LABEL_CUSTOM_MENU&quot;&#10;assert_visible &quot;$LABEL_COMMON_LIBRARY&quot;&#10;assert_visible &quot;$LABEL_CUSTOM_MASTER&quot;&#10;assert_visible &quot;$LABEL_THIS_DEVICE&quot;&#10;assert_visible &quot;$LABEL_CONMAS_SERVER&quot;&#10;log_step &quot;✅ Done!&quot;">
+<div class="card-top">
+<span class="chev">&#x25B6;</span>
+<span class="status-pill pass">&#x2705; PASS</span>
+<span class="card-name">home_comnas_server_section.sh</span>
+<span class="card-badge">16/16 assertions</span>
+<span class="dur-badge">&#x23F1; 33s</span>
+</div>
+<div class="card-body">
+<div class="card-body-inner">
+<div class="ai-summary">
+<div class="ai-label">&#x2728; AI Summary</div>
+<div class="ai-status"></div>
+<div class="ai-text" style="display:none"></div></div>
+<div class="asserts">
+<div class="aline ok">   ✅ PASS: ConMas Server page loaded</div>
+<div class="aline ok">   ✅ PASS: element visible: "info"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Create New"</div>
+<div class="aline ok">   ✅ PASS: element visible: "All Reports"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Before Input"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Editing"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Completed"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Waiting for your approval"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Rejected"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Applying"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Schedule"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Custom Menu"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Common Library"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Custom Master"</div>
+<div class="aline ok">   ✅ PASS: element visible: "This Device"</div>
+<div class="aline ok">   ✅ PASS: element visible: "ConMas Server"</div>
+</div>
+<div class="video-name">&#x1F3AC; <a class="video-link" href="https://app.bitrise.io/build/9451d24e-0239-412b-a248-8ff31406a7b8?tab=artifacts" target="_blank">i-Reporter-UITest-home_comnas_server_section-20260329-031249.mp4</a></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="log-section">
+<div class="log-toggle"><span class="chev">&#x25B6;</span>&nbsp; Show full run log</div>
+<div class="logblock full-log">[03:04:34]
+   🧹 Clearing simulator state...
+[03:04:34]
+   ℹ️  No simulator state file found.
+[03:04:34]
+   🔍 Looking up simulator: "iPad Air 11-inch (M3)" (iOS 26.0)
+[03:04:35]
+   ✅ Found UDID: E095FD78-A5C9-4210-BA37-4EFEF61607B7
+[03:04:35]
+   💾 Saved DEVICE_UDID to state file.
+[03:04:35]
+   📱 Opening Simulator app...
+[03:04:35]
+   ⏳ Waiting for Simulator app to launch...
+[03:04:35]
+   ✅ Simulator app is running.
+[03:04:36]
+   ✅ Simulator "iPad Air 11-inch (M3)" is already booted.
+[03:04:36]
+   ⏳ Waiting for simulator services to be ready...
+Monitoring boot status for iPad Air 11-inch (M3) (E095FD78-A5C9-4210-BA37-4EFEF61607B7).
+Device already booted, nothing to do.
+
+[03:04:36]
+   ✅ Simulator services are ready.
+[03:04:36]
+   ✅ Keyboard auto-correct disabled.
+[03:04:37]
+   ✅ Save-password prompts should be disabled (if supported by this iOS version).
+[03:04:37] [log_step:77]
+   📣 📦 Installing app from: ./build/Build/Products/Debug-iphonesimulator/i-Reporter.app
+[03:04:42] [log_step:81]
+   📣 🔐 Configuring permissions for jp.conmas.i-Reporter...
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶  freedraw_continue_editing.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[03:04:45]
+   🧹 Clearing simulator state...
+[03:04:45]
+   🧹 Simulator state cleared.
+[03:04:45]
+   🔍 Looking up simulator: "iPad Air 11-inch (M3)" (iOS 26.0)
+Recording simulator E095FD78-A5C9-4210-BA37-4EFEF61607B7 to /Users/vagrant/deploy/i-Reporter-UITest-freedraw_continue_editing-20260329-030445.mp4
+Press Ctrl+C to stop recording
+[03:04:46]
+   ✅ Found UDID: E095FD78-A5C9-4210-BA37-4EFEF61607B7
+[03:04:46]
+   💾 Saved DEVICE_UDID to state file.
+[03:04:46]
+   📱 Simulator app is already running.
+IOServiceMatchingfailed for: AppleM2ScalerParavirtDriver
+[03:04:47]
+   ✅ Simulator "iPad Air 11-inch (M3)" is already booted.
+[03:04:47]
+   ⏳ Waiting for simulator services to be ready...
+Monitoring boot status for iPad Air 11-inch (M3) (E095FD78-A5C9-4210-BA37-4EFEF61607B7).
+Device already booted, nothing to do.
+
+[03:04:47]
+   ✅ Simulator services are ready.
+[03:04:48]
+   ✅ Keyboard auto-correct disabled.
+[03:04:48]
+   ✅ Save-password prompts should be disabled (if supported by this iOS version).
+[03:04:49]
+   🔍 Looking up booted simulator: "iPad Air 11-inch (M3)"
+[03:04:49]
+   ✅ Using persisted UDID: E095FD78-A5C9-4210-BA37-4EFEF61607B7
+[03:04:49]
+   🛑 Terminating app: jp.conmas.i-Reporter
+[03:04:49]
+   ⚠️  App "jp.conmas.i-Reporter" was not running or could not be terminated.
+[03:04:49]
+   🔍 Looking up booted simulator: "iPad Air 11-inch (M3)"
+[03:04:49]
+   ✅ Using persisted UDID: E095FD78-A5C9-4210-BA37-4EFEF61607B7
+[03:04:50]
+   🪪 Injected TerminalID: DUMMY-AUTOMATION-TEST
+[03:04:50]
+   🚀 Launching app: jp.conmas.i-Reporter
+jp.conmas.i-Reporter: 24504
+[03:04:51]
+   ✅ App "jp.conmas.i-Reporter" launched.
+[03:04:51] [log_step:23]
+   📣 Waiting for alert Confirmation - Data in editing exists
+[03:05:01] [log_step:34]
+   📣 Waiting for Home screen...
+[03:05:02] [log_step:104]
+   📣 Tapping nav button 'settings' in 'Home'
+[03:05:02]
+   axe_touch at (40, 54) with delay 0.3s (label='')
+[03:05:03] [log_step:64]
+   📣 Navigating to Server settings
+[03:05:04]
+   axe_touch at (170, 143) with delay 0.3s (label='Server')
+[03:05:06] [log_step:73]
+   📣 Checking if 'NEXT-SERVER' is already selected...
+[03:05:13] [log_step:85]
+   📣 Server 'NEXT-SERVER' not selected — opening Server connection list
+[03:05:13]
+   axe_touch at (575, 143) with delay 0.3s (label='')
+[03:05:14] [log_step:98]
+   📣 Selecting connection 'NEXT-SERVER'
+[03:05:18] [log_step:100]
+   📣 Connection 'NEXT-SERVER' not found — creating it
+[03:05:18] [log_step:102]
+   📣 Tapping Add new connection
+[03:05:19]
+   axe_touch at (575, 247) with delay 0.3s (label='Add new connection')
+[03:05:20] [log_step:110]
+   📣 Filling in connection form for 'NEXT-SERVER'
+[03:05:21]
+   axe_touch at (410, 386) with delay 0.3s (label='Server connection')
+[03:05:23] [log_step:20]
+   📣 Filling in field Server connection with value NEXT-SERVER
+[03:05:31]
+   axe_touch at (410, 360) with delay 0.3s (label='Connect to')
+[03:05:32] [log_step:20]
+   📣 Filling in field Connect to with value https://ircl-sup001kcy.conmas-i-reporter.com/ConMasWebNEXT/Rests/ConMasIReporter.aspx
+[03:06:05]
+   axe_touch at (410, 518) with delay 0.3s (label='User ID')
+[03:06:06] [log_step:20]
+   📣 Filling in field User ID with value azun
+[03:06:08]
+   axe_touch at (410, 562) with delay 0.3s (label='Password')
+[03:06:10] [log_step:20]
+   📣 Filling in field Password with value azun
+[03:06:12] [log_step:117]
+   📣 Enabling 'change server when local reports exist'
+[03:06:12] [log_step:62]
+   📣 Tapping switch 'Enable to change server when local reports exist'
+[03:06:12]
+   axe_touch at (643, 606) with delay 0.3s (label='')
+[03:06:13] [log_step:121]
+   📣 Saving connection
+[03:06:13] [log_step:104]
+   📣 Tapping nav button 'Save' in 'Input Connection'
+[03:06:16]
+   axe_touch at (659, 302) with delay 0.3s (label='')
+[03:06:17] [log_step:125]
+   📣 Selecting connection 'NEXT-SERVER'
+[03:06:18] [log_step:133]
+   📣 Activating 'NEXT-SERVER' connection
+[03:06:18]
+   axe_touch at (575, 211) with delay 0.3s (label='NEXT-SERVER')
+[03:06:23] [log_step:197]
+   📣 Alert button 'Change' appeared — tapping
+[03:06:26]
+   axe_touch at (372, 54) with delay 0.3s (label='Back')
+[03:06:28] [log_step:99]
+   📣 Turning 'Auto login' on
+[03:06:28]
+   axe_touch at (747, 187) with delay 0.3s (label='')
+[03:06:29]
+   axe_touch at (48, 54) with delay 0.3s (label='Close')
+[03:06:31] [log_step:30]
+   📣 Tapping Library: ConMas Server
+[03:06:31]
+   axe_touch at (340, 1135) with delay 0.3s (label='ConMas Server')
+[03:06:33] [log_step:45]
+   📣 Tapping Create New
+[03:06:44]
+   axe_touch at (217, 134) with delay 0.3s (label='Create New')
+[03:06:45] [log_step:53]
+   📣 Waiting for template search box...
+[03:06:51] [log_step:56]
+   📣 Tapping search box
+[03:06:51]
+   axe_touch at (199, 120) with delay 0.3s (label='')
+[03:06:52] [log_step:72]
+   📣 Typing template name
+[03:07:00] [log_step:74]
+   📣 Pressing Enter to search
+[03:07:01] [log_step:77]
+   📣 Waiting for search results for 'IRDPM-24315_freedraw'...
+[03:07:02] [log_step:79]
+   📣 Tapping first search result
+[03:07:02]
+   axe_touch at (218, 305) with delay 0.3s (label='')
+[03:07:05] [log_step:87]
+   📣 Waiting for Document Preview...
+[03:07:06] [log_step:89]
+   📣 Tapping Create New on Document Preview
+[03:07:06]
+   axe_touch at (488, 583) with delay 0.3s (label='Create New')
+[03:07:07] [log_step:96]
+   📣 Waiting for report view...
+[03:07:17] [log_step:44]
+   📣 Drawing row of slashes
+[03:07:17] [log_step:16]
+   📣 Entering FreeDraw drawing mode
+✓ Tap at (410.0, 295.0) completed successfully
+[03:07:18] [log_step:20]
+   📣 Selecting brush tool
+[03:07:18] [log_step:65]
+   📣 Tapping FreeDraw toolbar button: fd brush
+[03:07:18]
+   axe_touch at (60, 61) with delay 0.3s (label='')
+[03:07:20] [assert_visible:22]
+   ✅ PASS: element visible: "fd colorpicker"
+[03:07:20]
+   axe_touch at (538, 1139) with delay 0.3s (label='fd colorpicker')
+[03:07:21] [log_step:121]
+   📣 Tapped on Color picker at the bottom
+[03:07:22]
+   axe_touch at (516, 924) with delay 0.3s (label='')
+[03:07:23] [log_step:144]
+   📣 Selected black color
+[03:07:24] [log_step:146]
+   📣 Tapping screen center to dismiss color picker
+✓ Tap at (410.0, 590.0) completed successfully
+[03:07:24] [log_step:28]
+   📣 Drawing row of slashes
+[03:07:24] [log_step:181]
+   📣 Drawing 19 slashes at row y=350
+[03:07:24] [log_step:185]
+   📣 Drawing slash #0 start: (10, 362), end: (35, 338)
+[03:07:25] [log_step:185]
+   📣 Drawing slash #1 start: (50, 362), end: (75, 338)
+[03:07:26] [log_step:185]
+   📣 Drawing slash #2 start: (90, 362), end: (115, 338)
+[03:07:27] [log_step:185]
+   📣 Drawing slash #3 start: (130, 362), end: (155, 338)
+[03:07:28] [log_step:185]
+   📣 Drawing slash #4 start: (170, 362), end: (195, 338)
+[03:07:29] [log_step:185]
+   📣 Drawing slash #5 start: (210, 362), end: (235, 338)
+[03:07:30] [log_step:185]
+   📣 Drawing slash #6 start: (250, 362), end: (275, 338)
+[03:07:31] [log_step:185]
+   📣 Drawing slash #7 start: (290, 362), end: (315, 338)
+[03:07:32] [log_step:185]
+   📣 Drawing slash #8 start: (330, 362), end: (355, 338)
+[03:07:33] [log_step:185]
+   📣 Drawing slash #9 start: (370, 362), end: (395, 338)
+[03:07:34] [log_step:185]
+   📣 Drawing slash #10 start: (410, 362), end: (435, 338)
+[03:07:35] [log_step:185]
+   📣 Drawing slash #11 start: (450, 362), end: (475, 338)
+[03:07:36] [log_step:185]
+   📣 Drawing slash #12 start: (490, 362), end: (515, 338)
+[03:07:37] [log_step:185]
+   📣 Drawing slash #13 start: (530, 362), end: (555, 338)
+[03:07:39] [log_step:185]
+   📣 Drawing slash #14 start: (570, 362), end: (595, 338)
+[03:07:40] [log_step:185]
+   📣 Drawing slash #15 start: (610, 362), end: (635, 338)
+[03:07:41] [log_step:185]
+   📣 Drawing slash #16 start: (650, 362), end: (675, 338)
+[03:07:42] [log_step:185]
+   📣 Drawing slash #17 start: (690, 362), end: (715, 338)
+[03:07:44] [log_step:185]
+   📣 Drawing slash #18 start: (730, 362), end: (755, 338)
+[03:07:45] [log_step:32]
+   📣 Going back from FreeDraw drawing mode
+[03:07:45]
+   axe_touch at (29, 61) with delay 0.3s (label='fd back')
+[03:07:54] [assert_absent:35]
+   ✅ PASS: element absent: "fd back"
+[03:07:54] [log_step:47]
+   📣 Drawing new row of slashes
+[03:07:54] [log_step:16]
+   📣 Entering FreeDraw drawing mode
+✓ Tap at (410.0, 295.0) completed successfully
+[03:07:55] [log_step:20]
+   📣 Selecting brush tool
+[03:07:55] [log_step:65]
+   📣 Tapping FreeDraw toolbar button: fd brush
+[03:07:55]
+   axe_touch at (60, 61) with delay 0.3s (label='')
+[03:07:57] [assert_visible:22]
+   ✅ PASS: element visible: "fd colorpicker"
+[03:07:58]
+   axe_touch at (538, 1139) with delay 0.3s (label='fd colorpicker')
+[03:07:59] [log_step:121]
+   📣 Tapped on Color picker at the bottom
+[03:08:00]
+   axe_touch at (616, 1024) with delay 0.3s (label='')
+[03:08:01] [log_step:144]
+   📣 Selected blue color
+[03:08:01] [log_step:146]
+   📣 Tapping screen center to dismiss color picker
+✓ Tap at (410.0, 590.0) completed successfully
+[03:08:02] [log_step:28]
+   📣 Drawing row of slashes
+[03:08:02] [log_step:181]
+   📣 Drawing 19 slashes at row y=800
+[03:08:02] [log_step:185]
+   📣 Drawing slash #0 start: (10, 812), end: (35, 788)
+[03:08:04] [log_step:185]
+   📣 Drawing slash #1 start: (50, 812), end: (75, 788)
+[03:08:05] [log_step:185]
+   📣 Drawing slash #2 start: (90, 812), end: (115, 788)
+[03:08:06] [log_step:185]
+   📣 Drawing slash #3 start: (130, 812), end: (155, 788)
+[03:08:07] [log_step:185]
+   📣 Drawing slash #4 start: (170, 812), end: (195, 788)
+[03:08:09] [log_step:185]
+   📣 Drawing slash #5 start: (210, 812), end: (235, 788)
+[03:08:10] [log_step:185]
+   📣 Drawing slash #6 start: (250, 812), end: (275, 788)
+[03:08:11] [log_step:185]
+   📣 Drawing slash #7 start: (290, 812), end: (315, 788)
+[03:08:13] [log_step:185]
+   📣 Drawing slash #8 start: (330, 812), end: (355, 788)
+[03:08:14] [log_step:185]
+   📣 Drawing slash #9 start: (370, 812), end: (395, 788)
+[03:08:15] [log_step:185]
+   📣 Drawing slash #10 start: (410, 812), end: (435, 788)
+[03:08:17] [log_step:185]
+   📣 Drawing slash #11 start: (450, 812), end: (475, 788)
+[03:08:18] [log_step:185]
+   📣 Drawing slash #12 start: (490, 812), end: (515, 788)
+[03:08:19] [log_step:185]
+   📣 Drawing slash #13 start: (530, 812), end: (555, 788)
+[03:08:21] [log_step:185]
+   📣 Drawing slash #14 start: (570, 812), end: (595, 788)
+[03:08:22] [log_step:185]
+   📣 Drawing slash #15 start: (610, 812), end: (635, 788)
+[03:08:23] [log_step:185]
+   📣 Drawing slash #16 start: (650, 812), end: (675, 788)
+[03:08:24] [log_step:185]
+   📣 Drawing slash #17 start: (690, 812), end: (715, 788)
+[03:08:26] [log_step:185]
+   📣 Drawing slash #18 start: (730, 812), end: (755, 788)
+[03:08:27] [log_step:32]
+   📣 Going back from FreeDraw drawing mode
+[03:08:28]
+   axe_touch at (29, 61) with delay 0.3s (label='fd back')
+[03:08:38] [assert_absent:35]
+   ✅ PASS: element absent: "fd back"
+[03:08:38] [log_step:50]
+   📣 ✅ Done!
+Recording saved to /Users/vagrant/deploy/i-Reporter-UITest-freedraw_continue_editing-20260329-030445.mp4
+/Users/vagrant/deploy/i-Reporter-UITest-freedraw_continue_editing-20260329-030445.mp4
+✅ PASS  freedraw_continue_editing.sh  (4/4 assertions passed, 233s)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶  freedraw_sample.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[03:08:43]
+   🧹 Clearing simulator state...
+[03:08:43]
+   🧹 Simulator state cleared.
+[03:08:43]
+   🔍 Looking up simulator: "iPad Air 11-inch (M3)" (iOS 26.0)
+Recording simulator E095FD78-A5C9-4210-BA37-4EFEF61607B7 to /Users/vagrant/deploy/i-Reporter-UITest-freedraw_sample-20260329-030843.mp4
+Press Ctrl+C to stop recording
+IOServiceMatchingfailed for: AppleM2ScalerParavirtDriver
+[03:08:43]
+   ✅ Found UDID: E095FD78-A5C9-4210-BA37-4EFEF61607B7
+[03:08:43]
+   💾 Saved DEVICE_UDID to state file.
+[03:08:43]
+   📱 Simulator app is already running.
+[03:08:44]
+   ✅ Simulator "iPad Air 11-inch (M3)" is already booted.
+[03:08:44]
+   ⏳ Waiting for simulator services to be ready...
+Monitoring boot status for iPad Air 11-inch (M3) (E095FD78-A5C9-4210-BA37-4EFEF61607B7).
+Device already booted, nothing to do.
+
+[03:08:45]
+   ✅ Simulator services are ready.
+[03:08:45]
+   ✅ Keyboard auto-correct disabled.
+[03:08:46]
+   ✅ Save-password prompts should be disabled (if supported by this iOS version).
+[03:08:46]
+   🔍 Looking up booted simulator: "iPad Air 11-inch (M3)"
+[03:08:46]
+   ✅ Using persisted UDID: E095FD78-A5C9-4210-BA37-4EFEF61607B7
+[03:08:46]
+   🛑 Terminating app: jp.conmas.i-Reporter
+[03:08:47]
+   ⚠️  App "jp.conmas.i-Reporter" was not running or could not be terminated.
+[03:08:47]
+   🔍 Looking up booted simulator: "iPad Air 11-inch (M3)"
+[03:08:47]
+   ✅ Using persisted UDID: E095FD78-A5C9-4210-BA37-4EFEF61607B7
+[03:08:48]
+   🪪 Injected TerminalID: DUMMY-AUTOMATION-TEST
+[03:08:48]
+   🚀 Launching app: jp.conmas.i-Reporter
+jp.conmas.i-Reporter: 28481
+[03:08:48]
+   ✅ App "jp.conmas.i-Reporter" launched.
+[03:08:48] [log_step:23]
+   📣 Waiting for alert Confirmation - Data in editing exists
+[03:08:50] [log_step:197]
+   📣 Alert button 'Cancel' appeared — tapping
+[03:08:52] [log_step:34]
+   📣 Waiting for Home screen...
+[03:08:52] [log_step:104]
+   📣 Tapping nav button 'settings' in 'Home'
+[03:08:53]
+   axe_touch at (40, 54) with delay 0.3s (label='')
+[03:08:54] [log_step:64]
+   📣 Navigating to Server settings
+[03:08:56]
+   axe_touch at (170, 143) with delay 0.3s (label='Server')
+[03:08:57] [log_step:73]
+   📣 Checking if 'NEXT-SERVER' is already selected...
+[03:08:58] [log_step:75]
+   📣 Server 'NEXT-SERVER' already selected — ensuring Auto login is enabled
+[03:08:58] [log_step:102]
+   📣 Switch 'Auto login' is already on — skipping
+[03:08:59]
+   axe_touch at (48, 54) with delay 0.3s (label='Close')
+[03:09:01] [log_step:30]
+   📣 Tapping Library: ConMas Server
+[03:09:02]
+   axe_touch at (340, 1135) with delay 0.3s (label='ConMas Server')
+[03:09:03] [log_step:45]
+   📣 Tapping Create New
+[03:09:10]
+   axe_touch at (217, 134) with delay 0.3s (label='Create New')
+[03:09:11] [log_step:53]
+   📣 Waiting for template search box...
+[03:09:17] [log_step:56]
+   📣 Tapping search box
+[03:09:18]
+   axe_touch at (199, 120) with delay 0.3s (label='')
+[03:09:19] [log_step:72]
+   📣 Typing template name
+[03:09:28] [log_step:74]
+   📣 Pressing Enter to search
+[03:09:28] [log_step:77]
+   📣 Waiting for search results for 'IRDPM-24315_freedraw'...
+[03:09:30] [log_step:79]
+   📣 Tapping first search result
+[03:09:30]
+   axe_touch at (218, 305) with delay 0.3s (label='')
+[03:09:33] [log_step:87]
+   📣 Waiting for Document Preview...
+[03:09:34] [log_step:89]
+   📣 Tapping Create New on Document Preview
+[03:09:34]
+   axe_touch at (488, 583) with delay 0.3s (label='Create New')
+[03:09:35] [log_step:96]
+   📣 Waiting for report view...
+[03:09:45] [log_step:202]
+   📣 Tapping on the FreeDraw cluster
+✓ Tap at (410.0, 295.0) completed successfully
+[03:09:46] [log_step:206]
+   📣 Selecting brush tool
+[03:09:46] [log_step:65]
+   📣 Tapping FreeDraw toolbar button: fd brush
+[03:09:47]
+   axe_touch at (60, 61) with delay 0.3s (label='')
+[03:09:48] [assert_visible:208]
+   ✅ PASS: element visible: "fd colorpicker"
+[03:09:49]
+   axe_touch at (538, 1139) with delay 0.3s (label='fd colorpicker')
+[03:09:50] [log_step:121]
+   📣 Tapped on Color picker at the bottom
+[03:09:51]
+   axe_touch at (516, 924) with delay 0.3s (label='')
+[03:09:52] [log_step:144]
+   📣 Selected black color
+[03:09:52] [log_step:146]
+   📣 Tapping screen center to dismiss color picker
+✓ Tap at (410.0, 590.0) completed successfully
+[03:09:53] [log_step:23]
+   📣 Drawing mouse head from mouse.svg...
+[03:09:53] [log_step:25]
+   📣 Stroke 1/9: Head
+[03:09:57] [log_step:40]
+   📣 Stroke 2/9: Left ear
+[03:10:02] [log_step:54]
+   📣 Stroke 3/9: Right ear
+[03:10:06] [log_step:68]
+   📣 Stroke 4/9: Left eye
+[03:10:09] [log_step:79]
+   📣 Stroke 5/9: Right eye
+[03:10:12] [log_step:90]
+   📣 Stroke 6/9: Nose
+[03:10:16] [log_step:103]
+   📣 Stroke 7/9: Mouth
+[03:10:18] [log_step:114]
+   📣 Stroke 8/9: Whiskers left
+[03:10:24] [log_step:120]
+   📣 Stroke 9/9: Whiskers right
+[03:10:31] [log_step:126]
+   📣 ✅ Done! Mouse drawing complete.
+[03:10:31] [assert_app_running:211]
+   ✅ PASS: app is running
+[03:10:31]
+   axe_touch at (538, 1139) with delay 0.3s (label='fd colorpicker')
+[03:10:32] [log_step:121]
+   📣 Tapped on Color picker at the bottom
+[03:10:33]
+   axe_touch at (516, 1024) with delay 0.3s (label='')
+[03:10:34] [log_step:144]
+   📣 Selected purple color
+[03:10:34] [log_step:146]
+   📣 Tapping screen center to dismiss color picker
+✓ Tap at (410.0, 590.0) completed successfully
+[03:10:35] [log_step:137]
+   📣 Drawing cat from cat.svg...
+[03:10:35] [log_step:139]
+   📣 Stroke 1/1
+[03:10:51] [log_step:192]
+   📣 ✅ Done! Cat drawing complete.
+[03:10:53] [assert_app_running:215]
+   ✅ PASS: app is running
+Recording saved to /Users/vagrant/deploy/i-Reporter-UITest-freedraw_sample-20260329-030843.mp4
+/Users/vagrant/deploy/i-Reporter-UITest-freedraw_sample-20260329-030843.mp4
+✅ PASS  freedraw_sample.sh  (3/3 assertions passed, 130s)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶  freetext_split_undo.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[03:10:57]
+   🧹 Clearing simulator state...
+[03:10:57]
+   🧹 Simulator state cleared.
+[03:10:57]
+   🔍 Looking up simulator: "iPad Air 11-inch (M3)" (iOS 26.0)
+Recording simulator E095FD78-A5C9-4210-BA37-4EFEF61607B7 to /Users/vagrant/deploy/i-Reporter-UITest-freetext_split_undo-20260329-031057.mp4
+Press Ctrl+C to stop recording
+IOServiceMatchingfailed for: AppleM2ScalerParavirtDriver
+[03:10:58]
+   ✅ Found UDID: E095FD78-A5C9-4210-BA37-4EFEF61607B7
+[03:10:58]
+   💾 Saved DEVICE_UDID to state file.
+[03:10:58]
+   📱 Simulator app is already running.
+[03:10:58]
+   ✅ Simulator "iPad Air 11-inch (M3)" is already booted.
+[03:10:58]
+   ⏳ Waiting for simulator services to be ready...
+Monitoring boot status for iPad Air 11-inch (M3) (E095FD78-A5C9-4210-BA37-4EFEF61607B7).
+Device already booted, nothing to do.
+
+[03:10:59]
+   ✅ Simulator services are ready.
+[03:10:59]
+   ✅ Keyboard auto-correct disabled.
+[03:11:00]
+   ✅ Save-password prompts should be disabled (if supported by this iOS version).
+[03:11:00]
+   🔍 Looking up booted simulator: "iPad Air 11-inch (M3)"
+[03:11:00]
+   ✅ Using persisted UDID: E095FD78-A5C9-4210-BA37-4EFEF61607B7
+[03:11:00]
+   🛑 Terminating app: jp.conmas.i-Reporter
+[03:11:00]
+   ⚠️  App "jp.conmas.i-Reporter" was not running or could not be terminated.
+[03:11:00]
+   🔍 Looking up booted simulator: "iPad Air 11-inch (M3)"
+[03:11:00]
+   ✅ Using persisted UDID: E095FD78-A5C9-4210-BA37-4EFEF61607B7
+[03:11:01]
+   🪪 Injected TerminalID: DUMMY-AUTOMATION-TEST
+[03:11:01]
+   🚀 Launching app: jp.conmas.i-Reporter
+jp.conmas.i-Reporter: 30872
+[03:11:01]
+   ✅ App "jp.conmas.i-Reporter" launched.
+[03:11:01] [log_step:23]
+   📣 Waiting for alert Confirmation - Data in editing exists
+[03:11:02] [log_step:197]
+   📣 Alert button 'Cancel' appeared — tapping
+[03:11:04] [log_step:34]
+   📣 Waiting for Home screen...
+[03:11:04] [log_step:104]
+   📣 Tapping nav button 'settings' in 'Home'
+[03:11:04]
+   axe_touch at (40, 54) with delay 0.3s (label='')
+[03:11:06] [log_step:64]
+   📣 Navigating to Server settings
+[03:11:06]
+   axe_touch at (170, 143) with delay 0.3s (label='Server')
+[03:11:08] [log_step:73]
+   📣 Checking if 'NEXT-SERVER' is already selected...
+[03:11:08] [log_step:75]
+   📣 Server 'NEXT-SERVER' already selected — ensuring Auto login is enabled
+[03:11:08] [log_step:102]
+   📣 Switch 'Auto login' is already on — skipping
+[03:11:08]
+   axe_touch at (48, 54) with delay 0.3s (label='Close')
+[03:11:11] [log_step:30]
+   📣 Tapping Library: ConMas Server
+[03:11:11]
+   axe_touch at (340, 1135) with delay 0.3s (label='ConMas Server')
+[03:11:12] [log_step:45]
+   📣 Tapping Create New
+[03:11:18]
+   axe_touch at (217, 134) with delay 0.3s (label='Create New')
+[03:11:19] [log_step:53]
+   📣 Waiting for template search box...
+[03:11:25] [log_step:56]
+   📣 Tapping search box
+[03:11:25]
+   axe_touch at (199, 120) with delay 0.3s (label='')
+[03:11:26] [log_step:72]
+   📣 Typing template name
+[03:11:34] [log_step:74]
+   📣 Pressing Enter to search
+[03:11:34] [log_step:77]
+   📣 Waiting for search results for 'IRDPM-20308_freetext'...
+[03:11:36] [log_step:79]
+   📣 Tapping first search result
+[03:11:36]
+   axe_touch at (218, 305) with delay 0.3s (label='')
+[03:11:39] [log_step:87]
+   📣 Waiting for Document Preview...
+[03:11:39] [log_step:89]
+   📣 Tapping Create New on Document Preview
+[03:11:40]
+   axe_touch at (488, 626) with delay 0.3s (label='Create New')
+[03:11:41] [log_step:96]
+   📣 Waiting for report view...
+[03:11:52] [log_step:29]
+   📣 Tapping FreeText cluster
+✓ Tap at (410.0, 295.0) completed successfully
+[03:11:53]
+   axe_touch at (775, 106) with delay 0.3s (label='free off')
+[03:11:54] [assert_visible:33]
+   ✅ PASS: element visible: "free on"
+[03:11:54] [log_step:181]
+   📣 Drawing 5 slashes at row y=450
+[03:11:54] [log_step:185]
+   📣 Drawing slash #0 start: (10, 475), end: (40, 425)
+[03:11:55] [log_step:185]
+   📣 Drawing slash #1 start: (140, 475), end: (170, 425)
+[03:11:56] [log_step:185]
+   📣 Drawing slash #2 start: (270, 475), end: (300, 425)
+[03:11:57] [log_step:185]
+   📣 Drawing slash #3 start: (400, 475), end: (430, 425)
+[03:11:58] [log_step:185]
+   📣 Drawing slash #4 start: (530, 475), end: (560, 425)
+[03:11:59] [assert_app_running:38]
+   ✅ PASS: app is running
+[03:12:00]
+   axe_touch at (775, 106) with delay 0.3s (label='free on')
+[03:12:06] [assert_absent:41]
+   ✅ PASS: element absent: "free on"
+[03:12:06] [log_step:47]
+   📣 Tapping top toolbar button: More
+[03:12:13]
+   axe_touch at (778, 64) with delay 0.3s (label='')
+[03:12:15] [log_step:46]
+   📣 Turning on Split display
+[03:12:15] [log_step:62]
+   📣 Tapping switch 'Split display'
+[03:12:15]
+   axe_touch at (754, 350) with delay 0.3s (label='')
+[03:12:19] [log_step:50]
+   📣 Select a dummy point to split
+✓ Tap at (410.0, 590.0) completed successfully
+[03:12:20] [log_step:54]
+   📣 Re-opening More popover to toggle Split display off
+[03:12:20] [log_step:47]
+   📣 Tapping top toolbar button: More
+[03:12:27]
+   axe_touch at (778, 64) with delay 0.3s (label='')
+[03:12:29] [log_step:58]
+   📣 Turning off Split display
+[03:12:29] [log_step:62]
+   📣 Tapping switch 'Split display'
+[03:12:29]
+   axe_touch at (754, 350) with delay 0.3s (label='')
+[03:12:30] [log_step:47]
+   📣 Tapping top toolbar button: arrow.left.and.right.square
+[03:12:36]
+   axe_touch at (721, 64) with delay 0.3s (label='')
+[03:12:38] [log_step:65]
+   📣 Undo #1 — items should disappear
+[03:12:38] [log_step:47]
+   📣 Tapping top toolbar button: undo
+[03:12:40]
+   axe_touch at (180, 64) with delay 0.3s (label='')
+[03:12:42] [assert_app_running:68]
+   ✅ PASS: app is running
+[03:12:42] [log_step:70]
+   📣 Undo #2 — app should survive (regression: used to crash here)
+[03:12:42] [log_step:47]
+   📣 Tapping top toolbar button: undo
+[03:12:43]
+   axe_touch at (180, 64) with delay 0.3s (label='')
+[03:12:45] [assert_app_running:73]
+   ✅ PASS: app is running
+[03:12:45] [log_step:75]
+   📣 ✅ Done!
+Recording saved to /Users/vagrant/deploy/i-Reporter-UITest-freetext_split_undo-20260329-031057.mp4
+/Users/vagrant/deploy/i-Reporter-UITest-freetext_split_undo-20260329-031057.mp4
+✅ PASS  freetext_split_undo.sh  (5/5 assertions passed, 108s)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶  home_comnas_server_section.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[03:12:49]
+   🧹 Clearing simulator state...
+[03:12:49]
+   🧹 Simulator state cleared.
+[03:12:49]
+   🔍 Looking up simulator: "iPad Air 11-inch (M3)" (iOS 26.0)
+Recording simulator E095FD78-A5C9-4210-BA37-4EFEF61607B7 to /Users/vagrant/deploy/i-Reporter-UITest-home_comnas_server_section-20260329-031249.mp4
+Press Ctrl+C to stop recording
+IOServiceMatchingfailed for: AppleM2ScalerParavirtDriver
+[03:12:50]
+   ✅ Found UDID: E095FD78-A5C9-4210-BA37-4EFEF61607B7
+[03:12:50]
+   💾 Saved DEVICE_UDID to state file.
+[03:12:50]
+   📱 Simulator app is already running.
+[03:12:50]
+   ✅ Simulator "iPad Air 11-inch (M3)" is already booted.
+[03:12:50]
+   ⏳ Waiting for simulator services to be ready...
+Monitoring boot status for iPad Air 11-inch (M3) (E095FD78-A5C9-4210-BA37-4EFEF61607B7).
+Device already booted, nothing to do.
+
+[03:12:51]
+   ✅ Simulator services are ready.
+[03:12:51]
+   ✅ Keyboard auto-correct disabled.
+[03:12:52]
+   ✅ Save-password prompts should be disabled (if supported by this iOS version).
+[03:12:52]
+   🔍 Looking up booted simulator: "iPad Air 11-inch (M3)"
+[03:12:52]
+   ✅ Using persisted UDID: E095FD78-A5C9-4210-BA37-4EFEF61607B7
+[03:12:52]
+   🛑 Terminating app: jp.conmas.i-Reporter
+[03:12:52]
+   ⚠️  App "jp.conmas.i-Reporter" was not running or could not be terminated.
+[03:12:52]
+   🔍 Looking up booted simulator: "iPad Air 11-inch (M3)"
+[03:12:52]
+   ✅ Using persisted UDID: E095FD78-A5C9-4210-BA37-4EFEF61607B7
+[03:12:53]
+   🪪 Injected TerminalID: DUMMY-AUTOMATION-TEST
+[03:12:53]
+   🚀 Launching app: jp.conmas.i-Reporter
+jp.conmas.i-Reporter: 33982
+[03:12:53]
+   ✅ App "jp.conmas.i-Reporter" launched.
+[03:12:53] [log_step:25]
+   📣 Waiting for Home screen...
+[03:13:03] [log_step:197]
+   📣 Alert button 'Cancel' appeared — tapping
+[03:13:04] [log_step:34]
+   📣 Waiting for Home screen...
+[03:13:04] [log_step:104]
+   📣 Tapping nav button 'settings' in 'Home'
+[03:13:04]
+   axe_touch at (40, 54) with delay 0.3s (label='')
+[03:13:06] [log_step:64]
+   📣 Navigating to Server settings
+[03:13:06]
+   axe_touch at (170, 143) with delay 0.3s (label='Server')
+[03:13:08] [log_step:73]
+   📣 Checking if 'NEXT-SERVER' is already selected...
+[03:13:08] [log_step:75]
+   📣 Server 'NEXT-SERVER' already selected — ensuring Auto login is enabled
+[03:13:08] [log_step:102]
+   📣 Switch 'Auto login' is already on — skipping
+[03:13:09]
+   axe_touch at (48, 54) with delay 0.3s (label='Close')
+[03:13:11] [log_step:37]
+   📣 Tapping ConMas Server tab
+[03:13:11]
+   axe_touch at (340, 1135) with delay 0.3s (label='ConMas Server')
+[03:13:18] [assert:41]
+   ✅ PASS: ConMas Server page loaded
+[03:13:19] [assert_visible:48]
+   ✅ PASS: element visible: "info"
+[03:13:19] [assert_visible:54]
+   ✅ PASS: element visible: "Create New"
+[03:13:19] [assert_visible:60]
+   ✅ PASS: element visible: "All Reports"
+[03:13:19] [assert_visible:61]
+   ✅ PASS: element visible: "Before Input"
+[03:13:20] [assert_visible:62]
+   ✅ PASS: element visible: "Editing"
+[03:13:20] [assert_visible:63]
+   ✅ PASS: element visible: "Completed"
+[03:13:20] [assert_visible:64]
+   ✅ PASS: element visible: "Waiting for your approval"
+[03:13:20] [assert_visible:65]
+   ✅ PASS: element visible: "Rejected"
+[03:13:21] [assert_visible:66]
+   ✅ PASS: element visible: "Applying"
+[03:13:21] [assert_visible:67]
+   ✅ PASS: element visible: "Schedule"
+[03:13:21] [assert_visible:73]
+   ✅ PASS: element visible: "Custom Menu"
+[03:13:21] [assert_visible:74]
+   ✅ PASS: element visible: "Common Library"
+[03:13:21] [assert_visible:75]
+   ✅ PASS: element visible: "Custom Master"
+[03:13:22] [assert_visible:81]
+   ✅ PASS: element visible: "This Device"
+[03:13:22] [assert_visible:82]
+   ✅ PASS: element visible: "ConMas Server"
+[03:13:22] [log_step:84]
+   📣 ✅ Done!
+Recording saved to /Users/vagrant/deploy/i-Reporter-UITest-home_comnas_server_section-20260329-031249.mp4
+/Users/vagrant/deploy/i-Reporter-UITest-home_comnas_server_section-20260329-031249.mp4
+✅ PASS  home_comnas_server_section.sh  (16/16 assertions passed, 33s)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Tests:      ✅ 4 passed  ❌ 0 failed  (total: 4)
+  Assertions: ✅ 28 passed  ❌ 0 failed  (total: 28)
+  Duration:   8m 41s
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+</div></div>
+</div>
+<script>
+var _groqKey='YOUR_GROQ_API_KEY';
+async function _loadAiSummary(card){
+  var src=card.dataset.source;
+  if(!src)return;
+  var aiDiv=card.querySelector('.ai-summary');
+  if(!aiDiv||aiDiv.dataset.loaded)return;
+  aiDiv.dataset.loaded='1';
+  var st=aiDiv.querySelector('.ai-status'),tx=aiDiv.querySelector('.ai-text'),lb=aiDiv.querySelector('.ai-label');
+  st.textContent='Generating\u2026';
+  var prompt='iOS UI automation test source (bash):\n```\n'+src+'\n```\nReply with exactly:\nPURPOSE: one sentence stating what feature this test verifies.\nSTEPS:\n\u2022 action/verification (3-5 bullets, no extra text)';
+  try{
+    if(!_groqKey)throw new Error('no key');
+    var r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Authorization':'Bearer '+_groqKey,'Content-Type':'application/json'},body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:[{role:'user',content:prompt}],max_tokens:200})});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    var result=(await r.json()).choices[0].message.content;
+    st.style.display='none';
+    tx.textContent=result;
+    tx.style.display='';
+    lb.innerHTML='&#x2728; AI Summary <span class="ai-tool-tag">Groq</span>';
+    var body=card.querySelector('.card-body');
+    if(body)body.style.maxHeight=body.scrollHeight+'px';
+  }catch(e){st.textContent='AI summary unavailable.';}
+}
+document.querySelectorAll('.card-top').forEach(function(t){
+  t.addEventListener('click',function(){
+    var card=this.closest('.card');
+    var b=this.parentElement.querySelector('.card-body');
+    var c=this.querySelector('.chev');
+    if(!b)return;
+    if(b.style.maxHeight&&b.style.maxHeight!='0px'){
+      b.style.maxHeight='0';
+      if(c)c.style.transform='';
+    }else{
+      b.style.maxHeight=b.scrollHeight+'px';
+      if(c)c.style.transform='rotate(90deg)';
+      if(card)_loadAiSummary(card);
+    }
+  });
+});
+var lt=document.querySelector('.log-toggle');
+if(lt){
+  lt.addEventListener('click',function(){
+    var l=document.querySelector('.logblock.full-log');
+    var c=this.querySelector('.chev');
+    if(!l)return;
+    l.classList.toggle('open');
+    if(c)c.style.transform=l.classList.contains('open')?'rotate(90deg)':'';
+  });
+}
+</script>
+</body>
+</html>
