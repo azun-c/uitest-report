@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>i-Reporter UI Test Report</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23fff' d='M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z'/></svg>">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:#0f172a;line-height:1.45;-webkit-font-smoothing:antialiased}
+.page{max-width:940px;margin:0 auto;padding:28px 16px 52px}
+.header{background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 65%,#60a5fa 100%);border-radius:16px;padding:28px 32px;margin-bottom:16px;color:#fff;position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none}
+.header::after{content:'';position:absolute;bottom:-60px;left:-20px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
+.header h1{font-size:1.8rem;font-weight:800;letter-spacing:-.035em;position:relative}
+.header p{color:rgba(255,255,255,.72);font-size:.95rem;margin-top:6px;position:relative}
+.banner{border-radius:12px;padding:15px 22px;margin-bottom:16px;font-size:1.05rem;font-weight:700;border:1.5px solid transparent;display:flex;align-items:center;gap:8px}
+.banner.pass{background:#f0fdf4;color:#15803d;border-color:#86efac}
+.banner.fail{background:#fff1f2;color:#b91c1c;border-color:#fca5a5}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:22px}
+.stat{background:#fff;border-radius:12px;padding:18px 12px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.07);border:1px solid #e2e8f0}
+.stat-icon{font-size:1.4rem;line-height:1;margin-bottom:8px}
+.stat .val{font-size:1.9rem;font-weight:800;line-height:1.05;letter-spacing:-.02em}
+.stat .lbl{font-size:.68rem;color:#94a3b8;margin-top:5px;text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+.stat.green .val{color:#16a34a}.stat.red .val{color:#dc2626}.stat.blue .val{color:#2563eb}.stat.slate .val{color:#64748b}.stat.purple .val{color:#7c3aed}
+.cards-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;margin:0 0 10px 38px}
+.cards{display:flex;flex-direction:column;gap:7px}
+.card-row{display:flex;align-items:flex-start;gap:8px}
+.step-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;flex-shrink:0;margin-top:12px;letter-spacing:0}
+.step-num.pass{background:#dcfce7;color:#15803d}
+.step-num.fail{background:#fee2e2;color:#b91c1c}
+.card{background:#fff;border-radius:12px;padding:13px 18px;flex:1;border:1px solid #e2e8f0;border-left:4px solid transparent;box-shadow:0 1px 4px rgba(0,0,0,.06);transition:box-shadow .15s,border-color .15s}
+.card:hover{box-shadow:0 4px 16px rgba(0,0,0,.1)}
+.card.pass{border-left-color:#22c55e}.card.fail{border-left-color:#ef4444}
+.card-top{display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none;-webkit-user-select:none}
+.chev{font-size:.58rem;color:#94a3b8;flex-shrink:0;width:10px;transition:transform .22s ease}
+.status-pill{font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.04em;white-space:nowrap;flex-shrink:0}
+.status-pill.pass{background:#dcfce7;color:#15803d}
+.status-pill.fail{background:#fee2e2;color:#b91c1c}
+.card-name{font-weight:700;font-size:.97rem;flex:1;color:#0f172a;transition:color .12s}
+.card-top:hover .card-name{color:#2563eb}
+.card-badge{font-size:.76rem;color:#64748b;background:#f1f5f9;padding:2px 10px;border-radius:20px;white-space:nowrap;border:1px solid #e2e8f0;flex-shrink:0}
+.dur-badge{font-size:.76rem;color:#7c3aed;background:#f5f3ff;padding:2px 10px;border-radius:20px;white-space:nowrap;border:1px solid #ede9fe;flex-shrink:0}
+.card-body{overflow:hidden;max-height:0;transition:max-height .3s ease}
+.card-body-inner{padding-top:14px}
+.ai-summary{background:linear-gradient(135deg,#faf5ff,#f5f3ff);border-left:3px solid #8b5cf6;border-radius:0 8px 8px 0;padding:11px 15px;margin-bottom:12px}
+.ai-label{display:inline-flex;align-items:center;gap:6px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#fff;background:#7c3aed;padding:2px 10px;border-radius:20px;margin-bottom:8px}
+.ai-tool-tag{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#7c3aed;background:#ede9fe;padding:1px 7px;border-radius:10px}
+.ai-status{font-size:.875rem;color:#7c3aed;font-style:italic;min-height:1.2em}
+.ai-text{font-size:.875rem;color:#3b1f6e;white-space:pre-line;line-height:1.65}
+.asserts{display:flex;flex-direction:column;gap:3px;margin-bottom:10px}
+.aline{font-size:.83rem;padding:4px 10px;border-radius:5px;font-family:ui-monospace,'Cascadia Code',Menlo,monospace;border-left:2px solid transparent}
+.aline.ok{color:#166534;background:#f0fdf4;border-left-color:#86efac}
+.aline.ng{color:#991b1b;background:#fff1f2;border-left-color:#fca5a5}
+.logblock{background:#0f172a;color:#8da3b8;border-radius:8px;padding:14px 16px;font-family:ui-monospace,'Cascadia Code',Menlo,monospace;font-size:.78rem;line-height:1.7;white-space:pre-wrap;word-break:break-all;max-height:300px;overflow-y:auto;margin-top:8px}
+.video-name{margin-top:12px;font-size:.8rem;font-weight:600;color:#334155;font-family:ui-monospace,'Cascadia Code',Menlo,monospace;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;padding:5px 11px;display:flex;align-items:center;gap:6px}
+.video-link{color:#334155;text-decoration:none;border-bottom:1.5px solid #94a3b8;transition:color .12s,border-color .12s}
+.video-link:hover{color:#2563eb;border-bottom-color:#2563eb}
+.log-section{margin-top:30px}
+.log-toggle{font-size:.88rem;font-weight:600;color:#64748b;cursor:pointer;user-select:none;-webkit-user-select:none;padding:10px 0;display:flex;align-items:center;gap:7px;transition:color .12s}
+.log-toggle:hover{color:#1e293b}
+.logblock.full-log{display:none;max-height:600px}
+.logblock.full-log.open{display:block}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="header">
+  <h1>i-Reporter UI Test Report</h1>
+  <p>2026-03-29 11:24:32 UTC &nbsp;&bull;&nbsp; &#x23F1; 8m 33s total run time</p>
+</div>
+<div class="banner fail">&#x274C;&nbsp;&nbsp;1 of 4 tests failed &nbsp;&mdash;&nbsp; 3 passed</div>
+<div class="stats">
+  <div class="stat red"><div class="stat-icon">&#x2705;</div><div class="val">3</div><div class="lbl">Tests Passed</div></div>
+  <div class="stat red"><div class="stat-icon">&#x274C;</div><div class="val">1</div><div class="lbl">Tests Failed</div></div>
+  <div class="stat blue"><div class="stat-icon">&#x1F3AF;</div><div class="val">27</div><div class="lbl">Assertions OK</div></div>
+  <div class="stat red"><div class="stat-icon">&#x26A0;&#xFE0F;</div><div class="val">1</div><div class="lbl">Assertions Failed</div></div>
+  <div class="stat purple"><div class="stat-icon">&#x23F1;</div><div class="val">8m 33s</div><div class="lbl">Run Time</div></div>
+</div>
+<div class="cards-label">Test Runs — execution order</div>
+<div class="cards">
+<div class="card-row">
+<div class="step-num pass">1</div>
+<div class="card pass" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;draw_slashes_and_back() {&#10;  log_step &quot;Entering FreeDraw drawing mode&quot;&#10;  if _is_iphone; then &#10;    tap_screen_center&#10;  else &#10;    tap_on_first_half_center&#10;  fi&#10;  sleep 0.3&#10;  log_step &quot;Selecting brush tool&quot;&#10;  tap_fd_toolbar_button &quot;$LABEL_FD_BRUSH&quot;&#10;  assert_visible &quot;$LABEL_FD_COLOR_PICKER&quot;    # confirm drawing toolbar is visible&#10;  local pen_color=${1:-black}&#10;  local base_y=${2:-350}&#10;  select_free_draw_color &quot;$pen_color&quot;&#10;  log_step &quot;Drawing row of slashes&quot;&#10;  draw_slash_row &quot;$base_y&quot;&#10;  sleep 0.3&#10;  log_step &quot;Going back from FreeDraw drawing mode&quot;&#10;  axe_touch_delay --label &quot;$LABEL_FD_BACK&quot;&#10;  sleep 2&#10;  assert_absent &quot;$LABEL_FD_BACK&quot; 3           # confirm we exited drawing mode&#10;}&#10;create_new_report_of &quot;$TEMPLATE_FREEDRAW&quot; || exit 1&#10;log_step &quot;Drawing row of slashes&quot;&#10;draw_slashes_and_back black 350&#10;log_step &quot;Drawing new row of slashes&quot;&#10;if _is_iphone; then&#10;  draw_slashes_and_back blue 420&#10;else&#10;  draw_slashes_and_back blue 800&#10;fi&#10;sleep 0.3  # dismiss animation&#10;log_step &quot;✅ Done!&quot;">
+<div class="card-top">
+<span class="chev">&#x25B6;</span>
+<span class="status-pill pass">&#x2705; PASS</span>
+<span class="card-name">freedraw_continue_editing.sh</span>
+<span class="card-badge">4/4 assertions</span>
+<span class="dur-badge">&#x23F1; 3m 53s</span>
+</div>
+<div class="card-body">
+<div class="card-body-inner">
+<div class="ai-summary">
+<div class="ai-label">&#x2728; AI Summary</div>
+<div class="ai-status"></div>
+<div class="ai-text" style="display:none"></div></div>
+<div class="asserts">
+<div class="aline ok">   ✅ PASS: element visible: "fd colorpicker"</div>
+<div class="aline ok">   ✅ PASS: element absent: "Back Button"</div>
+<div class="aline ok">   ✅ PASS: element visible: "fd colorpicker"</div>
+<div class="aline ok">   ✅ PASS: element absent: "Back Button"</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="card-row">
+<div class="step-num pass">2</div>
+<div class="card pass" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;draw_mouse() {&#10;  local deltaX=${1:-0}&#10;  local deltaY=${2:-0}&#10;  local _cx=410 _cy=590 _scale=1&#10;  _is_iphone &amp;&amp; _scale=2&#10;  _sx() { awk &quot;BEGIN { print int($_cx + ($1 - $_cx) / $_scale + 0.5) }&quot;; }&#10;  _sy() { awk &quot;BEGIN { print int($_cy + ($1 - $_cy) / $_scale + 0.5) }&quot;; }&#10;  log_step &quot;Drawing mouse head from mouse.svg...&quot;&#10;  log_step &quot;Stroke 1/9: Head&quot;&#10;  _scale_stroke &quot;$deltaX&quot; &quot;$deltaY&quot; &quot;$_cx&quot; &quot;$_cy&quot; &quot;$_scale&quot; \&#10;    260 590 \&#10;    291 682 \&#10;    372 735 \&#10;    469 728 \&#10;    541 663 \&#10;    558 567 \&#10;    513 481 \&#10;    425 441 \&#10;    331 463 \&#10;    269 538 \&#10;    260 590&#10;  sleep 0.2&#10;  log_step &quot;Stroke 2/9: Left ear&quot;&#10;  _scale_stroke &quot;$deltaX&quot; &quot;$deltaY&quot; &quot;$_cx&quot; &quot;$_cy&quot; &quot;$_scale&quot; \&#10;    260 452 \&#10;    276 494 \&#10;    315 515 \&#10;    358 504 \&#10;    383 467 \&#10;    378 423 \&#10;    345 394 \&#10;    300 394 \&#10;    267 423 \&#10;    260 452&#10;  sleep 0.2&#10;  log_step &quot;Stroke 3/9: Right ear&quot;&#10;  _scale_stroke &quot;$deltaX&quot; &quot;$deltaY&quot; &quot;$_cx&quot; &quot;$_cy&quot; &quot;$_scale&quot; \&#10;    435 452 \&#10;    451 494 \&#10;    490 515 \&#10;    533 504 \&#10;    558 467 \&#10;    553 423 \&#10;    520 394 \&#10;    475 394 \&#10;    442 423 \&#10;    435 4">
+<div class="card-top">
+<span class="chev">&#x25B6;</span>
+<span class="status-pill pass">&#x2705; PASS</span>
+<span class="card-name">freedraw_sample.sh</span>
+<span class="card-badge">3/3 assertions</span>
+<span class="dur-badge">&#x23F1; 1m 56s</span>
+</div>
+<div class="card-body">
+<div class="card-body-inner">
+<div class="ai-summary">
+<div class="ai-label">&#x2728; AI Summary</div>
+<div class="ai-status"></div>
+<div class="ai-text" style="display:none"></div></div>
+<div class="asserts">
+<div class="aline ok">   ✅ PASS: element visible: "fd colorpicker"</div>
+<div class="aline ok">   ✅ PASS: app is running</div>
+<div class="aline ok">   ✅ PASS: app is running</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="card-row">
+<div class="step-num fail">3</div>
+<div class="card fail" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;create_new_report_of &quot;$TEMPLATE_FREETEXT&quot; || exit 1&#10;log_step &quot;Tapping FreeText cluster&quot;&#10;tap_on_first_half_center   # focus the FreeText cluster&#10;sleep 0.4 # wait for the animations to finish&#10;ft_enter_edit_mode           # turns on drawing mode&#10;assert_visible &quot;$LABEL_FT_EDIT_MODE_ACTIVE&quot;   # drawing mode is now active&#10;draw_slash_row 450 30 50 30&#10;sleep 0.3&#10;assert_app_running   # verify no crash during drawing&#10;ft_exit_edit_mode           # turns off drawing mode&#10;assert_absent &quot;$LABEL_FT_EDIT_MODE_ACTIVE&quot; 3  # drawing mode has exited&#10;if _is_ipad; then&#10;    tap_top_toolbar_button &quot;$TOOLBAR_BTN_MORE&quot;&#10;    sleep 0.4  # wait for More popover to appear&#10;    log_step &quot;Turning on Split display&quot;&#10;    tap_split_display_switch&#10;    sleep 3&#10;    log_step &quot;Select a dummy point to split&quot;&#10;    tap_screen_center&#10;    sleep 0.1&#10;    log_step &quot;Re-opening More popover to toggle Split display off&quot;&#10;    tap_top_toolbar_button &quot;$TOOLBAR_BTN_MORE&quot;&#10;    sleep 0.4&#10;    log_step &quot;Turning off Split display&quot;&#10;    tap_split_display_switch&#10;    sleep 0.4&#10;    tap_top_toolbar_button &quot;$T">
+<div class="card-top">
+<span class="chev">&#x25B6;</span>
+<span class="status-pill fail">&#x274C; FAIL</span>
+<span class="card-name">freetext_split_undo.sh</span>
+<span class="card-badge">4/5 assertions</span>
+<span class="dur-badge">&#x23F1; 1m 57s</span>
+</div>
+<div class="card-body">
+<div class="card-body-inner">
+<div class="ai-summary">
+<div class="ai-label">&#x2728; AI Summary</div>
+<div class="ai-status"></div>
+<div class="ai-text" style="display:none"></div></div>
+<div class="asserts">
+<div class="aline ng">   ❌ FAIL: element visible: "free on"</div>
+<div class="aline ok">   ✅ PASS: app is running</div>
+<div class="aline ok">   ✅ PASS: element absent: "free on"</div>
+<div class="aline ok">   ✅ PASS: app is running</div>
+<div class="aline ok">   ✅ PASS: app is running</div>
+</div>
+<div class="logblock">[11:23:45] [assert_absent:41]
+   ✅ PASS: element absent: "free on"
+[11:23:45] [log_step:66]
+   📣 Undo #1 — items should disappear
+[11:23:45] [log_step:64]
+   📣 Tapping top toolbar button: undo
+[11:23:47]
+   axe_touch at (162, 96) with delay 0.3s (label='')
+[11:23:48] [assert_app_running:69]
+   ✅ PASS: app is running
+[11:23:48] [log_step:71]
+   📣 Undo #2 — app should survive (regression: used to crash here)
+[11:23:48] [log_step:64]
+   📣 Tapping top toolbar button: undo
+[11:23:50]
+   axe_touch at (162, 96) with delay 0.3s (label='')
+[11:23:52] [assert_app_running:74]
+   ✅ PASS: app is running
+[11:23:52] [log_step:76]
+   📣 ✅ Done!</div>
+</div>
+</div>
+</div>
+</div>
+<div class="card-row">
+<div class="step-num pass">4</div>
+<div class="card pass" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;&quot;$SCRIPT_DIR/relaunch-app.sh&quot;&#10;log_step &quot;Waiting for Home screen...&quot;&#10;wait_for_home_screen 5&#10;tap_alert_button_if_present &quot;$LABEL_BUTTON_CANCEL&quot;&#10;setup_server_login&#10;log_step &quot;Tapping ConMas Server tab&quot;&#10;axe_touch_delay --label &quot;$LABEL_CONMAS_SERVER&quot;&#10;assert &quot;ConMas Server page loaded&quot; wait_for_element_having_label &quot;$LABEL_ALL_REPORTS&quot; 10&#10;assert_visible &quot;$LABEL_HOME_INFO&quot;&#10;assert_visible &quot;$LABEL_CREATE_NEW&quot;&#10;assert_visible &quot;$LABEL_ALL_REPORTS&quot;&#10;assert_visible &quot;$LABEL_BEFORE_INPUT&quot;&#10;assert_visible &quot;$LABEL_EDITING&quot;&#10;assert_visible &quot;$LABEL_COMPLETED&quot;&#10;assert_visible &quot;$LABEL_WAITING_FOR_APPROVAL&quot;&#10;assert_visible &quot;$LABEL_REJECTED&quot;&#10;assert_visible &quot;$LABEL_APPLYING&quot;&#10;assert_visible &quot;$LABEL_SCHEDULE&quot;&#10;assert_visible &quot;$LABEL_CUSTOM_MENU&quot;&#10;assert_visible &quot;$LABEL_COMMON_LIBRARY&quot;&#10;assert_visible &quot;$LABEL_CUSTOM_MASTER&quot;&#10;assert_visible &quot;$LABEL_THIS_DEVICE&quot;&#10;assert_visible &quot;$LABEL_CONMAS_SERVER&quot;&#10;log_step &quot;✅ Done!&quot;">
+<div class="card-top">
+<span class="chev">&#x25B6;</span>
+<span class="status-pill pass">&#x2705; PASS</span>
+<span class="card-name">home_comnas_server_section.sh</span>
+<span class="card-badge">16/16 assertions</span>
+<span class="dur-badge">&#x23F1; 37s</span>
+</div>
+<div class="card-body">
+<div class="card-body-inner">
+<div class="ai-summary">
+<div class="ai-label">&#x2728; AI Summary</div>
+<div class="ai-status"></div>
+<div class="ai-text" style="display:none"></div></div>
+<div class="asserts">
+<div class="aline ok">   ✅ PASS: ConMas Server page loaded</div>
+<div class="aline ok">   ✅ PASS: element visible: "info"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Create New"</div>
+<div class="aline ok">   ✅ PASS: element visible: "All Reports"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Before Input"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Editing"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Completed"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Waiting for your approval"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Rejected"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Applying"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Schedule"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Custom Menu"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Common Library"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Custom Master"</div>
+<div class="aline ok">   ✅ PASS: element visible: "This Device"</div>
+<div class="aline ok">   ✅ PASS: element visible: "ConMas Server"</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="log-section">
+<div class="log-toggle"><span class="chev">&#x25B6;</span>&nbsp; Show full run log</div>
+<div class="logblock full-log">[11:15:35]
+   🧹 Clearing simulator state...
+[11:15:35]
+   ℹ️  No simulator state file found.
+[11:15:35]
+   🔍 Looking up simulator: "iPhone 17 Pro" (iOS 26.0)
+[11:15:36]
+   ✅ Found UDID: 7CC8A451-6EE6-4C18-BB6D-5DD3C9C10E35
+[11:15:36]
+   💾 Saved DEVICE_UDID to state file.
+[11:15:36]
+   📱 Opening Simulator app...
+[11:15:37]
+   ⏳ Waiting for Simulator app to launch...
+[11:15:37]
+   ✅ Simulator app is running.
+[11:15:38]
+   ✅ Simulator "iPhone 17 Pro" is already booted.
+[11:15:38]
+   ⏳ Waiting for simulator services to be ready...
+Monitoring boot status for iPhone 17 Pro (7CC8A451-6EE6-4C18-BB6D-5DD3C9C10E35).
+Device already booted, nothing to do.
+
+[11:15:39]
+   ✅ Simulator services are ready.
+[11:15:40]
+   ✅ Keyboard auto-correct disabled.
+[11:15:41]
+   ✅ Save-password prompts should be disabled (if supported by this iOS version).
+[11:15:41] [log_step:77]
+   📣 📦 Installing app from: ./build/Build/Products/Debug-iphonesimulator/i-Reporter.app
+[11:15:53] [log_step:81]
+   📣 🔐 Configuring permissions for jp.conmas.i-Reporter...
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶  freedraw_continue_editing.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:16:04]
+   🧹 Clearing simulator state...
+[11:16:04]
+   🧹 Simulator state cleared.
+[11:16:04]
+   🔍 Looking up simulator: "iPhone 17 Pro" (iOS 26.0)
+[11:16:05]
+   ✅ Found UDID: 7CC8A451-6EE6-4C18-BB6D-5DD3C9C10E35
+[11:16:05]
+   💾 Saved DEVICE_UDID to state file.
+[11:16:05]
+   📱 Simulator app is already running.
+[11:16:06]
+   ✅ Simulator "iPhone 17 Pro" is already booted.
+[11:16:06]
+   ⏳ Waiting for simulator services to be ready...
+Monitoring boot status for iPhone 17 Pro (7CC8A451-6EE6-4C18-BB6D-5DD3C9C10E35).
+Device already booted, nothing to do.
+
+[11:16:06]
+   ✅ Simulator services are ready.
+[11:16:07]
+   ✅ Keyboard auto-correct disabled.
+[11:16:08]
+   ✅ Save-password prompts should be disabled (if supported by this iOS version).
+[11:16:09]
+   🔍 Looking up booted simulator: "iPhone 17 Pro"
+[11:16:09]
+   ✅ Using persisted UDID: 7CC8A451-6EE6-4C18-BB6D-5DD3C9C10E35
+[11:16:09]
+   🛑 Terminating app: jp.conmas.i-Reporter
+[11:16:11]
+   ⚠️  App "jp.conmas.i-Reporter" was not running or could not be terminated.
+[11:16:14]
+   🔍 Looking up booted simulator: "iPhone 17 Pro"
+[11:16:14]
+   ✅ Using persisted UDID: 7CC8A451-6EE6-4C18-BB6D-5DD3C9C10E35
+[11:16:15]
+   🪪 Injected TerminalID: DUMMY-AUTOMATION-TEST
+[11:16:15]
+   🚀 Launching app: jp.conmas.i-Reporter
+jp.conmas.i-Reporter: 10223
+[11:16:16]
+   ✅ App "jp.conmas.i-Reporter" launched.
+[11:16:16] [log_step:23]
+   📣 Waiting for alert Confirmation - Data in editing exists
+[11:16:38] [log_step:34]
+   📣 Waiting for Home screen...
+[11:16:41]
+   axe_touch at (38, 84) with delay 0.3s (label='settings')
+[11:16:42] [log_step:65]
+   📣 Navigating to Server settings
+[11:16:43]
+   axe_touch at (201, 173) with delay 0.3s (label='Server')
+[11:16:45] [log_step:74]
+   📣 Checking if 'NEXT-SERVER' is already selected...
+[11:16:54] [log_step:91]
+   📣 Server 'NEXT-SERVER' not selected — opening Server connection list
+[11:16:54]
+   axe_touch at (201, 173) with delay 0.3s (label='')
+[11:16:55] [log_step:104]
+   📣 Selecting connection 'NEXT-SERVER'
+[11:17:01] [log_step:106]
+   📣 Connection 'NEXT-SERVER' not found — creating it
+[11:17:01] [log_step:108]
+   📣 Tapping Add new connection
+[11:17:01]
+   axe_touch at (201, 277) with delay 0.3s (label='Add new connection')
+[11:17:02] [log_step:116]
+   📣 Filling in connection form for 'NEXT-SERVER'
+[11:17:04]
+   axe_touch at (201, 194) with delay 0.3s (label='Server connection')
+[11:17:06] [log_step:20]
+   📣 Filling in field Server connection with value NEXT-SERVER
+[11:17:14]
+   axe_touch at (201, 238) with delay 0.3s (label='Connect to')
+[11:17:16] [log_step:20]
+   📣 Filling in field Connect to with value https://ircl-sup001kcy.conmas-i-reporter.com/ConMasWebNEXT/Rests/ConMasIReporter.aspx
+[11:17:52]
+   axe_touch at (201, 326) with delay 0.3s (label='User ID')
+[11:17:53] [log_step:20]
+   📣 Filling in field User ID with value azun
+[11:17:56]
+   axe_touch at (201, 370) with delay 0.3s (label='Password')
+[11:17:57] [log_step:20]
+   📣 Filling in field Password with value azun
+[11:17:59] [log_step:123]
+   📣 Enabling 'change server when local reports exist'
+[11:17:59] [log_step:62]
+   📣 Tapping switch 'Enable to change server when local reports exist'
+[11:17:59]
+   axe_touch at (345, 414) with delay 0.3s (label='')
+[11:18:01] [log_step:127]
+   📣 Saving connection
+[11:18:01] [log_step:121]
+   📣 Tapping nav button 'Save' in 'Input Connection'
+[11:18:04]
+   axe_touch at (355, 110) with delay 0.3s (label='')
+[11:18:06] [log_step:131]
+   📣 Selecting connection 'NEXT-SERVER'
+[11:18:07] [log_step:139]
+   📣 Activating 'NEXT-SERVER' connection
+[11:18:07]
+   axe_touch at (201, 241) with delay 0.3s (label='NEXT-SERVER')
+[11:18:12] [log_step:208]
+   📣 Alert button 'Change' appeared — tapping
+✓ Tap at (275.0, 537.0) completed successfully
+[11:18:15]
+   axe_touch at (38, 84) with delay 0.3s (label='Back')
+[11:18:17] [log_step:99]
+   📣 Turning 'Auto login' on
+[11:18:17]
+   axe_touch at (329, 217) with delay 0.3s (label='')
+✓ Tap at (38.0, 84.0) completed successfully
+[11:18:20]
+   axe_touch at (50, 84) with delay 0.3s (label='Close')
+[11:18:22] [log_step:34]
+   📣 Tapping Library: ConMas Server
+[11:18:23]
+   axe_touch at (301, 825) with delay 0.3s (label='ConMas Server')
+[11:18:24] [log_step:49]
+   📣 Tapping Create New
+[11:18:33]
+   axe_touch at (201, 164) with delay 0.3s (label='Create New')
+[11:18:34] [log_step:57]
+   📣 Waiting for template search box...
+[11:18:38] [log_step:60]
+   📣 Tapping search box
+[11:18:38]
+   axe_touch at (179, 146) with delay 0.3s (label='')
+[11:18:39] [log_step:76]
+   📣 Typing template name
+[11:18:48] [log_step:78]
+   📣 Pressing Enter to search
+[11:18:48] [log_step:81]
+   📣 Waiting for search results for 'IRDPM-24315_freedraw'...
+[11:18:49] [log_step:83]
+   📣 Tapping first search result
+[11:18:50]
+   axe_touch at (201, 329) with delay 0.3s (label='')
+[11:18:53] [log_step:91]
+   📣 Waiting for Document Preview...
+[11:18:53] [log_step:93]
+   📣 Tapping Create New on Document Preview
+[11:18:53]
+   axe_touch at (63, 612) with delay 0.3s (label='Create New')
+[11:18:55] [log_step:208]
+   📣 Alert button 'Edit With Normal View' appeared — tapping
+✓ Tap at (201.0, 395.0) completed successfully
+[11:18:57] [log_step:105]
+   📣 Waiting for report view...
+[11:19:06] [log_step:48]
+   📣 Drawing row of slashes
+[11:19:06] [log_step:16]
+   📣 Entering FreeDraw drawing mode
+✓ Tap at (196.0, 426.0) completed successfully
+[11:19:07] [log_step:24]
+   📣 Selecting brush tool
+[11:19:07] [log_step:66]
+   📣 Tapping FreeDraw toolbar button: fd brush
+[11:19:07]
+   axe_touch at (80, 111) with delay 0.3s (label='')
+[11:19:08] [assert_visible:26]
+   ✅ PASS: element visible: "fd colorpicker"
+[11:19:09]
+   axe_touch at (125, 815) with delay 0.3s (label='fd colorpicker')
+[11:19:10] [log_step:122]
+   📣 Tapped on Color picker at the bottom
+[11:19:11]
+   axe_touch at (138, 598) with delay 0.3s (label='')
+[11:19:12] [log_step:145]
+   📣 Selected black color
+[11:19:12] [log_step:147]
+   📣 Tapping screen center to dismiss color picker
+✓ Tap at (196.0, 426.0) completed successfully
+[11:19:13] [log_step:32]
+   📣 Drawing row of slashes
+[11:19:13] [log_step:197]
+   📣 Drawing 8 slashes at row y=350
+[11:19:13] [log_step:201]
+   📣 Drawing slash #0 start: (10, 362), end: (35, 338)
+[11:19:14] [log_step:201]
+   📣 Drawing slash #1 start: (50, 362), end: (75, 338)
+[11:19:15] [log_step:201]
+   📣 Drawing slash #2 start: (90, 362), end: (115, 338)
+[11:19:16] [log_step:201]
+   📣 Drawing slash #3 start: (130, 362), end: (155, 338)
+[11:19:17] [log_step:201]
+   📣 Drawing slash #4 start: (170, 362), end: (195, 338)
+[11:19:18] [log_step:201]
+   📣 Drawing slash #5 start: (210, 362), end: (235, 338)
+[11:19:19] [log_step:201]
+   📣 Drawing slash #6 start: (250, 362), end: (275, 338)
+[11:19:20] [log_step:201]
+   📣 Drawing slash #7 start: (290, 362), end: (315, 338)
+[11:19:21] [log_step:36]
+   📣 Going back from FreeDraw drawing mode
+[11:19:21]
+   axe_touch at (25, 111) with delay 0.3s (label='Back Button')
+[11:19:30] [assert_absent:39]
+   ✅ PASS: element absent: "Back Button"
+[11:19:30] [log_step:51]
+   📣 Drawing new row of slashes
+[11:19:30] [log_step:16]
+   📣 Entering FreeDraw drawing mode
+✓ Tap at (196.0, 426.0) completed successfully
+[11:19:31] [log_step:24]
+   📣 Selecting brush tool
+[11:19:31] [log_step:66]
+   📣 Tapping FreeDraw toolbar button: fd brush
+[11:19:31]
+   axe_touch at (80, 111) with delay 0.3s (label='')
+[11:19:33] [assert_visible:26]
+   ✅ PASS: element visible: "fd colorpicker"
+[11:19:33]
+   axe_touch at (125, 815) with delay 0.3s (label='fd colorpicker')
+[11:19:34] [log_step:122]
+   📣 Tapped on Color picker at the bottom
+[11:19:35]
+   axe_touch at (232, 692) with delay 0.3s (label='')
+[11:19:36] [log_step:145]
+   📣 Selected blue color
+[11:19:36] [log_step:147]
+   📣 Tapping screen center to dismiss color picker
+✓ Tap at (196.0, 426.0) completed successfully
+[11:19:37] [log_step:32]
+   📣 Drawing row of slashes
+[11:19:37] [log_step:197]
+   📣 Drawing 8 slashes at row y=420
+[11:19:37] [log_step:201]
+   📣 Drawing slash #0 start: (10, 432), end: (35, 408)
+[11:19:38] [log_step:201]
+   📣 Drawing slash #1 start: (50, 432), end: (75, 408)
+[11:19:39] [log_step:201]
+   📣 Drawing slash #2 start: (90, 432), end: (115, 408)
+[11:19:40] [log_step:201]
+   📣 Drawing slash #3 start: (130, 432), end: (155, 408)
+[11:19:41] [log_step:201]
+   📣 Drawing slash #4 start: (170, 432), end: (195, 408)
+[11:19:42] [log_step:201]
+   📣 Drawing slash #5 start: (210, 432), end: (235, 408)
+[11:19:43] [log_step:201]
+   📣 Drawing slash #6 start: (250, 432), end: (275, 408)
+[11:19:44] [log_step:201]
+   📣 Drawing slash #7 start: (290, 432), end: (315, 408)
+[11:19:45] [log_step:36]
+   📣 Going back from FreeDraw drawing mode
+[11:19:46]
+   axe_touch at (25, 111) with delay 0.3s (label='Back Button')
+[11:19:55] [assert_absent:39]
+   ✅ PASS: element absent: "Back Button"
+[11:19:55] [log_step:60]
+   📣 ✅ Done!
+✅ PASS  freedraw_continue_editing.sh  (4/4 assertions passed, 233s)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶  freedraw_sample.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:19:58]
+   🧹 Clearing simulator state...
+[11:19:58]
+   🧹 Simulator state cleared.
+[11:19:58]
+   🔍 Looking up simulator: "iPhone 17 Pro" (iOS 26.0)
+[11:19:58]
+   ✅ Found UDID: 7CC8A451-6EE6-4C18-BB6D-5DD3C9C10E35
+[11:19:58]
+   💾 Saved DEVICE_UDID to state file.
+[11:19:58]
+   📱 Simulator app is already running.
+[11:19:58]
+   ✅ Simulator "iPhone 17 Pro" is already booted.
+[11:19:58]
+   ⏳ Waiting for simulator services to be ready...
+Monitoring boot status for iPhone 17 Pro (7CC8A451-6EE6-4C18-BB6D-5DD3C9C10E35).
+Device already booted, nothing to do.
+
+[11:19:59]
+   ✅ Simulator services are ready.
+[11:19:59]
+   ✅ Keyboard auto-correct disabled.
+[11:19:59]
+   ✅ Save-password prompts should be disabled (if supported by this iOS version).
+[11:20:00]
+   🔍 Looking up booted simulator: "iPhone 17 Pro"
+[11:20:00]
+   ✅ Using persisted UDID: 7CC8A451-6EE6-4C18-BB6D-5DD3C9C10E35
+[11:20:00]
+   🛑 Terminating app: jp.conmas.i-Reporter
+[11:20:00]
+   ⚠️  App "jp.conmas.i-Reporter" was not running or could not be terminated.
+[11:20:00]
+   🔍 Looking up booted simulator: "iPhone 17 Pro"
+[11:20:00]
+   ✅ Using persisted UDID: 7CC8A451-6EE6-4C18-BB6D-5DD3C9C10E35
+[11:20:01]
+   🪪 Injected TerminalID: DUMMY-AUTOMATION-TEST
+[11:20:01]
+   🚀 Launching app: jp.conmas.i-Reporter
+jp.conmas.i-Reporter: 13941
+[11:20:01]
+   ✅ App "jp.conmas.i-Reporter" launched.
+[11:20:01] [log_step:23]
+   📣 Waiting for alert Confirmation - Data in editing exists
+[11:20:04] [log_step:208]
+   📣 Alert button 'Cancel' appeared — tapping
+✓ Tap at (127.0, 497.0) completed successfully
+[11:20:05] [log_step:34]
+   📣 Waiting for Home screen...
+[11:20:06]
+   axe_touch at (38, 84) with delay 0.3s (label='settings')
+[11:20:07] [log_step:65]
+   📣 Navigating to Server settings
+[11:20:08]
+   axe_touch at (201, 173) with delay 0.3s (label='Server')
+[11:20:09] [log_step:74]
+   📣 Checking if 'NEXT-SERVER' is already selected...
+[11:20:10] [log_step:76]
+   📣 Server 'NEXT-SERVER' already selected — ensuring Auto login is enabled
+[11:20:10] [log_step:102]
+   📣 Switch 'Auto login' is already on — skipping
+✓ Tap at (38.0, 84.0) completed successfully
+[11:20:12]
+   axe_touch at (50, 84) with delay 0.3s (label='Close')
+[11:20:14] [log_step:34]
+   📣 Tapping Library: ConMas Server
+[11:20:14]
+   axe_touch at (301, 825) with delay 0.3s (label='ConMas Server')
+[11:20:16] [log_step:49]
+   📣 Tapping Create New
+[11:20:20]
+   axe_touch at (201, 164) with delay 0.3s (label='Create New')
+[11:20:21] [log_step:57]
+   📣 Waiting for template search box...
+[11:20:25] [log_step:60]
+   📣 Tapping search box
+[11:20:25]
+   axe_touch at (179, 146) with delay 0.3s (label='')
+[11:20:26] [log_step:76]
+   📣 Typing template name
+[11:20:36] [log_step:78]
+   📣 Pressing Enter to search
+[11:20:36] [log_step:81]
+   📣 Waiting for search results for 'IRDPM-24315_freedraw'...
+[11:20:37] [log_step:83]
+   📣 Tapping first search result
+[11:20:38]
+   axe_touch at (201, 329) with delay 0.3s (label='')
+[11:20:41] [log_step:91]
+   📣 Waiting for Document Preview...
+[11:20:41] [log_step:93]
+   📣 Tapping Create New on Document Preview
+[11:20:41]
+   axe_touch at (63, 612) with delay 0.3s (label='Create New')
+[11:20:43] [log_step:208]
+   📣 Alert button 'Edit With Normal View' appeared — tapping
+✓ Tap at (201.0, 395.0) completed successfully
+[11:20:44] [log_step:105]
+   📣 Waiting for report view...
+[11:20:53] [log_step:214]
+   📣 Tapping on the FreeDraw cluster
+✓ Tap at (196.0, 426.0) completed successfully
+[11:20:54] [log_step:223]
+   📣 Selecting brush tool
+[11:20:54] [log_step:66]
+   📣 Tapping FreeDraw toolbar button: fd brush
+[11:20:54]
+   axe_touch at (80, 111) with delay 0.3s (label='')
+[11:20:56] [assert_visible:225]
+   ✅ PASS: element visible: "fd colorpicker"
+[11:20:56]
+   axe_touch at (125, 815) with delay 0.3s (label='fd colorpicker')
+[11:20:57] [log_step:122]
+   📣 Tapped on Color picker at the bottom
+[11:20:58]
+   axe_touch at (138, 598) with delay 0.3s (label='')
+[11:20:59] [log_step:145]
+   📣 Selected black color
+[11:20:59] [log_step:147]
+   📣 Tapping screen center to dismiss color picker
+✓ Tap at (196.0, 426.0) completed successfully
+[11:21:01] [log_step:30]
+   📣 Drawing mouse head from mouse.svg...
+[11:21:01] [log_step:32]
+   📣 Stroke 1/9: Head
+[11:21:05] [log_step:47]
+   📣 Stroke 2/9: Left ear
+[11:21:09] [log_step:61]
+   📣 Stroke 3/9: Right ear
+[11:21:13] [log_step:75]
+   📣 Stroke 4/9: Left eye
+[11:21:16] [log_step:86]
+   📣 Stroke 5/9: Right eye
+[11:21:20] [log_step:112]
+   📣 Stroke 7/9: Mouth
+[11:21:22] [log_step:123]
+   📣 Stroke 8/9: Whiskers left
+[11:21:28] [log_step:129]
+   📣 Stroke 9/9: Whiskers right
+[11:21:33] [log_step:135]
+   📣 ✅ Done! Mouse drawing complete.
+[11:21:33] [assert_app_running:233]
+   ✅ PASS: app is running
+[11:21:34] [log_error:74]
+   ❌ axe_touch_delay: element not found: 'fd colorpicker'
+[11:21:34] [log_step:122]
+   📣 Tapped on Color picker at the bottom
+[11:21:34] [log_error:140]
+   ❌ select_free_draw_color: could not locate swatch index 14 for 'purple'
+[11:21:35] [log_step:149]
+   📣 Drawing cat from cat.svg...
+[11:21:35] [log_step:151]
+   📣 Stroke 1/1
+[11:21:51] [log_step:204]
+   📣 ✅ Done! Cat drawing complete.
+[11:21:53] [assert_app_running:241]
+   ✅ PASS: app is running
+✅ PASS  freedraw_sample.sh  (3/3 assertions passed, 116s)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶  freetext_split_undo.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:21:55]
+   🧹 Clearing simulator state...
+[11:21:55]
+   🧹 Simulator state cleared.
+[11:21:55]
+   🔍 Looking up simulator: "iPhone 17 Pro" (iOS 26.0)
+[11:21:56]
+   ✅ Found UDID: 7CC8A451-6EE6-4C18-BB6D-5DD3C9C10E35
+[11:21:56]
+   💾 Saved DEVICE_UDID to state file.
+[11:21:56]
+   📱 Simulator app is already running.
+[11:21:56]
+   ✅ Simulator "iPhone 17 Pro" is already booted.
+[11:21:56]
+   ⏳ Waiting for simulator services to be ready...
+Monitoring boot status for iPhone 17 Pro (7CC8A451-6EE6-4C18-BB6D-5DD3C9C10E35).
+Device already booted, nothing to do.
+
+[11:21:56]
+   ✅ Simulator services are ready.
+[11:21:57]
+   ✅ Keyboard auto-correct disabled.
+[11:21:57]
+   ✅ Save-password prompts should be disabled (if supported by this iOS version).
+[11:21:57]
+   🔍 Looking up booted simulator: "iPhone 17 Pro"
+[11:21:57]
+   ✅ Using persisted UDID: 7CC8A451-6EE6-4C18-BB6D-5DD3C9C10E35
+[11:21:57]
+   🛑 Terminating app: jp.conmas.i-Reporter
+[11:21:58]
+   ⚠️  App "jp.conmas.i-Reporter" was not running or could not be terminated.
+[11:21:58]
+   🔍 Looking up booted simulator: "iPhone 17 Pro"
+[11:21:58]
+   ✅ Using persisted UDID: 7CC8A451-6EE6-4C18-BB6D-5DD3C9C10E35
+[11:21:58]
+   🪪 Injected TerminalID: DUMMY-AUTOMATION-TEST
+[11:21:58]
+   🚀 Launching app: jp.conmas.i-Reporter
+jp.conmas.i-Reporter: 16247
+[11:21:59]
+   ✅ App "jp.conmas.i-Reporter" launched.
+[11:21:59] [log_step:23]
+   📣 Waiting for alert Confirmation - Data in editing exists
+[11:22:01] [log_step:208]
+   📣 Alert button 'Cancel' appeared — tapping
+✓ Tap at (127.0, 497.0) completed successfully
+[11:22:03] [log_step:34]
+   📣 Waiting for Home screen...
+[11:22:04]
+   axe_touch at (38, 84) with delay 0.3s (label='settings')
+[11:22:05] [log_step:65]
+   📣 Navigating to Server settings
+[11:22:05]
+   axe_touch at (201, 173) with delay 0.3s (label='Server')
+[11:22:07] [log_step:74]
+   📣 Checking if 'NEXT-SERVER' is already selected...
+[11:22:07] [log_step:76]
+   📣 Server 'NEXT-SERVER' already selected — ensuring Auto login is enabled
+[11:22:07] [log_step:102]
+   📣 Switch 'Auto login' is already on — skipping
+✓ Tap at (38.0, 84.0) completed successfully
+[11:22:09]
+   axe_touch at (50, 84) with delay 0.3s (label='Close')
+[11:22:11] [log_step:34]
+   📣 Tapping Library: ConMas Server
+[11:22:11]
+   axe_touch at (301, 825) with delay 0.3s (label='ConMas Server')
+[11:22:13] [log_step:49]
+   📣 Tapping Create New
+[11:22:18]
+   axe_touch at (201, 164) with delay 0.3s (label='Create New')
+[11:22:19] [log_step:57]
+   📣 Waiting for template search box...
+[11:22:23] [log_step:60]
+   📣 Tapping search box
+[11:22:23]
+   axe_touch at (179, 146) with delay 0.3s (label='')
+[11:22:24] [log_step:76]
+   📣 Typing template name
+[11:22:33] [log_step:78]
+   📣 Pressing Enter to search
+[11:22:33] [log_step:81]
+   📣 Waiting for search results for 'IRDPM-20308_freetext'...
+[11:22:34] [log_step:83]
+   📣 Tapping first search result
+[11:22:35]
+   axe_touch at (201, 329) with delay 0.3s (label='')
+[11:22:38] [log_step:91]
+   📣 Waiting for Document Preview...
+[11:22:38] [log_step:93]
+   📣 Tapping Create New on Document Preview
+[11:22:38]
+   axe_touch at (63, 655) with delay 0.3s (label='Create New')
+[11:22:40] [log_step:208]
+   📣 Alert button 'Edit With Normal View' appeared — tapping
+✓ Tap at (201.0, 395.0) completed successfully
+[11:22:41] [log_step:105]
+   📣 Waiting for report view...
+[11:22:51] [log_step:29]
+   📣 Tapping FreeText cluster
+✓ Tap at (196.0, 213.0) completed successfully
+[11:23:03] [log_error:19]
+   ❌ FreeText edit-mode button did not appear (is a cluster focused?)
+[11:23:22] [assert_visible:33]
+   ❌ FAIL: element visible: "free on"
+[11:23:22] [log_step:197]
+   📣 Drawing 5 slashes at row y=450
+[11:23:22] [log_step:201]
+   📣 Drawing slash #0 start: (10, 475), end: (40, 425)
+[11:23:23] [log_step:201]
+   📣 Drawing slash #1 start: (70, 475), end: (100, 425)
+[11:23:24] [log_step:201]
+   📣 Drawing slash #2 start: (130, 475), end: (160, 425)
+[11:23:25] [log_step:201]
+   📣 Drawing slash #3 start: (190, 475), end: (220, 425)
+[11:23:26] [log_step:201]
+   📣 Drawing slash #4 start: (250, 475), end: (280, 425)
+[11:23:27] [assert_app_running:38]
+   ✅ PASS: app is running
+[11:23:39] [log_error:33]
+   ❌ FreeText edit-mode button did not appear (is a cluster focused?)
+[11:23:45] [assert_absent:41]
+   ✅ PASS: element absent: "free on"
+[11:23:45] [log_step:66]
+   📣 Undo #1 — items should disappear
+[11:23:45] [log_step:64]
+   📣 Tapping top toolbar button: undo
+[11:23:47]
+   axe_touch at (162, 96) with delay 0.3s (label='')
+[11:23:48] [assert_app_running:69]
+   ✅ PASS: app is running
+[11:23:48] [log_step:71]
+   📣 Undo #2 — app should survive (regression: used to crash here)
+[11:23:48] [log_step:64]
+   📣 Tapping top toolbar button: undo
+[11:23:50]
+   axe_touch at (162, 96) with delay 0.3s (label='')
+[11:23:52] [assert_app_running:74]
+   ✅ PASS: app is running
+[11:23:52] [log_step:76]
+   📣 ✅ Done!
+❌ FAIL  freetext_split_undo.sh  (4/5 assertions passed, exit 1, 117s)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶  home_comnas_server_section.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:23:54]
+   🧹 Clearing simulator state...
+[11:23:54]
+   🧹 Simulator state cleared.
+[11:23:54]
+   🔍 Looking up simulator: "iPhone 17 Pro" (iOS 26.0)
+[11:23:55]
+   ✅ Found UDID: 7CC8A451-6EE6-4C18-BB6D-5DD3C9C10E35
+[11:23:55]
+   💾 Saved DEVICE_UDID to state file.
+[11:23:55]
+   📱 Simulator app is already running.
+[11:23:55]
+   ✅ Simulator "iPhone 17 Pro" is already booted.
+[11:23:55]
+   ⏳ Waiting for simulator services to be ready...
+Monitoring boot status for iPhone 17 Pro (7CC8A451-6EE6-4C18-BB6D-5DD3C9C10E35).
+Device already booted, nothing to do.
+
+[11:23:55]
+   ✅ Simulator services are ready.
+[11:23:56]
+   ✅ Keyboard auto-correct disabled.
+[11:23:56]
+   ✅ Save-password prompts should be disabled (if supported by this iOS version).
+[11:23:56]
+   🔍 Looking up booted simulator: "iPhone 17 Pro"
+[11:23:56]
+   ✅ Using persisted UDID: 7CC8A451-6EE6-4C18-BB6D-5DD3C9C10E35
+[11:23:56]
+   🛑 Terminating app: jp.conmas.i-Reporter
+[11:23:56]
+   ⚠️  App "jp.conmas.i-Reporter" was not running or could not be terminated.
+[11:23:57]
+   🔍 Looking up booted simulator: "iPhone 17 Pro"
+[11:23:57]
+   ✅ Using persisted UDID: 7CC8A451-6EE6-4C18-BB6D-5DD3C9C10E35
+[11:23:57]
+   🪪 Injected TerminalID: DUMMY-AUTOMATION-TEST
+[11:23:57]
+   🚀 Launching app: jp.conmas.i-Reporter
+jp.conmas.i-Reporter: 18747
+[11:23:57]
+   ✅ App "jp.conmas.i-Reporter" launched.
+[11:23:57] [log_step:25]
+   📣 Waiting for Home screen...
+[11:24:13] [log_step:208]
+   📣 Alert button 'Cancel' appeared — tapping
+✓ Tap at (127.0, 497.0) completed successfully
+[11:24:13] [log_step:34]
+   📣 Waiting for Home screen...
+[11:24:14]
+   axe_touch at (38, 84) with delay 0.3s (label='settings')
+[11:24:16] [log_step:65]
+   📣 Navigating to Server settings
+[11:24:16]
+   axe_touch at (201, 173) with delay 0.3s (label='Server')
+[11:24:18] [log_step:74]
+   📣 Checking if 'NEXT-SERVER' is already selected...
+[11:24:18] [log_step:76]
+   📣 Server 'NEXT-SERVER' already selected — ensuring Auto login is enabled
+[11:24:18] [log_step:102]
+   📣 Switch 'Auto login' is already on — skipping
+✓ Tap at (38.0, 84.0) completed successfully
+[11:24:20]
+   axe_touch at (50, 84) with delay 0.3s (label='Close')
+[11:24:22] [log_step:37]
+   📣 Tapping ConMas Server tab
+[11:24:22]
+   axe_touch at (301, 825) with delay 0.3s (label='ConMas Server')
+[11:24:28] [assert:41]
+   ✅ PASS: ConMas Server page loaded
+[11:24:28] [assert_visible:48]
+   ✅ PASS: element visible: "info"
+[11:24:29] [assert_visible:54]
+   ✅ PASS: element visible: "Create New"
+[11:24:29] [assert_visible:60]
+   ✅ PASS: element visible: "All Reports"
+[11:24:29] [assert_visible:61]
+   ✅ PASS: element visible: "Before Input"
+[11:24:29] [assert_visible:62]
+   ✅ PASS: element visible: "Editing"
+[11:24:29] [assert_visible:63]
+   ✅ PASS: element visible: "Completed"
+[11:24:30] [assert_visible:64]
+   ✅ PASS: element visible: "Waiting for your approval"
+[11:24:30] [assert_visible:65]
+   ✅ PASS: element visible: "Rejected"
+[11:24:30] [assert_visible:66]
+   ✅ PASS: element visible: "Applying"
+[11:24:30] [assert_visible:67]
+   ✅ PASS: element visible: "Schedule"
+[11:24:31] [assert_visible:73]
+   ✅ PASS: element visible: "Custom Menu"
+[11:24:31] [assert_visible:74]
+   ✅ PASS: element visible: "Common Library"
+[11:24:31] [assert_visible:75]
+   ✅ PASS: element visible: "Custom Master"
+[11:24:31] [assert_visible:81]
+   ✅ PASS: element visible: "This Device"
+[11:24:31] [assert_visible:82]
+   ✅ PASS: element visible: "ConMas Server"
+[11:24:31] [log_step:84]
+   📣 ✅ Done!
+✅ PASS  home_comnas_server_section.sh  (16/16 assertions passed, 37s)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Tests:      ✅ 3 passed  ❌ 1 failed  (total: 4)
+  Assertions: ✅ 27 passed  ❌ 1 failed  (total: 28)
+  Duration:   8m 33s
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+</div></div>
+</div>
+<script>
+var _groqKey='YOUR_GROQ_API_KEY';
+async function _loadAiSummary(card){
+  var src=card.dataset.source;
+  if(!src)return;
+  var aiDiv=card.querySelector('.ai-summary');
+  if(!aiDiv||aiDiv.dataset.loaded)return;
+  aiDiv.dataset.loaded='1';
+  var st=aiDiv.querySelector('.ai-status'),tx=aiDiv.querySelector('.ai-text'),lb=aiDiv.querySelector('.ai-label');
+  st.textContent='Generating\u2026';
+  var prompt='iOS UI automation test source (bash):\n```\n'+src+'\n```\nReply with exactly:\nPURPOSE: one sentence stating what feature this test verifies.\nSTEPS:\n\u2022 action/verification (3-5 bullets, no extra text)';
+  try{
+    if(!_groqKey)throw new Error('no key');
+    var r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Authorization':'Bearer '+_groqKey,'Content-Type':'application/json'},body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:[{role:'user',content:prompt}],max_tokens:200})});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    var result=(await r.json()).choices[0].message.content;
+    st.style.display='none';
+    tx.textContent=result;
+    tx.style.display='';
+    lb.innerHTML='&#x2728; AI Summary <span class="ai-tool-tag">Groq</span>';
+    var body=card.querySelector('.card-body');
+    if(body)body.style.maxHeight=body.scrollHeight+'px';
+  }catch(e){st.textContent='AI summary unavailable.';}
+}
+document.querySelectorAll('.card-top').forEach(function(t){
+  t.addEventListener('click',function(){
+    var card=this.closest('.card');
+    var b=this.parentElement.querySelector('.card-body');
+    var c=this.querySelector('.chev');
+    if(!b)return;
+    if(b.style.maxHeight&&b.style.maxHeight!='0px'){
+      b.style.maxHeight='0';
+      if(c)c.style.transform='';
+    }else{
+      b.style.maxHeight=b.scrollHeight+'px';
+      if(c)c.style.transform='rotate(90deg)';
+      if(card)_loadAiSummary(card);
+    }
+  });
+});
+var lt=document.querySelector('.log-toggle');
+if(lt){
+  lt.addEventListener('click',function(){
+    var l=document.querySelector('.logblock.full-log');
+    var c=this.querySelector('.chev');
+    if(!l)return;
+    l.classList.toggle('open');
+    if(c)c.style.transform=l.classList.contains('open')?'rotate(90deg)':'';
+  });
+}
+</script>
+</body>
+</html>
