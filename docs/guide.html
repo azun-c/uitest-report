@@ -134,7 +134,7 @@
   /* ── Feature grid ── */
   .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; margin: 24px 0; }
   .feature-card {
-    background: var(--surface); border: 1px solid var(--border);
+    background: #c8ccdfcf; border: 1px solid var(--border);
     border-radius: 12px; padding: 20px;
     transition: transform .2s, box-shadow .2s; cursor: default;
   }
@@ -153,7 +153,7 @@
     height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); z-index: 0;
   }
   .plain-card {
-    background: var(--surface); border: 1px solid var(--border);
+    background: #c8ccdfcf; border: 1px solid var(--border);
     border-radius: 16px; padding: 28px 22px 24px; text-align: center;
     position: relative; z-index: 1; transition: transform .2s, box-shadow .2s;
   }
@@ -331,14 +331,13 @@
   .pub-fallback-label { font-size: 12px; color: var(--muted); padding: 3px 0 3px 34px; display: block; }
 
   /* ── Showcase ── */
-  .showcase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 32px; }
-  @media (max-width: 680px) { .showcase-grid { grid-template-columns: 1fr; } }
+  .showcase-grid { display: flex; flex-direction: column; gap: 40px; margin-top: 32px; }
   .showcase-item { display: flex; flex-direction: column; gap: 12px; }
   .showcase-label { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1em; }
   .showcase-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; }
   .showcase-badge.pass { background: #dcfce7; color: #166534; }
   .showcase-badge.fail { background: #fee2e2; color: #991b1b; }
-  .showcase-embed { position: relative; width: 100%; padding-bottom: 70%; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 6px 28px rgba(0,0,0,.1); }
+  .showcase-embed { position: relative; width: 100%; padding-bottom: 62.5%; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 6px 28px rgba(0,0,0,.1); }
   .showcase-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
   .showcase-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
 
@@ -858,7 +857,11 @@
           <span class="lang-en">Successful test run</span>
         </div>
         <div class="showcase-embed sr-scale">
-          <iframe src="https://drive.google.com/file/d/1F5e2MiZptEAxRgS-gdiFp75P3OfhQGew/preview" allow="autoplay" allowfullscreen></iframe>
+          <iframe
+            src="https://drive.google.com/file/d/1F5e2MiZptEAxRgS-gdiFp75P3OfhQGew/preview"
+            style="position:absolute;inset:0;width:100%;height:100%;border:none;"
+            allow="autoplay" allowfullscreen>
+          </iframe>
         </div>
         <div class="showcase-desc">
           <span class="lang-ja">自動化ツールがアプリを起動し、FreeDraw キャンバスに移動してシェイプを描画し、UIを確認します — すべてのアサーションが成功します。</span>
@@ -873,7 +876,11 @@
           <span class="lang-en">Troubleshooting a failure</span>
         </div>
         <div class="showcase-embed sr-scale">
-          <iframe src="https://drive.google.com/file/d/1wAIo3s-byoh6eFibv_s0Oop_YXFK2P24/preview" allow="autoplay" allowfullscreen></iframe>
+          <iframe
+            src="https://drive.google.com/file/d/1wAIo3s-byoh6eFibv_s0Oop_YXFK2P24/preview"
+            style="position:absolute;inset:0;width:100%;height:100%;border:none;"
+            allow="autoplay" allowfullscreen>
+          </iframe>
         </div>
         <div class="showcase-desc">
           <span class="lang-ja">実行中に失敗したアサーションが検出されます。動画、ログの断片、AI要約を使って、何が問題だったのかを簡単に特定できます。</span>
