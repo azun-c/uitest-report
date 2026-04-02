@@ -1,0 +1,2302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crash Report — ConMas i-Reporter</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='url(%23g)'/><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23e6194b'/><stop offset='1' stop-color='%23ff8c42'/></linearGradient></defs><text x='16' y='23' font-size='18' text-anchor='middle'>📋</text></svg>">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+         background: #f0f4f8; color: #1a1f3c; font-size: 16px; }
+
+  .header {
+    background: linear-gradient(135deg, #1a1f3c 0%, #2d3a6b 60%, #3d2060 100%);
+    color: white; padding: 28px 40px 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .app-icon {
+    width: 52px; height: 52px; border-radius: 13px;
+    background: linear-gradient(135deg, #e6194b, #ff8c42);
+    display: flex; align-items: center; justify-content: center; font-size: 26px;
+    box-shadow: 0 4px 14px rgba(230,25,75,0.4); flex-shrink: 0;
+  }
+  .header h1 { font-size: 1.5em; font-weight: 700; letter-spacing: -0.3px; }
+  .subtitle { font-size: 0.88em; color: #a0aad0; margin-top: 3px; }
+  .header-right { text-align: right; flex-shrink: 0; }
+  .info-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 0.86em; font-weight: 600; letter-spacing: 0.1px;
+    color: #dce6ff;
+    background: linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.07));
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 8px; padding: 6px 13px;
+    pointer-events: none; cursor: default;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.18);
+  }
+  .gen-date { font-size: 0.83em; color: #8898c8; margin-top: 4px; }
+
+  /* ── Tab bar ── */
+  .tab-bar {
+    background: white;
+    border-bottom: 1px solid #e8ecf4;
+    padding: 0 40px;
+    display: flex; gap: 2px;
+  }
+  .tab-btn {
+    padding: 14px 24px; font-size: 0.94em; font-weight: 600;
+    border: none; background: none; cursor: pointer;
+    color: #6870a0; border-bottom: 3px solid transparent;
+    margin-bottom: -1px; transition: color 0.15s, border-color 0.15s;
+  }
+  .tab-btn:hover { color: #1a1f3c; }
+  .tab-btn.active { color: #e6194b; border-bottom-color: #e6194b; }
+  .tab-btn.disabled { color: #c0c8e0; cursor: default; }
+  .tab-btn.disabled:hover { color: #c0c8e0; }
+
+  .page { max-width: 1040px; margin: 0 auto; padding: 28px 20px 48px; }
+
+  .period-meta {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 0.86em; font-weight: 600; color: #4a5490;
+    background: #eef1fb; border-radius: 8px; padding: 6px 14px;
+    margin-bottom: 20px;
+  }
+
+  .kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 22px; }
+  .kpi {
+    background: white; border-radius: 14px; padding: 20px 22px;
+    box-shadow: 0 2px 10px rgba(26,31,60,0.07);
+    border-top: 4px solid transparent; position: relative; overflow: hidden;
+  }
+  .kpi::after { content: attr(data-icon); position: absolute; right: 14px; top: 14px;
+    font-size: 28px; opacity: 1.0; }
+  .kpi.red   { border-top-color: #e6194b; }
+  .kpi.blue  { border-top-color: #4363d8; }
+  .kpi.amber { border-top-color: #f59e0b; }
+  .kpi.green { border-top-color: #0ead69; }
+  .kpi-value { font-size: 2.2em; font-weight: 800; line-height: 1; margin-bottom: 5px; }
+  .kpi.red   .kpi-value { color: #e6194b; }
+  .kpi.blue  .kpi-value { color: #4363d8; }
+  .kpi.amber .kpi-value { color: #d97706; }
+  .kpi.green .kpi-value { color: #0ead69; }
+  .kpi-label { font-size: 0.82em; color: #8890b0; font-weight: 500; margin-bottom: 8px; }
+  .kpi-sub   { font-size: 0.8em; color: #a0a8c0; }
+
+  .card {
+    background: white; border-radius: 14px; padding: 22px 26px;
+    margin-bottom: 18px; box-shadow: 0 2px 10px rgba(26,31,60,0.07);
+  }
+  .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .card-header h2 { font-size: 1.02em; font-weight: 700; color: #1a1f3c; }
+  .card-tag { font-size: 0.75em; font-weight: 600; padding: 3px 10px;
+    border-radius: 20px; background: #e8ecf8; color: #3a4480; letter-spacing: 0.4px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 18px; }
+
+  .chart-wrap { position: relative; height: 240px; }
+
+  .bar-table { width: 100%; border-collapse: collapse; }
+  .bar-table thead td { font-size: 0.76em; font-weight: 700; color: #a0a8c0;
+    letter-spacing: 0.5px; padding: 0 6px 8px; border-bottom: 1px solid #f0f4f8; }
+  .bar-table tr:hover td { background: #fafbff; }
+  .bar-table td { padding: 8px 6px; vertical-align: middle; }
+  .lbl { font-size: 0.9em; color: #3a4060; width: 160px; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
+  .num { font-size: 0.9em; font-weight: 700; color: #e6194b; width: 46px; text-align: right; }
+  .pct { font-size: 0.82em; color: #000; font-weight: 700; width: 38px; text-align: right; }
+
+  .crash-table { width: 100%; border-collapse: collapse; }
+  .crash-table thead td { font-size: 0.76em; font-weight: 700; color: #004444;
+    letter-spacing: 0.5px; padding: 0 6px 10px; border-bottom: 1px solid #f0f4f8; }
+  .crash-table tr:hover td { background: #fafbff; }
+  .crash-table td { padding: 10px 6px; vertical-align: middle; border-bottom: 1px solid #f8f9fc; }
+  .crash-table tr:last-child td { border-bottom: none; }
+  .rank { width: 32px; font-size: 0.82em; font-weight: 700; color: #c0c8e0; }
+  .crash-table tr:nth-child(1) .rank { color: #e6194b; }
+  .crash-table tr:nth-child(2) .rank { color: #ff8c42; }
+  .crash-table tr:nth-child(3) .rank { color: #f59e0b; }
+  .crash-table tr.crash-row { cursor: pointer; }
+  .crash-table tr.crash-row:hover td { background: #f5f7ff; }
+  .crash-name { }
+  .name { font-size: 0.9em; color: #1a1f3c; font-weight: 500; display: block;
+    white-space: pre-wrap; overflow: hidden; text-overflow: ellipsis; }
+  .crash-meta { display: flex; align-items: center; gap: 5px; margin-top: 3px; flex-wrap: wrap; }
+  .file-tag { display: inline-block; font-size: 0.78em; color: #3a4480;
+    background: #e8ecf8; border-radius: 4px; padding: 1px 5px; }
+  .badge-24h { display: inline-block; font-size: 0.78em; color: #e6194b;
+    background: #fff0f3; border-radius: 4px; padding: 1px 5px; font-weight: 600; }
+  .badge-sev { display: inline-block; font-size: 0.76em; font-weight: 700;
+    border-radius: 4px; padding: 1px 6px; }
+  .ai-badge { display: inline-block; font-size: 0.72em; font-weight: 700;
+    color: #fff; background: #7c3aed; border-radius: 4px; padding: 1px 5px;
+    vertical-align: middle; letter-spacing: 0.03em; }
+  .devices { width: 56px; text-align: right; font-size: 0.9em; font-weight: 700; color: #e6194b; }
+  .latest-ver { width: 90px; text-align: center; font-size: 0.82em; font-weight: 600; color: #4363d8; font-family: "SF Mono","Fira Code",monospace; }
+  .detail-row td { padding: 0 !important; border-bottom: 2px solid #e8ecf4 !important; }
+  .detail-box { background: #f8faff; border-left: 3px solid #4363d8;
+    padding: 16px 22px; display: flex; gap: 30px; flex-wrap: wrap; }
+  .detail-section { flex: 1; min-width: 260px; }
+  .detail-label { font-size: 0.78em; font-weight: 700; color: #6870a0;
+    letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 7px; }
+  .detail-content { font-size: 0.88em; color: #2a3050; line-height: 1.65; }
+  .detail-content code { background: #eef0ff; border-radius: 3px; padding: 1px 4px;
+    font-family: "SF Mono", ui-monospace, monospace; font-size: 0.92em; color: #3a2080; }
+  .detail-content ol { padding-left: 18px; margin: 0; }
+  .detail-content li { margin-bottom: 5px; }
+  .data-note { font-size: 0.78em; color: #a0a8c0; margin-top: 8px; font-style: italic; }
+
+  .release-note { display: flex; align-items: center; gap: 8px;
+    font-size: 0.82em; color: #7080a0; margin-top: 10px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  .no-data-msg {
+    text-align: center; padding: 60px 20px; color: #8890b0; line-height: 1.8;
+    background: white; border-radius: 14px; box-shadow: 0 2px 10px rgba(26,31,60,0.07);
+    margin-top: 22px;
+  }
+
+  footer { text-align: center; color: #a0a8c0; font-size: 0.8em;
+    padding-top: 14px; border-top: 1px solid #e8ecf4; }
+
+  /* Language switcher */
+  .lang-switcher { display: inline-flex; border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 20px; overflow: hidden; }
+  .lang-btn { background: transparent; border: none; color: rgba(255,255,255,0.55);
+    padding: 4px 13px; font-size: 0.8em; font-weight: 600; cursor: pointer;
+    transition: background 0.15s, color 0.15s; }
+  .lang-btn.active { background: rgba(255,255,255,0.22); color: white; }
+  .lang-btn:hover:not(.active) { background: rgba(255,255,255,0.1); color: white; }
+
+  /* KPI delta */
+  .kpi-delta { font-size: 0.78em; font-weight: 600; margin-top: 6px;
+    display: flex; align-items: center; gap: 4px; }
+  .kpi-delta.bad  { color: #e6194b; }
+  .kpi-delta.good { color: #0ead69; }
+  .kpi-delta.flat { color: #a0a8c0; }
+  .delta-label { font-weight: 500; opacity: 0.8; margin-right: 1px; }
+
+  /* Comparison bar */
+  .comparison-bar { background: #f0f5ff; border: 1px solid #d0daf8;
+    border-radius: 10px; padding: 9px 16px; margin-bottom: 16px;
+    display: flex; gap: 18px; flex-wrap: wrap; align-items: center; font-size: 0.84em; }
+  .comp-label { color: #6870a0; font-weight: 600; }
+  .comp-item { font-weight: 600; }
+  .comp-item.bad  { color: #e6194b; }
+  .comp-item.good { color: #0ead69; }
+  .comp-item.neutral { color: #6870a0; }
+
+  /* Rank change badges */
+  .rank-badge { display: inline-block; font-size: 0.68em; font-weight: 700;
+    border-radius: 3px; padding: 1px 4px; margin-left: 3px; vertical-align: middle; }
+  .rank-new    { background: #ff6b00; color: white; }
+  .rank-worse  { background: #e6194b; color: white; }
+  .rank-better { background: #0ead69; color: white; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="app-icon">📋</div>
+    <div>
+      <h1 data-i18n="report_title">クラッシュレポート</h1>
+      <div class="subtitle">ConMas i-Reporter &nbsp;·&nbsp; jp.co.cimtops.i-Reporter</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div style="display:flex;align-items:center;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-bottom:6px">
+      <span class="info-chip">🔍 <span data-i18n="xcode_data">Xcode Organizer データ</span></span>
+      <span class="info-chip">✨ <span data-i18n="ai_powered">AI 分析済み</span></span>
+      <div class="lang-switcher">
+        <button class="lang-btn active" id="lang-btn-ja" onclick="setLang('ja')">日本語</button>
+        <button class="lang-btn" id="lang-btn-en" onclick="setLang('en')">English</button>
+      </div>
+    </div>
+    <div class="gen-date"><span data-i18n="generated_label">生成日時</span>: 26-04-02 03:37 UTC</div>
+  </div>
+</div>
+
+<div class="tab-bar">
+<button class="tab-btn active" data-period="last14Days" data-i18n="period_last14Days" onclick="switchPeriod('last14Days')">直近2週間</button>
+<button class="tab-btn" data-period="last365Days" data-i18n="period_last365Days" onclick="switchPeriod('last365Days')">直近1年</button>
+</div>
+
+<div class="page">
+
+<div id="panel-last14Days" class="panel" style="display:block">
+  <div class="period-meta">
+    📅 <span data-i18n="sync_label">Xcode 同期</span>: 26-04-02
+  </div>
+
+  <div class="comparison-bar">
+    <span class="comp-label" data-i18n="comp_prev">前回:</span>
+    <span class="comp-label">2026-03-30</span>
+    <span class="comp-item neutral">● 0 <span data-i18n="unit_types">種類</span> (+0%)</span>
+    <span class="comp-item good">▼ 18 <span data-i18n="unit_devices">台</span> (-9%)</span>
+    <span class="comp-item neutral"><span data-i18n="comp_new">新規</span> +5 &nbsp; <span data-i18n="comp_resolved">解消</span> −5</span>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi red" data-icon="💥">
+      <div class="kpi-label" data-i18n="kpi_types">クラッシュ種類数</div>
+      <div class="kpi-value" data-kpi-value="25">25</div>
+      <div class="kpi-sub" data-i18n="kpi_types_sub">固有のクラッシュ署名</div>
+      <div class="kpi-delta flat"><span class="delta-label" data-i18n="comp_vs_last">前回比</span> ● 0 (0%)</div>
+    </div>
+    <div class="kpi blue" data-icon="📱">
+      <div class="kpi-label" data-i18n="kpi_devices">影響デバイス数</div>
+      <div class="kpi-value" data-kpi-value="181">181</div>
+      <div class="kpi-sub" data-i18n="kpi_devices_sub">全クラッシュ種類の合計</div>
+      <div class="kpi-delta good"><span class="delta-label" data-i18n="comp_vs_last">前回比</span> ▼ 18 (-9%)</div>
+    </div>
+    <div class="kpi amber" data-icon="🔝">
+      <div class="kpi-label" data-i18n="kpi_worst">最大クラッシュ</div>
+      <div class="kpi-value" data-kpi-value="27">27</div>
+      <div class="kpi-sub" data-i18n="kpi_worst_sub">影響デバイス数</div>
+      <div class="kpi-delta good"><span class="delta-label" data-i18n="comp_vs_last">前回比</span> ▼ 5 (-16%)</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 data-i18n="trend_daily">日次 影響デバイス数推移</h2>
+      <span class="card-tag">LAST 2 WEEKS</span>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="dailyChart_last14Days"></canvas>
+    </div>
+    <div class="release-note">
+      <div class="dot" style="background:#4363d8"></div>
+      <span data-i18n="chart_note_daily">破線 = 7日移動平均 · 値 = 日次影響デバイス数（全クラッシュ合計）</span>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <h2 data-i18n="by_version">アプリバージョン別</h2>
+        <span class="card-tag">TOP 8</span>
+      </div>
+      <table class="bar-table">
+        <thead><tr><td data-i18n="th_version">バージョン</td><td class="num" data-i18n="th_dev">台数</td><td class="pct">%</td></tr></thead>
+        <tbody>
+        <tr>
+          <td class="lbl">8.2.26030</td>
+          <td class="num">97</td>
+          <td class="pct">61%</td>
+        </tr>
+        <tr>
+          <td class="lbl">8.1.24073</td>
+          <td class="num">27</td>
+          <td class="pct">17%</td>
+        </tr>
+        <tr>
+          <td class="lbl">8.2.26020</td>
+          <td class="num">14</td>
+          <td class="pct">9%</td>
+        </tr>
+        <tr>
+          <td class="lbl">8.2.25111</td>
+          <td class="num">5</td>
+          <td class="pct">3%</td>
+        </tr>
+        <tr>
+          <td class="lbl">8.2.25120</td>
+          <td class="num">4</td>
+          <td class="pct">3%</td>
+        </tr>
+        <tr>
+          <td class="lbl">8.1.25051</td>
+          <td class="num">4</td>
+          <td class="pct">3%</td>
+        </tr>
+        <tr>
+          <td class="lbl">8.1.24040</td>
+          <td class="num">4</td>
+          <td class="pct">3%</td>
+        </tr>
+        <tr>
+          <td class="lbl">8.2.25071</td>
+          <td class="num">3</td>
+          <td class="pct">2%</td>
+        </tr></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h2 data-i18n="by_os">OS バージョン別</h2>
+        <span class="card-tag">TOP 8</span>
+      </div>
+      <table class="bar-table">
+        <thead><tr><td data-i18n="th_os">OS</td><td class="num" data-i18n="th_dev">台数</td><td class="pct">%</td></tr></thead>
+        <tbody>
+        <tr>
+          <td class="lbl">iOS 26.3</td>
+          <td class="num">68</td>
+          <td class="pct">43%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iOS 26.2</td>
+          <td class="num">30</td>
+          <td class="pct">19%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iOS 18.6</td>
+          <td class="num">22</td>
+          <td class="pct">14%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iOS 17.7</td>
+          <td class="num">12</td>
+          <td class="pct">8%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iOS 16.5</td>
+          <td class="num">7</td>
+          <td class="pct">4%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iOS 18.5</td>
+          <td class="num">7</td>
+          <td class="pct">4%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iOS 16.7</td>
+          <td class="num">6</td>
+          <td class="pct">4%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iOS 26.1</td>
+          <td class="num">5</td>
+          <td class="pct">3%</td>
+        </tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-header">
+        <h2 data-i18n="by_device_type">デバイスタイプ別</h2>
+        <span class="card-tag">FAMILY</span>
+      </div>
+      <table class="bar-table">
+        <thead><tr><td data-i18n="th_device">デバイス</td><td class="num" data-i18n="th_dev">台数</td><td class="pct">%</td></tr></thead>
+        <tbody>
+        <tr>
+          <td class="lbl">iPad</td>
+          <td class="num">143</td>
+          <td class="pct">79%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iPhone</td>
+          <td class="num">38</td>
+          <td class="pct">21%</td>
+        </tr></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h2 data-i18n="by_model">デバイスモデル別</h2>
+        <span class="card-tag">MODELS</span>
+      </div>
+      <table class="bar-table">
+        <thead><tr><td data-i18n="th_model">モデル</td><td class="num" data-i18n="th_logs">ログ</td><td class="pct">%</td></tr></thead>
+        <tbody>
+        <tr>
+          <td class="lbl">iPad (9th gen)</td>
+          <td class="num">4</td>
+          <td class="pct">6%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iPad (10th gen)</td>
+          <td class="num">4</td>
+          <td class="pct">6%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iPad (6th gen)</td>
+          <td class="num">16</td>
+          <td class="pct">25%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iPad (11th gen)</td>
+          <td class="num">10</td>
+          <td class="pct">15%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iPhone SE (3rd gen)</td>
+          <td class="num">8</td>
+          <td class="pct">12%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iPad (7th gen)</td>
+          <td class="num">6</td>
+          <td class="pct">9%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iPhone 16</td>
+          <td class="num">6</td>
+          <td class="pct">9%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iPad (8th gen)</td>
+          <td class="num">6</td>
+          <td class="pct">9%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iPad7,6</td>
+          <td class="num">3</td>
+          <td class="pct">5%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iPhone 14</td>
+          <td class="num">2</td>
+          <td class="pct">3%</td>
+        </tr></tbody>
+      </table>
+      <div class="data-note" data-i18n="models_note_avail">ダウンロード済みクラッシュログのみ</div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h2 data-i18n="by_severity">重要度別</h2>
+        <span class="card-tag">BY IMPACT RANK</span>
+      </div>
+      <table class="bar-table">
+        <thead><tr><td data-i18n="th_level">重要度</td><td class="num" data-i18n="th_types">種類数</td><td class="pct">%</td></tr></thead>
+        <tbody>
+        <tr>
+          <td class="lbl">Critical</td>
+          <td class="num">1</td>
+          <td class="pct">4%</td>
+        </tr>
+        <tr>
+          <td class="lbl">High</td>
+          <td class="num">2</td>
+          <td class="pct">8%</td>
+        </tr>
+        <tr>
+          <td class="lbl">Medium</td>
+          <td class="num">7</td>
+          <td class="pct">28%</td>
+        </tr>
+        <tr>
+          <td class="lbl">Low</td>
+          <td class="num">15</td>
+          <td class="pct">60%</td>
+        </tr></tbody>
+      </table>
+      <div class="data-note" data-i18n="sev_note">緊急=#1 · 高=#2–3 · 中=#4–10 · 低=その他</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 data-i18n="top_crashes_title">クラッシュ署名ランキング</h2>
+      <span class="card-tag" data-i18n="click_hint">行をクリックで原因・テスト表示</span>
+    </div>
+    <table class="crash-table">
+      <thead><tr>
+        <td>#</td><td data-i18n="th_crash">クラッシュ / ソースファイル</td><td class="devices" data-i18n="th_devices_col">台数</td><td class="latest-ver" data-i18n="th_latest_ver">最新バージョン</td>
+      </tr></thead>
+      <tbody>
+        <tr class="crash-row" onclick="toggleDetail('crash-0')">
+          <td class="rank">#1<span class="rank-badge rank-worse">▲1</span></td>
+          <td class="crash-name">
+            <span class="name" title="i-Reporter: 0x104e00000 + 4699524">i-Reporter: 0x104e00000 + 4699524</span>
+            <div class="crash-meta"><span class="badge-sev" style="color:#e6194b;background:#fff0f3">Critical</span></div>
+          </td>
+          <td class="devices">27</td>
+          <td class="latest-ver">8.1.24073</td>
+        </tr>
+        <tr id="crash-0" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of the crash is an intentional breakpoint set by the developer, as indicated by the EXC_BREAKPOINT (SIGTRAP) exception type. The code at fault appears to be related to the address 0x104540000 + 4699524, which corresponds to the function at address 0x00000001049bb584.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Launch the i-Reporter application on an iOS or macOS device.</li><li>Reproduce the sequence of actions that led to the crash, potentially involving user input or specific feature usage.</li><li>Monitor the application for the EXC_BREAKPOINT (SIGTRAP) exception, which should occur when the breakpoint is triggered at address 0x00000001049bb584.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-1')">
+          <td class="rank">#2<span class="rank-badge rank-better">▼1</span></td>
+          <td class="crash-name">
+            <span class="name" title="i-Reporter: -[LibraryInfoProvider requireReportDetailInfo:topId:] + 320">i-Reporter: -[LibraryInfoProvider requireReportDetailInfo:topId:] + 320</span>
+            <div class="crash-meta"><span class="file-tag">LibraryInfoProvider.m:0</span><span class="badge-sev" style="color:#ff6b00;background:#fff5ed">High</span></div>
+          </td>
+          <td class="devices">25</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-1" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of the crash is the attempt to insert a nil object into a dictionary in the <code>requireReportDetailInfo:topId:</code> method of the <code>LibraryInfoProvider</code> class, specifically in the <code>LibraryInfoProvider.m</code> file. The code at fault is likely located at line 0 of <code>LibraryInfoProvider.m</code>, where the <code>initWithObjects:forKeys:count:</code> method is called with a nil object.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Open the i-Reporter app and navigate to the documents list view.</li><li>Select a report item to trigger the <code>didSelectReportItem:</code> method in <code>DocumentsListViewController.mm</code>.</li><li>Verify that the <code>requireReportDetailInfo:topId:</code> method in <code>LibraryInfoProvider.m</code> is called with valid parameters.</li><li>Intentionally introduce a nil object in the array of objects passed to the <code>initWithObjects:forKeys:count:</code> method to reproduce the crash.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-2')">
+          <td class="rank">#3</td>
+          <td class="crash-name">
+            <span class="name" title="CoreAutoLayout: _AssertAutoLayoutOnAllowedThreadsOnly + 316">CoreAutoLayout: _AssertAutoLayoutOnAllowedThreadsOnly + 316</span>
+            <div class="crash-meta"><span class="file-tag">NSISEngine.m:0</span><span class="badge-sev" style="color:#ff6b00;background:#fff5ed">High</span></div>
+          </td>
+          <td class="devices">20</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-2" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is a threading issue related to AutoLayout, where a layout operation is being performed on a thread that is not the main thread. The code at fault appears to be related to the <code>AmiDsrsRecognizer::run()</code> function, which is calling into <code>NSISEngine.m</code> and triggering the <code>_AssertAutoLayoutOnAllowedThreadsOnly</code> assertion.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Create a test case that exercises the <code>AmiDsrsRecognizer::run()</code> function on a background thread.</li><li>Verify that the <code>AmiDsrsRecognizer::run()</code> function is performing any UI-related operations, such as updating layouts or accessing view properties.</li><li>Attempt to reproduce the crash by running the test case and observing if the <code>_AssertAutoLayoutOnAllowedThreadsOnly</code> assertion is triggered.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-3')">
+          <td class="rank">#4</td>
+          <td class="crash-name">
+            <span class="name" title="UIKitCore: -[UIPopoverPresentationController presentationTransitionWillBegin] + 2788">UIKitCore: -[UIPopoverPresentationController presentationTransitionWillBegin] + 2788</span>
+            <div class="crash-meta"><span class="file-tag">UIPopoverPresentationController.m:1910</span><span class="badge-sev" style="color:#d97706;background:#fffbeb">Medium</span></div>
+          </td>
+          <td class="devices">14</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-3" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of the crash is a synchronization issue between the main thread and a background thread, with the fault likely lying in the <code>+[ASIHTTPRequest runRequests]</code> method, which seems to be interacting with the <code>UIPopoverPresentationController</code> in a way that causes a crash. The <code>UIPopoverPresentationController</code> is attempting to begin a presentation transition, but is being aborted due to an external factor.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Launch the application and navigate to the screen where the <code>UIPopoverPresentationController</code> is presented.</li><li>Initiate a background request using <code>+[ASIHTTPRequest runRequests]</code> while the popover is being presented.</li><li>Verify that the crash occurs when the background request completes and the <code>UIPopoverPresentationController</code> attempts to begin its presentation transition.</li><li>Repeat steps 1-3 to confirm that the crash is reproducible.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-4')">
+          <td class="rank">#5</td>
+          <td class="crash-name">
+            <span class="name" title="UIKitCore: _UIZoomTransitionController.startInteractiveTransition(_:) + 7528">UIKitCore: _UIZoomTransitionController.startInteractiveTransition(_:) + 7528</span>
+            <div class="crash-meta"><span class="file-tag">_UIZoomTransitionController.swift:209</span><span class="badge-sev" style="color:#d97706;background:#fffbeb">Medium</span></div>
+          </td>
+          <td class="devices">12</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-4" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of the crash is an issue with the <code>dismissPresentedViewControllerWithCompletion:</code> method in <code>SchedulerViewController.m</code>, which is attempting to interact with a view controller transition. The <code>_UIZoomTransitionController.startInteractiveTransition(_:)</code> method is where the crash occurs, suggesting a problem with the transition process. The code at fault appears to be in the <code>SchedulerViewController</code> class, specifically around line 8100.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Open the app and navigate to the screen managed by <code>SchedulerViewController</code>.</li><li>Perform the action that triggers the <code>btnSaveMenuOpened:</code> method.</li><li>Verify that a presented view controller is being dismissed in the <code>dismissPresentedViewControllerWithCompletion:</code> method.</li><li>Repeat steps 1-3 to reproduce the crash, focusing on the transition process.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-5')">
+          <td class="rank">#6</td>
+          <td class="crash-name">
+            <span class="name" title="i-Reporter: NO_CRASH_STACK">i-Reporter: NO_CRASH_STACK</span>
+            <div class="crash-meta"><span class="badge-sev" style="color:#d97706;background:#fffbeb">Medium</span></div>
+          </td>
+          <td class="devices">10</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-5" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is an intentional breakpoint or an assertion failure in the <code>main.m</code> file at line 19, which is triggering the <code>EXC_BREAKPOINT (SIGTRAP)</code> exception. The code at fault appears to be in the <code>main</code> function, possibly related to the <code>AmiDsrsRecognizer::run()</code> method.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Open the Xcode project for the i-Reporter application.</li><li>Navigate to the <code>main.m</code> file and locate the line 19.</li><li>Set a breakpoint at this line to inspect the variables and program state.</li><li>Run the application under the debugger to reproduce the crash.</li><li>Inspect the call stack and variables to understand the program flow leading up to the crash.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-6')">
+          <td class="rank">#7<span class="rank-badge rank-worse">▲1</span></td>
+          <td class="crash-name">
+            <span class="name" title="UIKitCore: -[UIPopoverPresentationController presentationTransitionWillBegin] + 2676">UIKitCore: -[UIPopoverPresentationController presentationTransitionWillBegin] + 2676</span>
+            <div class="crash-meta"><span class="file-tag">UIPopoverPresentationController.m:1716</span><span class="badge-sev" style="color:#d97706;background:#fffbeb">Medium</span></div>
+          </td>
+          <td class="devices">8</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-6" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is a bug in the UIPopoverPresentationController, specifically in the presentationTransitionWillBegin method. This method is responsible for handling the transition when a popover is presented, and the crash suggests that there is an issue with the way this transition is being handled, possibly due to a null or unexpected value being passed to the method.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Create a new iOS project with a UIViewController that presents a UIPopoverPresentationController.</li><li>Configure the popover to present a view controller with a non-nil presentation controller.</li><li>Call the presentationTransitionWillBegin method on the UIPopoverPresentationController instance.</li><li>Verify that the method is called on the main thread and that all required properties are set before calling the method.</li><li>Repeat steps 1-4 with different presentation styles and view controllers to isolate the specific conditions that trigger the crash.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-7')">
+          <td class="rank">#8<span class="rank-badge rank-better">▼1</span></td>
+          <td class="crash-name">
+            <span class="name" title="i-Reporter: thunk for @escaping @callee_unowned @convention(block) () -&gt; () + 12">i-Reporter: thunk for @escaping @callee_unowned @convention(block) () -&gt; () + 12</span>
+            <div class="crash-meta"><span class="file-tag">/<compiler-generated>:0</span><span class="badge-sev" style="color:#d97706;background:#fffbeb">Medium</span></div>
+          </td>
+          <td class="devices">7</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-7" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is a nil object being inserted into an NSMutableArray in the <code>updateNavigationRightBarButtons</code> method of the <code>MasterViewController</code> class, specifically at line 1065 of MasterViewController.m. This suggests that the code is attempting to add a button or other object to the navigation bar, but the object being added is nil.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Open the i-Reporter app and navigate to the view controlled by <code>MasterViewController</code>.</li><li>Trigger the <code>updateNavigationRightBarButtons</code> method, potentially by rotating the device or interacting with the navigation bar.</li><li>Verify that the crash occurs when the method attempts to insert an object into the NSMutableArray.</li><li>Use the debugger to inspect the object being inserted and verify that it is indeed nil.</li><li>Check the code at line 1065 of MasterViewController.m to determine why the object being inserted is nil.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-8')">
+          <td class="rank">#9</td>
+          <td class="crash-name">
+            <span class="name" title="UIKitCore: -[UIPopoverPresentationController presentationTransitionWillBegin] + 2616">UIKitCore: -[UIPopoverPresentationController presentationTransitionWillBegin] + 2616</span>
+            <div class="crash-meta"><span class="file-tag">UIPopoverPresentationController.m:1654</span><span class="badge-sev" style="color:#d97706;background:#fffbeb">Medium</span></div>
+          </td>
+          <td class="devices">7</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-8" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of the crash is a synchronization issue between the main thread and a background thread, with the <code>UIPopoverPresentationController</code> attempting to present a popover while the app is in an inconsistent state. The code at fault appears to be related to the <code>AmiDsrsRecognizer::run()</code> function, which is running on a background thread and interacting with UIKit components.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Create a new iOS project with a <code>UIPopoverPresentationController</code> instance.</li><li>Implement the <code>AmiDsrsRecognizer::run()</code> function to run on a background thread.</li><li>Simulate a scenario where the <code>UIPopoverPresentationController</code> attempts to present a popover while the <code>AmiDsrsRecognizer::run()</code> function is executing on the background thread.</li><li>Verify that the crash occurs when the <code>presentationTransitionWillBegin</code> method is called.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-9')">
+          <td class="rank">#10<span class="rank-badge rank-worse">▲1</span></td>
+          <td class="crash-name">
+            <span class="name" title="i-Reporter: -[CustomMasterReader deleteDuplicatedRecordKey:] + 900">i-Reporter: -[CustomMasterReader deleteDuplicatedRecordKey:] + 900</span>
+            <div class="crash-meta"><span class="file-tag">CustomMasterReader.m:1533</span><span class="badge-sev" style="color:#d97706;background:#fffbeb">Medium</span></div>
+          </td>
+          <td class="devices">5</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-9" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of the crash is a nil object being passed to the <code>addObject:</code> method in the <code>deleteDuplicatedRecordKey:</code> function of <code>CustomMasterReader.m</code>. The code at fault is likely around line 1533 of <code>CustomMasterReader.m</code>, where an object is being added to a set without being properly initialized or checked for nil.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Initialize the <code>CustomMasterReader</code> object and call the <code>oldSearchMaster:defTopId:repTopId:searchConditions:</code> method with valid parameters.</li><li>Ensure that the <code>deleteDuplicatedRecordKey:</code> method is called as part of the <code>oldSearchMaster:defTopId:repTopId:searchConditions:</code> method&#x27;s execution.</li><li>Pass a nil object to the <code>addObject:</code> method in the <code>deleteDuplicatedRecordKey:</code> function to reproduce the crash.</li><li>Verify that the crash occurs with the <code>EXC_CRASH (SIGABRT)</code> exception type and the <code>*** -[__NSSetM addObject:]: object cannot be nil</code> exception reason.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-10')">
+          <td class="rank">#11<span class="rank-badge rank-worse">▲1</span></td>
+          <td class="crash-name">
+            <span class="name" title="UIKitCore: 0x1c6b9e000 + 3286352">UIKitCore: 0x1c6b9e000 + 3286352</span>
+            <div class="crash-meta"><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">5</td>
+          <td class="latest-ver">8.1.24040</td>
+        </tr>
+        <tr id="crash-10" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is an unhandled exception in the UIKitCore framework, specifically related to a SIGABRT signal. The code at fault appears to be in the app&#x27;s own binary (0x102138000), with the top frame pointing to address 0x1021bb818, suggesting an issue with the app&#x27;s handling of UI-related operations.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Launch the app and navigate to the UI component that is likely causing the crash.</li><li>Perform actions that trigger UI updates, such as scrolling, tapping, or swiping.</li><li>Repeat steps 1-2 multiple times to increase the likelihood of reproducing the crash.</li><li>Monitor the app&#x27;s behavior and system logs for any signs of the crash, such as an abrupt termination or an error message.</li><li>If the crash occurs, collect and analyze the resulting crash report to confirm the root cause.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-11')">
+          <td class="rank">#12<span class="rank-badge rank-better">▼2</span></td>
+          <td class="crash-name">
+            <span class="name" title="libswift_Concurrency.dylib: CheckedContinuation.resume(returning:) + 384">libswift_Concurrency.dylib: CheckedContinuation.resume(returning:) + 384</span>
+            <div class="crash-meta"><span class="file-tag">CheckedContinuation.swift:172</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">4</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-11" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is a concurrency issue in the <code>LoginViewController</code> class, specifically in the <code>showModal(parent:animated:)</code> function. The <code>CheckedContinuation.resume(returning:)</code> function is being called with an invalid or unexpected value, causing the program to terminate with a <code>SIGTRAP</code> signal. The code at fault is likely the closure passed to <code>showModal(parent:animated:)</code> at line 126 of <code>LoginViewController+Extensions.swift</code>.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Open the app and navigate to the login screen.</li><li>Call the <code>showModal(parent:animated:)</code> function on the <code>LoginViewController</code> instance.</li><li>Verify that the closure passed to <code>showModal(parent:animated:)</code> is properly handling concurrency and not causing a deadlock or invalid state.</li><li>Repeat steps 1-3 multiple times to reproduce the crash, as concurrency issues can be intermittent.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-12')">
+          <td class="rank">#13</td>
+          <td class="crash-name">
+            <span class="name" title="i-Reporter: closure #1 in static TerminalID.loadTerminalID() + 4">i-Reporter: closure #1 in static TerminalID.loadTerminalID() + 4</span>
+            <div class="crash-meta"><span class="file-tag">TerminalID.swift:33</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">4</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-12" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of the crash is a runtime error occurring within the closure defined in the <code>loadTerminalID()</code> function of the <code>TerminalID.swift</code> file, specifically at line 33. This error is likely due to an unexpected condition or null value being encountered, triggering a breakpoint exception.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Open the <code>TerminalID.swift</code> file and navigate to the <code>loadTerminalID()</code> function.</li><li>Set a breakpoint at line 33, where the closure is defined.</li><li>Run the application and trigger the <code>loadTerminalID()</code> function to execute.</li><li>When the breakpoint is hit, inspect the variables and conditions within the closure to identify the root cause of the error.</li><li>Repeat steps 3-4 until the crash is reproduced, then analyze the backtrace and variables to determine the exact cause of the exception.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-13')">
+          <td class="rank">#14<span class="rank-badge rank-worse">▲8</span></td>
+          <td class="crash-name">
+            <span class="name" title="i-Reporter: -[PluralChunkField moveRight] + 280">i-Reporter: -[PluralChunkField moveRight] + 280</span>
+            <div class="crash-meta"><span class="file-tag">PluralChunkField.m:431</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">4</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-13" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of the crash is an out-of-bounds array access in the <code>PluralChunkField</code> class, specifically in the <code>moveRight</code> method. The code at fault is likely located at line 431 of <code>PluralChunkField.m</code>, where it attempts to access an index of 9223372036854775808, which is beyond the bounds of the array.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Open the i-Reporter application and navigate to the Scheduler view.</li><li>Click on a PluralChunkField to focus it.</li><li>Click the &quot;Right&quot; button to trigger the <code>moveRight</code> method.</li><li>If the array is not properly initialized or has been corrupted, the application should crash with the same exception type and reason.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-14')">
+          <td class="rank">#15</td>
+          <td class="crash-name">
+            <span class="name" title="CoreAutoLayout: 0x1b0082000 + 22216">CoreAutoLayout: 0x1b0082000 + 22216</span>
+            <div class="crash-meta"><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">3</td>
+          <td class="latest-ver">8.2.25110</td>
+        </tr>
+        <tr id="crash-14" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of the crash is a threading issue, where the <code>AmiDsrsRecognizer::run()</code> function is accessing the <code>ASIHTTPRequest</code> and <code>BlankReportLibrary</code> classes in a way that is not thread-safe. The code at fault appears to be in the <code>AmiDsrsRecognizer::run()</code> function, which is calling into <code>ASIHTTPRequest</code> and <code>BlankReportLibrary</code> without proper synchronization.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Create a new instance of <code>AmiDsrsRecognizer</code> and call its <code>run()</code> method on a background thread.</li><li>Simultaneously, call the <code>saveTemp:</code> method on <code>BlankReportLibrary</code> from the main thread.</li><li>Repeat steps 1-2 multiple times to increase the likelihood of the crash occurring.</li><li>Verify that the crash occurs and the backtrace matches the provided one.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-15')">
+          <td class="rank">#16</td>
+          <td class="crash-name">
+            <span class="name" title="UIKitCore: 0x185e0e000 + 4865420">UIKitCore: 0x185e0e000 + 4865420</span>
+            <div class="crash-meta"><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">3</td>
+          <td class="latest-ver">8.1.23060</td>
+        </tr>
+        <tr id="crash-15" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is an unhandled exception in the UIKitCore framework, possibly due to an invalid or nil object being accessed. The code at fault appears to be in the i-Reporter app, specifically in the arm64 architecture, and the backtrace suggests that the issue lies in the app&#x27;s own code, rather than a system framework.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Launch the i-Reporter app on an arm64 device.</li><li>Navigate to the section of the app that uses UIKitCore framework.</li><li>Perform an action that triggers the UIKitCore framework to access an object, such as tapping a button or selecting an item from a list.</li><li>If the object being accessed is invalid or nil, the app should crash with the same EXC_CRASH (SIGABRT) exception.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-16')">
+          <td class="rank">#17</td>
+          <td class="crash-name">
+            <span class="name" title="UIKitCore: _UIGraphicsBeginImageContextWithOptions + 568">UIKitCore: _UIGraphicsBeginImageContextWithOptions + 568</span>
+            <div class="crash-meta"><span class="file-tag">UIGraphics.m:407</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">3</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-16" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of the crash is a memory-related issue in the <code>SheetImageCreator</code> class, specifically in the <code>createSheetImage:ofDocument:withBackgroundImage:forPreview:isCurrentSheet:needLayer:size:isPDFReferenceMode:lockedCluster:editingCluster:</code> method. The fault lies in the <code>UIGraphicsBeginImageContextWithOptions</code> call, which is not properly handled, leading to a crash. This suggests that the image creation process is not being managed correctly, potentially due to incorrect image context handling or insufficient memory allocation.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Open the application and navigate to the SchedulerViewController.</li><li>Trigger the <code>updateInputImage:</code> method to initiate the image creation process.</li><li>Verify that the <code>createSheetImage:ofDocument:withBackgroundImage:forPreview:isCurrentSheet:needLayer:size:isPDFReferenceMode:</code> method is called with valid parameters.</li><li>Repeat steps 2-3 multiple times to simulate concurrent image creation requests.</li><li>Monitor the application&#x27;s memory usage and observe if it crashes with the same EXC_CRASH (SIGABRT) exception.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-17')">
+          <td class="rank">#18<span class="rank-badge rank-new" data-i18n="badge_new">新規</span></td>
+          <td class="crash-name">
+            <span class="name" title="i-Reporter: -[SchedulerViewController addClusterController:withView:] + 1700">i-Reporter: -[SchedulerViewController addClusterController:withView:] + 1700</span>
+            <div class="crash-meta"><span class="file-tag">SchedulerViewController.m:5029</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">3</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-17" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of the crash is a nil object being passed to the <code>setObject:atIndexedSubscript:</code> method in the <code>addClusterController:withView:</code> function of the <code>SchedulerViewController</code> class, specifically at line 5029 of SchedulerViewController.m. This suggests that the code is attempting to add a nil object to an NSMutableArray, which is not allowed and results in the EXC_CRASH (SIGABRT) exception.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Open the i-Reporter app and navigate to the report bundle selection screen.</li><li>Select a report bundle that requires the <code>SchedulerViewController</code> to be initialized.</li><li>Verify that the <code>addClusterController:withView:</code> method is called during the initialization process.</li><li>Use a debugger or logging statements to inspect the objects being passed to the <code>setObject:atIndexedSubscript:</code> method and identify which object is nil.</li><li>Repeat steps 1-4 with different report bundles and initialization scenarios to confirm that the crash is consistently reproducible.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-18')">
+          <td class="rank">#19</td>
+          <td class="crash-name">
+            <span class="name" title="i-Reporter: 0x104b48000 + 1746140">i-Reporter: 0x104b48000 + 1746140</span>
+            <div class="crash-meta"><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">3</td>
+          <td class="latest-ver">8.2.25090</td>
+        </tr>
+        <tr id="crash-18" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is an attempt to insert a nil object into an NSDictionary, which is not allowed. The code at fault is likely located in the vicinity of the address 0x102d78000 + 1746140, where the initWithObjects:forKeys:count: method of NSPlaceholderDictionary is being called with a nil object.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Launch the i-Reporter application and navigate to the section of the app where dictionaries are being initialized.</li><li>Identify the specific dictionary initialization code that is causing the crash, likely where user input or data is being used to create the dictionary.</li><li>Intentionally pass a nil value as the second object in the array of objects being used to initialize the dictionary.</li><li>Verify that the app crashes with the same EXC_CRASH (SIGABRT) exception and exception reason as the original crash.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-19')">
+          <td class="rank">#20</td>
+          <td class="crash-name">
+            <span class="name" title="UIKitCore: -[UIPopoverPresentationController presentationTransitionWillBegin] + 2672">UIKitCore: -[UIPopoverPresentationController presentationTransitionWillBegin] + 2672</span>
+            <div class="crash-meta"><span class="file-tag">UIPopoverPresentationController.m:1696</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">3</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-19" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is a bug in the <code>UIPopoverPresentationController</code> class, specifically in the <code>presentationTransitionWillBegin</code> method. This method is called when a popover presentation is about to begin, and the crash suggests that there is an issue with the presentation controller&#x27;s setup or configuration, possibly due to a nil or invalid value being passed to it.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Create a new iOS project with a view controller that presents a popover using <code>UIPopoverPresentationController</code>.</li><li>Configure the popover presentation controller with a source view or bar button item.</li><li>Present the popover and immediately dismiss it, then repeat this process several times to reproduce the crash.</li><li>Verify that the crash occurs when the <code>presentationTransitionWillBegin</code> method is called, and inspect the values being passed to this method to identify the root cause of the issue.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-20')">
+          <td class="rank">#21</td>
+          <td class="crash-name">
+            <span class="name" title="i-Reporter: 0x104a6c000 + 4699100">i-Reporter: 0x104a6c000 + 4699100</span>
+            <div class="crash-meta"><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">3</td>
+          <td class="latest-ver">8.1.24072</td>
+        </tr>
+        <tr id="crash-20" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is an intentional breakpoint set by the developer, indicated by the EXC_BREAKPOINT (SIGTRAP) exception type, which suggests that the code is attempting to trigger a debugger or intentionally terminate the program. The code at fault appears to be located at the address 0x1000f4000 + 4699100, corresponding to the function or method called at 0x000000010056f3dc.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Launch the i-Reporter application and navigate to the section of the app that triggers the breakpoint.</li><li>Perform the specific action or sequence of actions that leads to the crash, likely related to the code at address 0x1000f4000 + 4699100.</li><li>Verify that the crash occurs and the debugger is triggered, or the program terminates with the EXC_BREAKPOINT (SIGTRAP) exception.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-21')">
+          <td class="rank">#22<span class="rank-badge rank-new" data-i18n="badge_new">新規</span></td>
+          <td class="crash-name">
+            <span class="name" title="libdispatch.dylib: _dlock_wait + 56">libdispatch.dylib: _dlock_wait + 56</span>
+            <div class="crash-meta"><span class="file-tag">lock.c:326</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">2</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-21" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is a deadlock situation caused by the <code>_dlock_wait</code> function in <code>libdispatch.dylib</code>, which is related to concurrent programming and locking mechanisms. The code at fault appears to be in the <code>TerminalID.loadTerminalID()</code> function, specifically the closure defined at line 33 of <code>TerminalID.swift</code>, which is attempting to acquire a lock that is already held by another thread.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Create a new iOS or macOS project in Xcode and add the <code>TerminalID.swift</code> file with the same code that is causing the crash.</li><li>Call the <code>TerminalID.loadTerminalID()</code> function from the <code>main</code> function in <code>main.m</code>.</li><li>Run the application on a physical device or simulator to reproduce the crash.</li><li>Use the Xcode debugger to step through the code and verify that the deadlock occurs when the closure at line 33 of <code>TerminalID.swift</code> is executed.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-22')">
+          <td class="rank">#23<span class="rank-badge rank-new" data-i18n="badge_new">新規</span></td>
+          <td class="crash-name">
+            <span class="name" title="UIKitCore: 0x185c38000 + 4863320">UIKitCore: 0x185c38000 + 4863320</span>
+            <div class="crash-meta"><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">2</td>
+          <td class="latest-ver">8.1.23060</td>
+        </tr>
+        <tr id="crash-22" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is an unhandled exception in the UIKitCore framework, specifically related to a SIGABRT signal, which is often caused by an assertion failure or an uncaught exception. The code at fault appears to be within the i-Reporter app, possibly related to a UI component or layout issue. The backtrace points to the i-Reporter executable, suggesting that the issue lies within the app&#x27;s codebase.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Launch the i-Reporter app on an iOS device or simulator.</li><li>Navigate to the UI component or screen that is likely causing the crash, based on the app&#x27;s functionality and the crash log.</li><li>Perform actions that may trigger the crash, such as scrolling, tapping, or interacting with UI elements.</li><li>Monitor the app&#x27;s behavior and crash logs to reproduce the EXC_CRASH (SIGABRT) exception.</li><li>Repeat steps 2-4 to confirm that the crash is reproducible and gather more information about the root cause.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-23')">
+          <td class="rank">#24<span class="rank-badge rank-new" data-i18n="badge_new">新規</span></td>
+          <td class="crash-name">
+            <span class="name" title="CoreAutoLayout: _NSBitSetResize.cold.1 + 100">CoreAutoLayout: _NSBitSetResize.cold.1 + 100</span>
+            <div class="crash-meta"><span class="file-tag">NSBitSet.m:96</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">2</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-23" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is a memory management issue, potentially related to the use of a third-party library (ASIHTTPRequest) that is not compatible with the latest iOS versions or is being used incorrectly. The fault likely lies in the <code>+[ASIHTTPRequest runRequests]</code> method, which is called from the <code>main</code> function, and may be causing an abort signal due to an internal error in the <code>_NSBitSetResize.cold.1</code> function.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Create a new iOS project and add the ASIHTTPRequest library to it.</li><li>Call the <code>+[ASIHTTPRequest runRequests]</code> method from the <code>main</code> function or a similar entry point.</li><li>Run the application on a physical device or simulator to reproduce the crash.</li><li>Verify that the crash occurs consistently and that the backtrace matches the one provided.</li><li>Attempt to debug the issue by inspecting the <code>ASIHTTPRequest</code> code and the <code>NSBitSet</code> implementation to identify the root cause of the crash.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-24')">
+          <td class="rank">#25<span class="rank-badge rank-new" data-i18n="badge_new">新規</span></td>
+          <td class="crash-name">
+            <span class="name" title="CoreAutoLayout: _AssertAutoLayoutOnAllowedThreadsOnly + 324">CoreAutoLayout: _AssertAutoLayoutOnAllowedThreadsOnly + 324</span>
+            <div class="crash-meta"><span class="file-tag">NSISEngine.m:0</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">2</td>
+          <td class="latest-ver">8.2.25111</td>
+        </tr>
+        <tr id="crash-24" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is that Auto Layout is being accessed from a thread other than the main thread, which is not allowed. The code at fault is likely a custom view or layout-related code that is being executed on a background thread, triggering the assertion in NSISEngine.m.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Create a custom view that uses Auto Layout to position its subviews.</li><li>Dispatch a block to a background thread that updates the layout of the custom view.</li><li>Run the app and observe the crash when the background thread attempts to access Auto Layout.</li><li>Verify that the crash is resolved by moving the layout update code to the main thread.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr></tbody>
+    </table>
+  </div>
+</div>
+
+<div id="panel-last365Days" class="panel" style="display:none">
+  <div class="period-meta">
+    📅 <span data-i18n="sync_label">Xcode 同期</span>: 26-04-02
+  </div>
+
+  <div class="comparison-bar">
+    <span class="comp-label" data-i18n="comp_prev">前回:</span>
+    <span class="comp-label">2026-03-30</span>
+    <span class="comp-item neutral">● 0 <span data-i18n="unit_types">種類</span> (+0%)</span>
+    <span class="comp-item good">▼ 18 <span data-i18n="unit_devices">台</span> (-9%)</span>
+    <span class="comp-item neutral"><span data-i18n="comp_new">新規</span> +5 &nbsp; <span data-i18n="comp_resolved">解消</span> −5</span>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi red" data-icon="💥">
+      <div class="kpi-label" data-i18n="kpi_types">クラッシュ種類数</div>
+      <div class="kpi-value" data-kpi-value="25">25</div>
+      <div class="kpi-sub" data-i18n="kpi_types_sub">固有のクラッシュ署名</div>
+      <div class="kpi-delta flat"><span class="delta-label" data-i18n="comp_vs_last">前回比</span> ● 0 (0%)</div>
+    </div>
+    <div class="kpi blue" data-icon="📱">
+      <div class="kpi-label" data-i18n="kpi_devices">影響デバイス数</div>
+      <div class="kpi-value" data-kpi-value="2129">2,129</div>
+      <div class="kpi-sub" data-i18n="kpi_devices_sub">全クラッシュ種類の合計</div>
+      <div class="kpi-delta good"><span class="delta-label" data-i18n="comp_vs_last">前回比</span> ▼ 18 (-9%)</div>
+    </div>
+    <div class="kpi amber" data-icon="🔝">
+      <div class="kpi-label" data-i18n="kpi_worst">最大クラッシュ</div>
+      <div class="kpi-value" data-kpi-value="419">419</div>
+      <div class="kpi-sub" data-i18n="kpi_worst_sub">影響デバイス数</div>
+      <div class="kpi-delta good"><span class="delta-label" data-i18n="comp_vs_last">前回比</span> ▼ 5 (-16%)</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 data-i18n="trend_monthly">月次 影響デバイス数推移</h2>
+      <span class="card-tag">LAST YEAR</span>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="dailyChart_last365Days"></canvas>
+    </div>
+    <div class="release-note">
+      <div class="dot" style="background:#4363d8"></div>
+      <span data-i18n="chart_note_monthly">破線 = 3ヶ月移動平均 · 値 = 月次影響デバイス数（全クラッシュ合計）</span>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <h2 data-i18n="by_version">アプリバージョン別</h2>
+        <span class="card-tag">TOP 8</span>
+      </div>
+      <table class="bar-table">
+        <thead><tr><td data-i18n="th_version">バージョン</td><td class="num" data-i18n="th_dev">台数</td><td class="pct">%</td></tr></thead>
+        <tbody>
+        <tr>
+          <td class="lbl">8.2.25120</td>
+          <td class="num">271</td>
+          <td class="pct">36%</td>
+        </tr>
+        <tr>
+          <td class="lbl">8.1.24073</td>
+          <td class="num">145</td>
+          <td class="pct">19%</td>
+        </tr>
+        <tr>
+          <td class="lbl">8.2.25111</td>
+          <td class="num">130</td>
+          <td class="pct">17%</td>
+        </tr>
+        <tr>
+          <td class="lbl">8.2.26020</td>
+          <td class="num">127</td>
+          <td class="pct">17%</td>
+        </tr>
+        <tr>
+          <td class="lbl">8.2.26030</td>
+          <td class="num">74</td>
+          <td class="pct">10%</td>
+        </tr>
+        <tr>
+          <td class="lbl">8.2.25110</td>
+          <td class="num">4</td>
+          <td class="pct">1%</td>
+        </tr>
+        <tr>
+          <td class="lbl">8.2.25100</td>
+          <td class="num">2</td>
+          <td class="pct">0%</td>
+        </tr>
+        <tr>
+          <td class="lbl">8.2.25071</td>
+          <td class="num">2</td>
+          <td class="pct">0%</td>
+        </tr></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h2 data-i18n="by_os">OS バージョン別</h2>
+        <span class="card-tag">TOP 8</span>
+      </div>
+      <table class="bar-table">
+        <thead><tr><td data-i18n="th_os">OS</td><td class="num" data-i18n="th_dev">台数</td><td class="pct">%</td></tr></thead>
+        <tbody>
+        <tr>
+          <td class="lbl">iOS 18.6</td>
+          <td class="num">287</td>
+          <td class="pct">23%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iOS 18.5</td>
+          <td class="num">270</td>
+          <td class="pct">21%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iOS 26.2</td>
+          <td class="num">184</td>
+          <td class="pct">15%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iOS 18.3</td>
+          <td class="num">147</td>
+          <td class="pct">12%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iOS 26.3</td>
+          <td class="num">118</td>
+          <td class="pct">9%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iOS 18.4</td>
+          <td class="num">94</td>
+          <td class="pct">7%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iOS 17.7</td>
+          <td class="num">82</td>
+          <td class="pct">6%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iOS 26.1</td>
+          <td class="num">80</td>
+          <td class="pct">6%</td>
+        </tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-header">
+        <h2 data-i18n="by_device_type">デバイスタイプ別</h2>
+        <span class="card-tag">FAMILY</span>
+      </div>
+      <table class="bar-table">
+        <thead><tr><td data-i18n="th_device">デバイス</td><td class="num" data-i18n="th_dev">台数</td><td class="pct">%</td></tr></thead>
+        <tbody>
+        <tr>
+          <td class="lbl">iPad</td>
+          <td class="num">942</td>
+          <td class="pct">72%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iPhone</td>
+          <td class="num">371</td>
+          <td class="pct">28%</td>
+        </tr></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h2 data-i18n="by_model">デバイスモデル別</h2>
+        <span class="card-tag">MODELS</span>
+      </div>
+      <table class="bar-table">
+        <thead><tr><td data-i18n="th_model">モデル</td><td class="num" data-i18n="th_logs">ログ</td><td class="pct">%</td></tr></thead>
+        <tbody>
+        <tr>
+          <td class="lbl">iPad (6th gen)</td>
+          <td class="num">6</td>
+          <td class="pct">17%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iPad (10th gen)</td>
+          <td class="num">4</td>
+          <td class="pct">11%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iPad (11th gen)</td>
+          <td class="num">5</td>
+          <td class="pct">14%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iPad (7th gen)</td>
+          <td class="num">5</td>
+          <td class="pct">14%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iPad (9th gen)</td>
+          <td class="num">3</td>
+          <td class="pct">8%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iPad (8th gen)</td>
+          <td class="num">4</td>
+          <td class="pct">11%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iPad7,6</td>
+          <td class="num">3</td>
+          <td class="pct">8%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iPhone SE (3rd gen)</td>
+          <td class="num">2</td>
+          <td class="pct">6%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iPhone 14</td>
+          <td class="num">2</td>
+          <td class="pct">6%</td>
+        </tr>
+        <tr>
+          <td class="lbl">iPad Air (4th gen)</td>
+          <td class="num">2</td>
+          <td class="pct">6%</td>
+        </tr></tbody>
+      </table>
+      <div class="data-note" data-i18n="models_note_avail">ダウンロード済みクラッシュログのみ</div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h2 data-i18n="by_severity">重要度別</h2>
+        <span class="card-tag">BY IMPACT RANK</span>
+      </div>
+      <table class="bar-table">
+        <thead><tr><td data-i18n="th_level">重要度</td><td class="num" data-i18n="th_types">種類数</td><td class="pct">%</td></tr></thead>
+        <tbody>
+        <tr>
+          <td class="lbl">Critical</td>
+          <td class="num">1</td>
+          <td class="pct">4%</td>
+        </tr>
+        <tr>
+          <td class="lbl">High</td>
+          <td class="num">2</td>
+          <td class="pct">8%</td>
+        </tr>
+        <tr>
+          <td class="lbl">Medium</td>
+          <td class="num">7</td>
+          <td class="pct">28%</td>
+        </tr>
+        <tr>
+          <td class="lbl">Low</td>
+          <td class="num">15</td>
+          <td class="pct">60%</td>
+        </tr></tbody>
+      </table>
+      <div class="data-note" data-i18n="sev_note">緊急=#1 · 高=#2–3 · 中=#4–10 · 低=その他</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 data-i18n="top_crashes_title">クラッシュ署名ランキング</h2>
+      <span class="card-tag" data-i18n="click_hint">行をクリックで原因・テスト表示</span>
+    </div>
+    <table class="crash-table">
+      <thead><tr>
+        <td>#</td><td data-i18n="th_crash">クラッシュ / ソースファイル</td><td class="devices" data-i18n="th_devices_col">台数</td><td class="latest-ver" data-i18n="th_latest_ver">最新バージョン</td>
+      </tr></thead>
+      <tbody>
+        <tr class="crash-row" onclick="toggleDetail('crash-0')">
+          <td class="rank">#1<span class="rank-badge rank-better">▼1</span></td>
+          <td class="crash-name">
+            <span class="name" title="i-Reporter: -[LibraryInfoProvider requireReportDetailInfo:topId:] + 320">i-Reporter: -[LibraryInfoProvider requireReportDetailInfo:topId:] + 320</span>
+            <div class="crash-meta"><span class="file-tag">LibraryInfoProvider.m:0</span><span class="badge-sev" style="color:#e6194b;background:#fff0f3">Critical</span></div>
+          </td>
+          <td class="devices">419</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-0" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of the crash is the attempt to insert a nil object into a dictionary in the <code>requireReportDetailInfo:topId:</code> method of the <code>LibraryInfoProvider</code> class, specifically in the <code>LibraryInfoProvider.m</code> file. The code at fault is likely located at line 0 of <code>LibraryInfoProvider.m</code>, where the <code>initWithObjects:forKeys:count:</code> method is called with a nil object.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Open the i-Reporter app and navigate to the documents list view.</li><li>Select a report item to trigger the <code>didSelectReportItem:</code> method in <code>DocumentsListViewController.mm</code>.</li><li>Verify that the <code>requireReportDetailInfo:topId:</code> method in <code>LibraryInfoProvider.m</code> is called with valid parameters.</li><li>Intentionally introduce a nil object in the array of objects passed to the <code>initWithObjects:forKeys:count:</code> method to reproduce the crash.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-1')">
+          <td class="rank">#2<span class="rank-badge rank-worse">▲1</span></td>
+          <td class="crash-name">
+            <span class="name" title="UIKitCore: -[UIPopoverPresentationController presentationTransitionWillBegin] + 2676">UIKitCore: -[UIPopoverPresentationController presentationTransitionWillBegin] + 2676</span>
+            <div class="crash-meta"><span class="file-tag">UIPopoverPresentationController.m:1716</span><span class="badge-sev" style="color:#ff6b00;background:#fff5ed">High</span></div>
+          </td>
+          <td class="devices">177</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-1" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is a bug in the UIPopoverPresentationController, specifically in the presentationTransitionWillBegin method. This method is responsible for handling the transition when a popover is presented, and the crash suggests that there is an issue with the way this transition is being handled, possibly due to a null or unexpected value being passed to the method.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Create a new iOS project with a UIViewController that presents a UIPopoverPresentationController.</li><li>Configure the popover to present a view controller with a non-nil presentation controller.</li><li>Call the presentationTransitionWillBegin method on the UIPopoverPresentationController instance.</li><li>Verify that the method is called on the main thread and that all required properties are set before calling the method.</li><li>Repeat steps 1-4 with different presentation styles and view controllers to isolate the specific conditions that trigger the crash.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-2')">
+          <td class="rank">#3</td>
+          <td class="crash-name">
+            <span class="name" title="CoreAutoLayout: _AssertAutoLayoutOnAllowedThreadsOnly + 316">CoreAutoLayout: _AssertAutoLayoutOnAllowedThreadsOnly + 316</span>
+            <div class="crash-meta"><span class="file-tag">NSISEngine.m:0</span><span class="badge-sev" style="color:#ff6b00;background:#fff5ed">High</span></div>
+          </td>
+          <td class="devices">148</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-2" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is a threading issue related to AutoLayout, where a layout operation is being performed on a thread that is not the main thread. The code at fault appears to be related to the <code>AmiDsrsRecognizer::run()</code> function, which is calling into <code>NSISEngine.m</code> and triggering the <code>_AssertAutoLayoutOnAllowedThreadsOnly</code> assertion.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Create a test case that exercises the <code>AmiDsrsRecognizer::run()</code> function on a background thread.</li><li>Verify that the <code>AmiDsrsRecognizer::run()</code> function is performing any UI-related operations, such as updating layouts or accessing view properties.</li><li>Attempt to reproduce the crash by running the test case and observing if the <code>_AssertAutoLayoutOnAllowedThreadsOnly</code> assertion is triggered.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-3')">
+          <td class="rank">#4<span class="rank-badge rank-worse">▲1</span></td>
+          <td class="crash-name">
+            <span class="name" title="i-Reporter: 0x104e00000 + 4699524">i-Reporter: 0x104e00000 + 4699524</span>
+            <div class="crash-meta"><span class="badge-sev" style="color:#d97706;background:#fffbeb">Medium</span></div>
+          </td>
+          <td class="devices">145</td>
+          <td class="latest-ver">8.1.24073</td>
+        </tr>
+        <tr id="crash-3" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of the crash is an intentional breakpoint set by the developer, as indicated by the EXC_BREAKPOINT (SIGTRAP) exception type. The code at fault appears to be related to the address 0x104540000 + 4699524, which corresponds to the function at address 0x00000001049bb584.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Launch the i-Reporter application on an iOS or macOS device.</li><li>Reproduce the sequence of actions that led to the crash, potentially involving user input or specific feature usage.</li><li>Monitor the application for the EXC_BREAKPOINT (SIGTRAP) exception, which should occur when the breakpoint is triggered at address 0x00000001049bb584.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-4')">
+          <td class="rank">#5</td>
+          <td class="crash-name">
+            <span class="name" title="i-Reporter: -[PrevGroup addCluster:withNetworkSkippable:] + 60">i-Reporter: -[PrevGroup addCluster:withNetworkSkippable:] + 60</span>
+            <div class="crash-meta"><span class="file-tag">NetworkUtil.m:41</span><span class="badge-sev" style="color:#d97706;background:#fffbeb">Medium</span></div>
+          </td>
+          <td class="devices">130</td>
+          <td class="latest-ver"></td>
+        </tr>
+        <tr id="crash-4" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of the crash is a null pointer exception or an out-of-bounds access in the <code>addCluster:withNetworkSkippable:</code> method of the <code>PrevGroup</code> class, which is implemented in the <code>NetworkUtil.m</code> file. The <code>+ 60</code> offset suggests that the issue occurs 60 bytes into the method, possibly due to a faulty pointer or an uninitialized variable.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Initialize the <code>PrevGroup</code> object and verify its validity.</li><li>Create a cluster object to be added to the <code>PrevGroup</code>.</li><li>Call the <code>addCluster:withNetworkSkippable:</code> method with the created cluster object and a valid network skippable value.</li><li>Repeat step 3 with an invalid or null cluster object to reproduce the crash.</li><li>Use a debugger to step through the <code>addCluster:withNetworkSkippable:</code> method and inspect variables at the <code>+ 60</code> offset to identify the root cause.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-5')">
+          <td class="rank">#6</td>
+          <td class="crash-name">
+            <span class="name" title="UIKitCore: -[UIPopoverPresentationController presentationTransitionWillBegin] + 2672">UIKitCore: -[UIPopoverPresentationController presentationTransitionWillBegin] + 2672</span>
+            <div class="crash-meta"><span class="file-tag">UIPopoverPresentationController.m:1696</span><span class="badge-sev" style="color:#d97706;background:#fffbeb">Medium</span></div>
+          </td>
+          <td class="devices">107</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-5" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is a bug in the <code>UIPopoverPresentationController</code> class, specifically in the <code>presentationTransitionWillBegin</code> method. This method is called when a popover presentation is about to begin, and the crash suggests that there is an issue with the presentation controller&#x27;s setup or configuration, possibly due to a nil or invalid value being passed to it.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Create a new iOS project with a view controller that presents a popover using <code>UIPopoverPresentationController</code>.</li><li>Configure the popover presentation controller with a source view or bar button item.</li><li>Present the popover and immediately dismiss it, then repeat this process several times to reproduce the crash.</li><li>Verify that the crash occurs when the <code>presentationTransitionWillBegin</code> method is called, and inspect the values being passed to this method to identify the root cause of the issue.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-6')">
+          <td class="rank">#7</td>
+          <td class="crash-name">
+            <span class="name" title="i-Reporter: @objc static TerminalID.uuid.getter + 16">i-Reporter: @objc static TerminalID.uuid.getter + 16</span>
+            <div class="crash-meta"><span class="badge-sev" style="color:#d97706;background:#fffbeb">Medium</span></div>
+          </td>
+          <td class="devices">105</td>
+          <td class="latest-ver"></td>
+        </tr>
+        <tr id="crash-6" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of the crash is a null pointer dereference in the <code>TerminalID.uuid.getter</code> method, which is a static Objective-C property. The code at fault is likely the getter implementation of the <code>uuid</code> property in the <code>TerminalID</code> class, which is not properly handling a null or uninitialized value.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Launch the i-Reporter app and navigate to a screen that uses the <code>TerminalID</code> class.</li><li>Verify that the <code>TerminalID</code> instance is properly initialized before accessing its <code>uuid</code> property.</li><li>If the <code>uuid</code> property is accessed before initialization, the app will likely crash with the same error message.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-7')">
+          <td class="rank">#8</td>
+          <td class="crash-name">
+            <span class="name" title="UIKitCore: -[UIViewController _presentViewController:withAnimationController:completion:] + 4352">UIKitCore: -[UIViewController _presentViewController:withAnimationController:completion:] + 4352</span>
+            <div class="crash-meta"><span class="file-tag">UIViewController.m:0</span><span class="badge-sev" style="color:#d97706;background:#fffbeb">Medium</span></div>
+          </td>
+          <td class="devices">78</td>
+          <td class="latest-ver"></td>
+        </tr>
+        <tr id="crash-7" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is a problem with presenting a view controller in the <code>i-Reporter</code> app, specifically with the <code>_presentViewController:withAnimationController:completion:</code> method in <code>UIViewController.m</code>. This method is a part of the UIKit framework, but the issue is likely due to the app&#x27;s code, possibly in the way it handles view controller presentation or animation.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Open the <code>i-Reporter</code> app and navigate to the screen where the view controller presentation is triggered.</li><li>Initiate the action that presents the new view controller (e.g., tapping a button).</li><li>If the crash occurs, check the code that handles the presentation of the new view controller, focusing on any custom animation controllers or completion handlers.</li><li>Verify that the presented view controller is properly configured and that its presentation is not interrupted or cancelled unexpectedly.</li><li>Repeat steps 1-4 to confirm that the crash is reproducible and to gather more information about the issue.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-8')">
+          <td class="rank">#9</td>
+          <td class="crash-name">
+            <span class="name" title="UIKitCore: -[UIPopoverPresentationController presentationTransitionWillBegin] + 2616">UIKitCore: -[UIPopoverPresentationController presentationTransitionWillBegin] + 2616</span>
+            <div class="crash-meta"><span class="file-tag">UIPopoverPresentationController.m:1654</span><span class="badge-sev" style="color:#d97706;background:#fffbeb">Medium</span></div>
+          </td>
+          <td class="devices">78</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-8" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of the crash is a synchronization issue between the main thread and a background thread, with the <code>UIPopoverPresentationController</code> attempting to present a popover while the app is in an inconsistent state. The code at fault appears to be related to the <code>AmiDsrsRecognizer::run()</code> function, which is running on a background thread and interacting with UIKit components.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Create a new iOS project with a <code>UIPopoverPresentationController</code> instance.</li><li>Implement the <code>AmiDsrsRecognizer::run()</code> function to run on a background thread.</li><li>Simulate a scenario where the <code>UIPopoverPresentationController</code> attempts to present a popover while the <code>AmiDsrsRecognizer::run()</code> function is executing on the background thread.</li><li>Verify that the crash occurs when the <code>presentationTransitionWillBegin</code> method is called.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-9')">
+          <td class="rank">#10</td>
+          <td class="crash-name">
+            <span class="name" title="UIKitCore: _UIGraphicsBeginImageContextWithOptions + 568">UIKitCore: _UIGraphicsBeginImageContextWithOptions + 568</span>
+            <div class="crash-meta"><span class="file-tag">UIGraphics.m:407</span><span class="badge-sev" style="color:#d97706;background:#fffbeb">Medium</span></div>
+          </td>
+          <td class="devices">69</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-9" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of the crash is a memory-related issue in the <code>SheetImageCreator</code> class, specifically in the <code>createSheetImage:ofDocument:withBackgroundImage:forPreview:isCurrentSheet:needLayer:size:isPDFReferenceMode:lockedCluster:editingCluster:</code> method. The fault lies in the <code>UIGraphicsBeginImageContextWithOptions</code> call, which is not properly handled, leading to a crash. This suggests that the image creation process is not being managed correctly, potentially due to incorrect image context handling or insufficient memory allocation.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Open the application and navigate to the SchedulerViewController.</li><li>Trigger the <code>updateInputImage:</code> method to initiate the image creation process.</li><li>Verify that the <code>createSheetImage:ofDocument:withBackgroundImage:forPreview:isCurrentSheet:needLayer:size:isPDFReferenceMode:</code> method is called with valid parameters.</li><li>Repeat steps 2-3 multiple times to simulate concurrent image creation requests.</li><li>Monitor the application&#x27;s memory usage and observe if it crashes with the same EXC_CRASH (SIGABRT) exception.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-10')">
+          <td class="rank">#11</td>
+          <td class="crash-name">
+            <span class="name" title="UIKitCore: -[UIPopoverPresentationController presentationTransitionWillBegin] + 2788">UIKitCore: -[UIPopoverPresentationController presentationTransitionWillBegin] + 2788</span>
+            <div class="crash-meta"><span class="file-tag">UIPopoverPresentationController.m:1910</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">64</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-10" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of the crash is a synchronization issue between the main thread and a background thread, with the fault likely lying in the <code>+[ASIHTTPRequest runRequests]</code> method, which seems to be interacting with the <code>UIPopoverPresentationController</code> in a way that causes a crash. The <code>UIPopoverPresentationController</code> is attempting to begin a presentation transition, but is being aborted due to an external factor.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Launch the application and navigate to the screen where the <code>UIPopoverPresentationController</code> is presented.</li><li>Initiate a background request using <code>+[ASIHTTPRequest runRequests]</code> while the popover is being presented.</li><li>Verify that the crash occurs when the background request completes and the <code>UIPopoverPresentationController</code> attempts to begin its presentation transition.</li><li>Repeat steps 1-3 to confirm that the crash is reproducible.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-11')">
+          <td class="rank">#12</td>
+          <td class="crash-name">
+            <span class="name" title="CoreAutoLayout: _AssertAutoLayoutOnAllowedThreadsOnly + 328">CoreAutoLayout: _AssertAutoLayoutOnAllowedThreadsOnly + 328</span>
+            <div class="crash-meta"><span class="file-tag">NSISEngine.m:0</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">61</td>
+          <td class="latest-ver"></td>
+        </tr>
+        <tr id="crash-11" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is that Auto Layout is being accessed from a thread other than the main thread, which is not allowed. The code at fault is likely a custom view or layout-related code that is being executed on a background thread, triggering the assertion in NSISEngine.m.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Create a custom view that uses Auto Layout to position its subviews.</li><li>Access the custom view&#x27;s layout from a background thread, such as by calling <code>layoutIfNeeded()</code> or <code>setNeedsLayout()</code> from a dispatch queue.</li><li>Observe the crash and verify that it occurs when the background thread attempts to access Auto Layout.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-12')">
+          <td class="rank">#13</td>
+          <td class="crash-name">
+            <span class="name" title="UIKitCore: -[UIApplication _performAfterCATransactionCommitsWithLegacyRunloopObserverBasedTiming:block:] + 200">UIKitCore: -[UIApplication _performAfterCATransactionCommitsWithLegacyRunloopObserverBasedTiming:block:] + 200</span>
+            <div class="crash-meta"><span class="file-tag">UIApplication.m:3400</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">53</td>
+          <td class="latest-ver"></td>
+        </tr>
+        <tr id="crash-12" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is a timing issue related to the UIKitCore framework, specifically with the <code>_performAfterCATransactionCommitsWithLegacyRunloopObserverBasedTiming</code> method in <code>UIApplication.m</code>. This method is responsible for executing a block of code after a Core Animation transaction has committed, and the crash may be due to a race condition or an invalid block being passed to this method.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Create a new iOS project with a single view controller.</li><li>Add a button to the view controller that triggers a Core Animation transaction when tapped.</li><li>In the button&#x27;s action handler, call a method that executes a block of code using the <code>_performAfterCATransactionCommitsWithLegacyRunloopObserverBasedTiming</code> method.</li><li>Within the block, access a UIKit component or perform an action that may cause a crash due to a timing issue.</li><li>Run the app and tap the button to reproduce the crash.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-13')">
+          <td class="rank">#14</td>
+          <td class="crash-name">
+            <span class="name" title="CoreAutoLayout: _AssertAutoLayoutOnAllowedThreadsOnly + 320">CoreAutoLayout: _AssertAutoLayoutOnAllowedThreadsOnly + 320</span>
+            <div class="crash-meta"><span class="file-tag">NSISEngine.m:0</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">53</td>
+          <td class="latest-ver"></td>
+        </tr>
+        <tr id="crash-13" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is that Auto Layout is being accessed from a thread other than the main thread, which is not allowed. The code at fault is likely a custom view or layout-related code that is being executed on a background thread, triggering the assertion in NSISEngine.m.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Create a custom view that uses Auto Layout to position its subviews.</li><li>Access the custom view&#x27;s layout from a background thread, such as by calling <code>layoutIfNeeded()</code> or <code>setNeedsLayout()</code> from a dispatch queue.</li><li>Observe the crash and verify that it occurs when Auto Layout is accessed from the background thread.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-14')">
+          <td class="rank">#15</td>
+          <td class="crash-name">
+            <span class="name" title="UIKitCore: -[UIView _backing_setFrame:] + 240">UIKitCore: -[UIView _backing_setFrame:] + 240</span>
+            <div class="crash-meta"><span class="file-tag">_UIViewBacking.m:192</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">52</td>
+          <td class="latest-ver"></td>
+        </tr>
+        <tr id="crash-14" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is a malformed or inconsistent view hierarchy, potentially caused by concurrent modifications to a UIView&#x27;s frame or bounds. The code at fault is likely in a custom UIView subclass or a view controller that is manipulating the view hierarchy, specifically in the <code>_UIViewBacking.m</code> file where the <code>_backing_setFrame:</code> method is defined.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Create a custom UIView subclass with a overridden <code>layoutSubviews</code> method that modifies the view&#x27;s frame or bounds.</li><li>Add the custom view to a view controller&#x27;s view hierarchy.</li><li>Simulate concurrent modifications to the view hierarchy, such as adding or removing subviews while the view is being laid out.</li><li>Repeat steps 2-3 multiple times to increase the likelihood of the crash occurring.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-15')">
+          <td class="rank">#16</td>
+          <td class="crash-name">
+            <span class="name" title="UIKitCore: -[UIViewController _presentViewController:withAnimationController:completion:] + 4272">UIKitCore: -[UIViewController _presentViewController:withAnimationController:completion:] + 4272</span>
+            <div class="crash-meta"><span class="file-tag">UIViewController.m:0</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">52</td>
+          <td class="latest-ver"></td>
+        </tr>
+        <tr id="crash-15" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is a retain cycle or an incorrect usage of a UIViewController&#x27;s presentation methods, specifically within the <code>_presentViewController:withAnimationController:completion:</code> method in UIViewController.m. The code at fault is probably a custom implementation of a presentation controller or an animation controller that is not properly handling the presentation or dismissal of a view controller.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Create a new iOS project with a single UIViewController.</li><li>Implement a custom presentation controller or animation controller.</li><li>Present a new view controller using the custom presentation controller or animation controller.</li><li>Dismiss the presented view controller and observe if the crash occurs.</li><li>Repeat steps 3-4 multiple times to verify if the crash is reproducible.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-16')">
+          <td class="rank">#17</td>
+          <td class="crash-name">
+            <span class="name" title="i-Reporter: -[PluralChunkField moveLeft] + 224">i-Reporter: -[PluralChunkField moveLeft] + 224</span>
+            <div class="crash-meta"><span class="file-tag">PluralChunkField.m:410</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">52</td>
+          <td class="latest-ver"></td>
+        </tr>
+        <tr id="crash-16" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of the crash is an out-of-bounds access or null pointer dereference in the <code>moveLeft</code> method of the <code>PluralChunkField</code> class, specifically at line 224 of <code>PluralChunkField.m</code>. The code at fault is likely related to array or string manipulation, where an index is being accessed that does not exist.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Open the i-Reporter app and navigate to a screen where the <code>PluralChunkField</code> is used.</li><li>Enter a long string of text into the <code>PluralChunkField</code>.</li><li>Attempt to move the cursor to the left using the <code>moveLeft</code> action.</li><li>Repeat step 3 multiple times to try and reproduce the crash.</li><li>Verify that the crash occurs consistently when moving the cursor to the left.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-17')">
+          <td class="rank">#18</td>
+          <td class="crash-name">
+            <span class="name" title="UIKitCore: -[UIPopoverPresentationController presentationTransitionWillBegin] + 2624">UIKitCore: -[UIPopoverPresentationController presentationTransitionWillBegin] + 2624</span>
+            <div class="crash-meta"><span class="file-tag">UIPopoverPresentationController.m:1716</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">45</td>
+          <td class="latest-ver"></td>
+        </tr>
+        <tr id="crash-17" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is a timing issue or an invalid state in the <code>UIPopoverPresentationController</code> when the <code>presentationTransitionWillBegin</code> method is called. The faulty code is likely in the <code>UIPopoverPresentationController.m</code> file, specifically in the <code>presentationTransitionWillBegin</code> method, which is part of the UIKitCore framework.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Create a new iOS project with a view controller that presents a popover using <code>UIPopoverPresentationController</code>.</li><li>Configure the popover to display a view controller with a complex layout or a large amount of data.</li><li>Present the popover and immediately dismiss it, or rapidly present and dismiss the popover multiple times to trigger the crash.</li><li>Verify that the crash occurs when the <code>presentationTransitionWillBegin</code> method is called, and investigate the state of the <code>UIPopoverPresentationController</code> at that point to identify the root cause.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-18')">
+          <td class="rank">#19</td>
+          <td class="crash-name">
+            <span class="name" title="libswift_Concurrency.dylib: CheckedContinuation.resume(returning:) + 408">libswift_Concurrency.dylib: CheckedContinuation.resume(returning:) + 408</span>
+            <div class="crash-meta"><span class="file-tag">CheckedContinuation.swift:172</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">43</td>
+          <td class="latest-ver"></td>
+        </tr>
+        <tr id="crash-18" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is a concurrency issue related to the use of CheckedContinuation in the libswift_Concurrency.dylib library, specifically in the CheckedContinuation.swift file. The code at fault is likely a custom implementation of a concurrency-related function that incorrectly handles the resume function, leading to a crash.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Create a new Swift project that utilizes the libswift_Concurrency.dylib library.</li><li>Implement a custom concurrency-related function that uses CheckedContinuation.</li><li>Call the resume function on the CheckedContinuation instance with an invalid or unexpected value.</li><li>Run the project and verify that it crashes with the same exception type and reason as the original crash.</li><li>Repeat steps 3-4 with different input values to reproduce the crash consistently.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-19')">
+          <td class="rank">#20<span class="rank-badge rank-better">▼1</span></td>
+          <td class="crash-name">
+            <span class="name" title="i-Reporter: thunk for @escaping @callee_unowned @convention(block) () -&gt; () + 12">i-Reporter: thunk for @escaping @callee_unowned @convention(block) () -&gt; () + 12</span>
+            <div class="crash-meta"><span class="file-tag">/<compiler-generated>:0</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">38</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-19" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is a nil object being inserted into an NSMutableArray in the <code>updateNavigationRightBarButtons</code> method of the <code>MasterViewController</code> class, specifically at line 1065 of MasterViewController.m. This suggests that the code is attempting to add a button or other object to the navigation bar, but the object being added is nil.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Open the i-Reporter app and navigate to the view controlled by <code>MasterViewController</code>.</li><li>Trigger the <code>updateNavigationRightBarButtons</code> method, potentially by rotating the device or interacting with the navigation bar.</li><li>Verify that the crash occurs when the method attempts to insert an object into the NSMutableArray.</li><li>Use the debugger to inspect the object being inserted and verify that it is indeed nil.</li><li>Check the code at line 1065 of MasterViewController.m to determine why the object being inserted is nil.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-20')">
+          <td class="rank">#21</td>
+          <td class="crash-name">
+            <span class="name" title="UIKitCore: _UIZoomTransitionController.startInteractiveTransition(_:) + 7528">UIKitCore: _UIZoomTransitionController.startInteractiveTransition(_:) + 7528</span>
+            <div class="crash-meta"><span class="file-tag">_UIZoomTransitionController.swift:209</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">37</td>
+          <td class="latest-ver">8.2.26030</td>
+        </tr>
+        <tr id="crash-20" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of the crash is an issue with the <code>dismissPresentedViewControllerWithCompletion:</code> method in <code>SchedulerViewController.m</code>, which is attempting to interact with a view controller transition. The <code>_UIZoomTransitionController.startInteractiveTransition(_:)</code> method is where the crash occurs, suggesting a problem with the transition process. The code at fault appears to be in the <code>SchedulerViewController</code> class, specifically around line 8100.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Open the app and navigate to the screen managed by <code>SchedulerViewController</code>.</li><li>Perform the action that triggers the <code>btnSaveMenuOpened:</code> method.</li><li>Verify that a presented view controller is being dismissed in the <code>dismissPresentedViewControllerWithCompletion:</code> method.</li><li>Repeat steps 1-3 to reproduce the crash, focusing on the transition process.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-21')">
+          <td class="rank">#22</td>
+          <td class="crash-name">
+            <span class="name" title="i-Reporter: -[PluralChunkField moveRight] + 288">i-Reporter: -[PluralChunkField moveRight] + 288</span>
+            <div class="crash-meta"><span class="file-tag">PluralChunkField.m:427</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">33</td>
+          <td class="latest-ver"></td>
+        </tr>
+        <tr id="crash-21" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of the crash is an out-of-bounds access or an invalid operation in the <code>moveRight</code> method of the <code>PluralChunkField</code> class, specifically at the line of code that is 288 bytes into the method. The code at fault is likely in the <code>PluralChunkField.m</code> file, which suggests a custom UI component is being used and its implementation contains a bug.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Open the i-Reporter app and navigate to a screen where the <code>PluralChunkField</code> is used.</li><li>Interact with the <code>PluralChunkField</code> to trigger the <code>moveRight</code> method, possibly by tapping or clicking on a button or element that calls this method.</li><li>Repeat step 2 multiple times to see if the crash is reproducible, and check if the crash occurs when the <code>moveRight</code> method is called under specific conditions or with certain input.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-22')">
+          <td class="rank">#23</td>
+          <td class="crash-name">
+            <span class="name" title="UIKitCore: -[UIViewController _presentViewController:withAnimationController:completion:] + 4052">UIKitCore: -[UIViewController _presentViewController:withAnimationController:completion:] + 4052</span>
+            <div class="crash-meta"><span class="file-tag">UIViewController.m:0</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">31</td>
+          <td class="latest-ver"></td>
+        </tr>
+        <tr id="crash-22" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is a null or uninitialized animation controller being passed to the <code>_presentViewController:withAnimationController:completion:</code> method in <code>UIViewController.m</code>. This suggests that the code responsible for creating and configuring the animation controller is at fault, possibly due to a programming error or an unexpected state.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Create a new iOS project with a single view controller.</li><li>Attempt to present another view controller using a custom animation controller.</li><li>Intentionally pass a null or uninitialized animation controller to the <code>presentViewController</code> method.</li><li>Run the application and verify that it crashes with the same stack trace as the original crash.</li><li>Repeat steps 2-4 with different animation controllers and presentation styles to isolate the root cause.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-23')">
+          <td class="rank">#24<span class="rank-badge rank-new" data-i18n="badge_new">新規</span></td>
+          <td class="crash-name">
+            <span class="name" title="CoreAutoLayout: _AssertAutoLayoutOnAllowedThreadsOnly + 324">CoreAutoLayout: _AssertAutoLayoutOnAllowedThreadsOnly + 324</span>
+            <div class="crash-meta"><span class="file-tag">NSISEngine.m:0</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">31</td>
+          <td class="latest-ver">8.2.25111</td>
+        </tr>
+        <tr id="crash-23" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is that Auto Layout is being accessed from a thread other than the main thread, which is not allowed. The code at fault is likely a custom view or layout-related code that is being executed on a background thread, triggering the assertion in NSISEngine.m.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Create a custom view that uses Auto Layout to position its subviews.</li><li>Dispatch a block to a background thread that updates the layout of the custom view.</li><li>Run the app and observe the crash when the background thread attempts to access Auto Layout.</li><li>Verify that the crash is resolved by moving the layout update code to the main thread.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="crash-row" onclick="toggleDetail('crash-24')">
+          <td class="rank">#25</td>
+          <td class="crash-name">
+            <span class="name" title="UIKitCore: -[UIPopoverPresentationController presentationTransitionWillBegin] + 3892">UIKitCore: -[UIPopoverPresentationController presentationTransitionWillBegin] + 3892</span>
+            <div class="crash-meta"><span class="file-tag">UIPopoverPresentationController.m:1375</span><span class="badge-sev" style="color:#6870a0;background:#f4f5ff">Low</span></div>
+          </td>
+          <td class="devices">28</td>
+          <td class="latest-ver"></td>
+        </tr>
+        <tr id="crash-24" class="detail-row" style="display:none">
+          <td colspan="5">
+            <div class="detail-box">
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_root_cause">根本原因</div>
+                <div class="detail-content"><span class="ai-badge">AI</span> The likely root cause of this crash is a timing issue or an invalid state within the UIPopoverPresentationController, specifically in the presentationTransitionWillBegin method. The code at fault is likely the UIPopoverPresentationController.m file, which is part of the UIKitCore framework, and is being called when a popover is being presented.
+
+##</div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label" data-i18n="detail_test_case">テストケース案</div>
+                <div class="detail-content"><ol><li>Create a new iOS project with a UIViewController that presents a UIPopoverPresentationController.</li><li>Configure the popover to be presented when a button is tapped.</li><li>Tap the button to present the popover and immediately rotate the device or navigate away from the presenting view controller.</li><li>Repeat steps 2-3 several times to increase the likelihood of reproducing the crash.</li></ol></div>
+              </div>
+            </div>
+          </td>
+        </tr></tbody>
+    </table>
+  </div>
+</div>
+
+  <footer>
+    ConMas i-Reporter &nbsp;·&nbsp; Xcode Organizer (crashwebservices.apple.com) &nbsp;·&nbsp;
+    <span data-i18n="footer_txt">Devices = ユニーク影響デバイス数</span>
+  </footer>
+</div>
+
+<script>
+const charts = {};
+
+  charts["last14Days"] = new Chart(document.getElementById("dailyChart_last14Days"), {
+    data: {
+      labels: ["26-03-18", "26-03-19", "26-03-20", "26-03-21", "26-03-22", "26-03-23", "26-03-24", "26-03-25", "26-03-26", "26-03-27", "26-03-28", "26-03-29", "26-03-30", "26-03-31"],
+      datasets: [
+        {
+          type: "bar",
+          label: "Daily Affected Devices",
+          data: [28, 25, 15, 10, 19, 36, 22, 23, 32, 21, 9, 10, 29, 24],
+          backgroundColor: "rgba(230,25,75,0.45)",
+          borderColor: "rgba(230,25,75,0.7)",
+          borderWidth: 1.5, borderRadius: 4, order: 2,
+        },
+        {
+          type: "line",
+          label: "7-day avg",
+          data: [28.0, 26.5, 22.7, 19.5, 19.4, 22.2, 22.1, 21.4, 22.4, 23.3, 23.1, 21.9, 20.9, 21.1],
+          borderColor: "#4363d8", borderWidth: 2,
+          borderDash: [5,4], pointRadius: 0,
+          tension: 0.4, fill: false, order: 1,
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: "index", intersect: false },
+      plugins: {
+        legend: { position: "top", align: "end",
+          labels: { boxWidth: 13, font: { size: 13 }, color: "#6870a0" } },
+        tooltip: {
+          backgroundColor: "white", titleColor: "#1a1f3c", bodyColor: "#3a4060",
+          borderColor: "#e0e4f0", borderWidth: 1, padding: 10,
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: "#8890b0", font: { size: 12 } } },
+        y: { beginAtZero: true, grid: { color: "#f0f4f8" },
+          ticks: { color: "#8890b0", font: { size: 12 }, precision: 0 },
+          title: { display: true, text: "Devices / Day", color: "#a0a8c0", font: { size: 12 } }
+        }
+      }
+    }
+  });
+  charts["last365Days"] = new Chart(document.getElementById("dailyChart_last365Days"), {
+    data: {
+      labels: ["May '25", "Jun '25", "Jul '25", "Aug '25", "Sep '25", "Oct '25", "Nov '25", "Dec '25", "Jan '26", "Feb '26", "Mar '26", "Apr '26"],
+      datasets: [
+        {
+          type: "bar",
+          label: "Monthly Affected Devices",
+          data: [132, 164, 194, 188, 196, 189, 148, 196, 156, 229, 266, 12],
+          backgroundColor: "rgba(230,25,75,0.45)",
+          borderColor: "rgba(230,25,75,0.7)",
+          borderWidth: 1.5, borderRadius: 4, order: 2,
+        },
+        {
+          type: "line",
+          label: "3-month avg",
+          data: [132.0, 148.0, 163.3, 169.5, 174.8, 177.2, 173.0, 182.1, 181.0, 186.0, 197.1, 170.9],
+          borderColor: "#4363d8", borderWidth: 2,
+          borderDash: [5,4], pointRadius: 0,
+          tension: 0.4, fill: false, order: 1,
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: "index", intersect: false },
+      plugins: {
+        legend: { position: "top", align: "end",
+          labels: { boxWidth: 13, font: { size: 13 }, color: "#6870a0" } },
+        tooltip: {
+          backgroundColor: "white", titleColor: "#1a1f3c", bodyColor: "#3a4060",
+          borderColor: "#e0e4f0", borderWidth: 1, padding: 10,
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: "#8890b0", font: { size: 12 } } },
+        y: { beginAtZero: true, grid: { color: "#f0f4f8" },
+          ticks: { color: "#8890b0", font: { size: 12 }, precision: 0 },
+          title: { display: true, text: "Devices / Month", color: "#a0a8c0", font: { size: 12 } }
+        }
+      }
+    }
+  });
+
+function animateKpi(el) {
+  const target = parseInt(el.getAttribute('data-kpi-value'), 10);
+  if (isNaN(target)) return;
+  el.textContent = '0';
+  const delay = 300;
+  const duration = 1000;
+  let startTime = null;
+  setTimeout(function() {
+    function step(ts) {
+      if (!startTime) startTime = ts;
+      const elapsed = ts - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(eased * target);
+      el.textContent = current.toLocaleString();
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }, delay);
+}
+
+function animateKpisInPanel(panelId) {
+  const panel = document.getElementById(panelId);
+  if (!panel) return;
+  panel.querySelectorAll('.kpi-value[data-kpi-value]').forEach(animateKpi);
+}
+
+function switchPeriod(period) {
+  document.querySelectorAll(".tab-btn").forEach(b =>
+    b.classList.toggle("active", b.dataset.period === period)
+  );
+  document.querySelectorAll(".panel").forEach(p => {
+    p.style.display = p.id === "panel-" + period ? "block" : "none";
+  });
+  if (charts[period]) charts[period].resize();
+  animateKpisInPanel("panel-" + period);
+}
+
+function toggleDetail(rowId) {
+  const row = document.getElementById(rowId);
+  if (!row) return;
+  row.style.display = row.style.display === "none" ? "table-row" : "none";
+}
+
+const STRINGS = {
+  ja: {
+    report_title: "クラッシュレポート",
+    xcode_data: "Xcode Organizer データ",
+    ai_powered: "AI 分析済み",
+    generated_label: "生成日時",
+    kpi_types: "クラッシュ種類数",
+    kpi_devices: "影響デバイス数",
+    kpi_worst: "最大クラッシュ",
+    kpi_types_sub: "固有のクラッシュ署名",
+    kpi_devices_sub: "全クラッシュ種類の合計",
+    kpi_worst_sub: "影響デバイス数",
+    trend_daily: "日次 影響デバイス数推移",
+    trend_monthly: "月次 影響デバイス数推移",
+    by_version: "アプリバージョン別",
+    by_os: "OS バージョン別",
+    by_device_type: "デバイスタイプ別",
+    by_model: "デバイスモデル別",
+    by_severity: "重要度別",
+    top_crashes_title: "クラッシュ署名ランキング",
+    click_hint: "行をクリックで原因・テスト表示",
+    th_version: "バージョン",
+    th_dev: "台数",
+    th_os: "OS",
+    th_device: "デバイス",
+    th_model: "モデル",
+    th_logs: "ログ",
+    th_level: "重要度",
+    th_types: "種類数",
+    th_crash: "クラッシュ / ソースファイル",
+    th_devices_col: "台数",
+    th_latest_ver: "最新バージョン",
+    chart_note_daily: "破線 = 7日移動平均 · 値 = 日次影響デバイス数（全クラッシュ合計）",
+    chart_note_monthly: "破線 = 3ヶ月移動平均 · 値 = 月次影響デバイス数（全クラッシュ合計）",
+    detail_root_cause: "根本原因",
+    detail_test_case: "テストケース案",
+    sev_note: "緊急=#1 · 高=#2–3 · 中=#4–10 · 低=その他",
+    models_note_empty: "クラッシュログ未ダウンロード — Xcode Organizerでクラッシュを開いてください",
+    models_note_avail: "ダウンロード済みクラッシュログのみ",
+    sync_label: "Xcode 同期",
+    badge_new: "新規",
+    footer_txt: "Devices = ユニーク影響デバイス数",
+    comp_prev: "前回:",
+    comp_new: "新規",
+    comp_resolved: "解消",
+    comp_vs_last: "前回比",
+    unit_types: "種類",
+    unit_devices: "台",
+    today: "今日",
+    period_last14Days: "直近2週間",
+    period_last365Days: "直近1年",
+  },
+  en: {
+    report_title: "Crash Report",
+    xcode_data: "Xcode Organizer Data",
+    ai_powered: "AI Analysis",
+    generated_label: "Generated",
+    kpi_types: "UNIQUE CRASH TYPES",
+    kpi_devices: "AFFECTED DEVICES",
+    kpi_worst: "WORST SINGLE CRASH",
+    kpi_types_sub: "Distinct crash signatures",
+    kpi_devices_sub: "Across all crash types",
+    kpi_worst_sub: "Devices affected",
+    trend_daily: "Daily Affected Devices Trend",
+    trend_monthly: "Monthly Affected Devices Trend",
+    by_version: "By App Version",
+    by_os: "By OS Version",
+    by_device_type: "By Device Type",
+    by_model: "By Device Model",
+    by_severity: "By Severity",
+    top_crashes_title: "Top Crash Signatures",
+    click_hint: "CLICK ROW FOR ROOT CAUSE &amp; TEST CASE",
+    th_version: "VERSION",
+    th_dev: "DEV",
+    th_os: "OS",
+    th_device: "DEVICE",
+    th_model: "MODEL",
+    th_logs: "LOGS",
+    th_level: "LEVEL",
+    th_types: "TYPES",
+    th_crash: "CRASH / SOURCE FILE",
+    th_devices_col: "DEVICES",
+    th_latest_ver: "LATEST VER.",
+    chart_note_daily: "Dashed = 7-day moving avg · Values = unique devices/day (all crash types)",
+    chart_note_monthly: "Dashed = 3-month moving avg · Values = unique devices/month (all crash types)",
+    detail_root_cause: "Root Cause",
+    detail_test_case: "Suggested Test Case",
+    sev_note: "Critical=#1 · High=#2–3 · Medium=#4–10 · Low=rest",
+    models_note_empty: "No crash logs downloaded yet — open a crash in Xcode Organizer",
+    models_note_avail: "From downloaded crash logs only",
+    sync_label: "Xcode sync",
+    badge_new: "NEW",
+    footer_txt: "Devices = unique devices affected",
+    comp_prev: "Last report:",
+    comp_new: "new",
+    comp_resolved: "resolved",
+    comp_vs_last: "vs last",
+    unit_types: "types",
+    unit_devices: "devices",
+    today: "today",
+    period_last14Days: "Last 2 Weeks",
+    period_last365Days: "Last Year",
+  }
+};
+
+window._currentLang = 'ja';
+
+function setLang(l) {
+  window._currentLang = l;
+  const strings = STRINGS[l];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (strings[key] !== undefined) el.innerHTML = strings[key];
+  });
+  document.getElementById('lang-btn-ja').classList.toggle('active', l === 'ja');
+  document.getElementById('lang-btn-en').classList.toggle('active', l === 'en');
+  const visiblePanel = document.querySelector('.panel[style*="block"]') || document.querySelector('.panel');
+  if (visiblePanel) animateKpisInPanel(visiblePanel.id);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const visiblePanel = document.querySelector('.panel[style*="block"]') || document.querySelector('.panel');
+  if (visiblePanel) animateKpisInPanel(visiblePanel.id);
+});
+</script>
+</body>
+</html>
