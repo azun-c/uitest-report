@@ -67,26 +67,26 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-seri
 <div class="page">
 <div class="header">
   <h1>i-Reporter UI Test Report</h1>
-  <p>2026-04-02 02:44:55 UTC &nbsp;&bull;&nbsp; &#x23F1; 23m 52s total run time</p>
+  <p>2026-04-02 02:47:17 UTC &nbsp;&bull;&nbsp; &#x23F1; 28m 43s total run time</p>
 </div>
 <div class="banner fail">&#x274C;&nbsp;&nbsp;3 of 3 tests failed &nbsp;&mdash;&nbsp; 0 passed</div>
 <div class="stats">
   <div class="stat red"><div class="stat-icon">&#x2705;</div><div class="val">0</div><div class="lbl">Tests Passed</div></div>
   <div class="stat red"><div class="stat-icon">&#x274C;</div><div class="val">3</div><div class="lbl">Tests Failed</div></div>
-  <div class="stat blue"><div class="stat-icon">&#x1F3AF;</div><div class="val">1</div><div class="lbl">Assertions OK</div></div>
-  <div class="stat red"><div class="stat-icon">&#x26A0;&#xFE0F;</div><div class="val">2</div><div class="lbl">Assertions Failed</div></div>
-  <div class="stat purple"><div class="stat-icon">&#x23F1;</div><div class="val">23m 52s</div><div class="lbl">Run Time</div></div>
+  <div class="stat blue"><div class="stat-icon">&#x1F3AF;</div><div class="val">0</div><div class="lbl">Assertions OK</div></div>
+  <div class="stat slate"><div class="stat-icon">&#x26A0;&#xFE0F;</div><div class="val">0</div><div class="lbl">Assertions Failed</div></div>
+  <div class="stat purple"><div class="stat-icon">&#x23F1;</div><div class="val">28m 43s</div><div class="lbl">Run Time</div></div>
 </div>
 <div class="cards-label">Test Runs — execution order</div>
 <div class="cards">
 <div class="card-row">
 <div class="step-num fail">1</div>
-<div class="card fail" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;create_new_report_of &quot;$TEMPLATE_FREETEXT&quot; || exit 1&#10;log_step &quot;Tapping FreeText cluster&quot;&#10;if _is_ipad; then&#10;    tap_on_first_half_center   # focus the FreeText cluster&#10;else&#10;    axe_tap -x &quot;$SCREEN_CENTER_X&quot; -y &quot;$(( SCREEN_A_QUARTER_Y + 100 ))&quot;&#10;fi&#10;sleep 0.4 # wait for the animations to finish&#10;ft_enter_edit_mode           # turns on drawing mode&#10;assert_visible &quot;$LABEL_FT_EDIT_MODE_ACTIVE&quot;   # drawing mode is now active&#10;draw_slash_row 450 30 50 30&#10;sleep 0.3&#10;assert_app_running   # verify no crash during drawing&#10;ft_exit_edit_mode           # turns off drawing mode&#10;assert_absent &quot;$LABEL_FT_EDIT_MODE_ACTIVE&quot; 3  # drawing mode has exited&#10;if _is_ipad; then&#10;    tap_top_toolbar_button &quot;$TOOLBAR_BTN_MORE&quot;&#10;    sleep 0.4  # wait for More popover to appear&#10;    log_step &quot;Turning on Split display&quot;&#10;    tap_split_display_switch&#10;    sleep 3&#10;    log_step &quot;Select a dummy point to split&quot;&#10;    tap_screen_center&#10;    sleep 0.1&#10;    log_step &quot;Re-opening More popover to toggle Split display off&quot;&#10;    tap_top_toolbar_button &quot;$TOOLBAR_BTN_MORE&quot;&#10;    sleep 0.4&#10;    log_step ">
+<div class="card fail" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;create_new_report_of &quot;$TEMPLATE_FREETEXT&quot; || exit 1&#10;log_step &quot;Tapping FreeText cluster to focus it&quot;&#10;if _is_ipad; then&#10;    tap_on_first_half_center&#10;else&#10;    axe_tap -x &quot;$SCREEN_CENTER_X&quot; -y &quot;$(( SCREEN_A_QUARTER_Y + 100 ))&quot;&#10;fi&#10;sleep 0.4&#10;assert_visible &quot;$LABEL_FT_EDIT_MODE_INACTIVE&quot;   # gray pencil → cluster focused, drawing inactive&#10;log_step &quot;Activating drawing mode&quot;&#10;ft_enter_edit_mode&#10;assert_visible &quot;$LABEL_FT_EDIT_MODE_ACTIVE&quot;     # blue pencil → drawing mode active&#10;log_step &quot;Drawing — row of thin slashes&quot;&#10;if _is_ipad; then&#10;  draw_slash_row 380 80 80 80&#10;else&#10;  draw_slash_row 380 50 25 20&#10;fi&#10;sleep 0.3&#10;log_step &quot;Drawing — row of wide slashes&quot;&#10;if _is_ipad; then&#10;  draw_slash_row 450 50 90 40&#10;else&#10;  draw_slash_row 450 60 35 25&#10;fi&#10;sleep 0.3&#10;log_step &quot;Drawing — continuous curves&quot;&#10;if _is_ipad; then&#10;  draw_curve \&#10;    80 530  180 490  300 520  420 480  540 520&#10;else&#10;  draw_curve \&#10;    80 530  180 490  150 520  100 480  20 520&#10;fi&#10;sleep 0.3&#10;if _is_ipad; then&#10;  draw_curve \&#10;    80 580  200 560  350 570  500 555  650 570&#10;else&#10;  draw_curve \">
 <div class="card-top">
 <span class="chev">&#x25B6;</span>
 <span class="status-pill fail">&#x274C; FAIL</span>
-<span class="card-name">freetext_split_undo.sh</span>
-<span class="dur-badge">&#x23F1; 7m 5s</span>
+<span class="card-name">freetext_draw.sh</span>
+<span class="dur-badge">&#x23F1; 16m 31s</span>
 </div>
 <div class="card-body">
 <div class="card-body-inner">
@@ -94,32 +94,39 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-seri
 <div class="ai-label">&#x2728; AI Summary</div>
 <div class="ai-status"></div>
 <div class="ai-text" style="display:none"></div></div>
-<div class="logblock">[02:22:44] [log_step:22]
-   📣 Waiting for alert Confirmation - Data in editing exists
-[02:22:56] [log_step:35]
-   📣 Waiting for Home screen...
-[02:24:58] [log_error:37]
-   ❌ Home screen did not appear
-[02:29:17] [log_step:36]
+<div class="logblock">[02:32:25] [log_step:129]
+   📣 Enabling 'change server when local reports exist'
+[02:32:26] [log_error:57]
+   ❌ Popover switch not found: 'Enable to change server when local reports exist'
+[02:32:26] [log_step:133]
+   📣 Saving connection
+[02:32:26] [log_step:155]
+   📣 Tapping nav button 'Save' in 'Input Connection'
+[02:32:27] [log_error:157]
+   ❌ Nav button not found: 'Save' in nav bar 'Input Connection'
+[02:32:27] [log_step:137]
+   📣 Selecting connection 'NEXT-SERVER'
+[02:34:56] [log_error:139]
+   ❌ Connection 'NEXT-SERVER' not found in list after saving
+[02:35:08] [log_step:36]
    📣 ConMas Server not visible — dismissing alert and retrying
-[02:29:18] [log_error:74]
+[02:35:08] [log_error:74]
    ❌ axe_touch_delay: element not found: 'Cancel'
-[02:29:41] [log_error:40]
+[02:35:22] [log_error:40]
    ❌ ConMas Server tab not found after retry</div>
-<div class="video-name">&#x1F3AC; <a class="video-link" href="https://app.bitrise.io/build/e35e5d06-c457-4f09-a0a5-b8182d8fca01?tab=artifacts" target="_blank">iphone-17-pro-freetext_split_undo-20260402-022105.mp4</a></div>
+<div class="video-name">&#x1F3AC; <a class="video-link" href="https://app.bitrise.io/build/e35e5d06-c457-4f09-a0a5-b8182d8fca01?tab=artifacts" target="_blank">iphone-17-pro-freetext_draw-20260402-021844.mp4</a></div>
 </div>
 </div>
 </div>
 </div>
 <div class="card-row">
 <div class="step-num fail">2</div>
-<div class="card fail" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;log_step &quot;Waiting for Home screen...&quot;&#10;wait_for_home_screen 5&#10;tap_alert_button_if_present &quot;$LABEL_BUTTON_CANCEL&quot;&#10;setup_server_login&#10;log_step &quot;Tapping ConMas Server tab&quot;&#10;axe_touch_delay --label &quot;$LABEL_CONMAS_SERVER&quot;&#10;assert &quot;ConMas Server page loaded&quot; wait_for_element_having_label &quot;$LABEL_ALL_REPORTS&quot; 10&#10;assert_visible &quot;$LABEL_HOME_INFO&quot;&#10;assert_visible &quot;$LABEL_CREATE_NEW&quot;&#10;assert_visible &quot;$LABEL_ALL_REPORTS&quot;&#10;assert_visible &quot;$LABEL_BEFORE_INPUT&quot;&#10;assert_visible &quot;$LABEL_EDITING&quot;&#10;assert_visible &quot;$LABEL_COMPLETED&quot;&#10;assert_visible &quot;$LABEL_WAITING_FOR_APPROVAL&quot;&#10;assert_visible &quot;$LABEL_REJECTED&quot;&#10;assert_visible &quot;$LABEL_APPLYING&quot;&#10;assert_visible &quot;$LABEL_SCHEDULE&quot;&#10;assert_visible &quot;$LABEL_CUSTOM_MENU&quot;&#10;assert_visible &quot;$LABEL_COMMON_LIBRARY&quot;&#10;assert_visible &quot;$LABEL_CUSTOM_MASTER&quot;&#10;assert_visible &quot;$LABEL_THIS_DEVICE&quot;&#10;assert_visible &quot;$LABEL_CONMAS_SERVER&quot;&#10;log_step &quot;✅ Done!&quot;">
+<div class="card fail" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;create_new_report_of &quot;$TEMPLATE_FREETEXT&quot; || exit 1&#10;log_step &quot;Tapping FreeText cluster to focus it&quot;&#10;if _is_ipad; then&#10;    tap_on_first_half_center&#10;else&#10;    axe_tap -x &quot;$SCREEN_CENTER_X&quot; -y &quot;$(( SCREEN_A_QUARTER_Y + 100 ))&quot;&#10;fi&#10;sleep 1&#10;assert_visible &quot;$LABEL_FT_EDIT_MODE_INACTIVE&quot;   # gray pencil visible → cluster is focused&#10;log_step &quot;Tapping outside the FreeText cluster to unfocus&quot;&#10;tap_below_top_toolbar&#10;sleep 1&#10;assert_absent &quot;$LABEL_FT_EDIT_MODE_INACTIVE&quot; 3   # pencil button gone → cluster unfocused&#10;assert_app_running&#10;log_step &quot;✅ Done!&quot;">
 <div class="card-top">
 <span class="chev">&#x25B6;</span>
 <span class="status-pill fail">&#x274C; FAIL</span>
-<span class="card-name">home_comnas_server_section.sh</span>
-<span class="card-badge">0/1 assertions</span>
-<span class="dur-badge">&#x23F1; 5m 8s</span>
+<span class="card-name">freetext_focus.sh</span>
+<span class="dur-badge">&#x23F1; 7m 52s</span>
 </div>
 <div class="card-body">
 <div class="card-body-inner">
@@ -127,35 +134,39 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-seri
 <div class="ai-label">&#x2728; AI Summary</div>
 <div class="ai-status"></div>
 <div class="ai-text" style="display:none"></div></div>
-<div class="asserts">
-<div class="aline ng">   ❌ FAIL: ConMas Server page loaded</div>
-</div>
-<div class="logblock">[02:31:17] [log_step:24]
-   📣 Waiting for Home screen...
-[02:32:13] [log_step:35]
-   📣 Waiting for Home screen...
-[02:34:51] [log_error:37]
-   ❌ Home screen did not appear
-[02:34:51] [log_step:36]
-   📣 Tapping ConMas Server tab
-[02:34:52] [log_error:74]
-   ❌ axe_touch_delay: element not found: 'ConMas Server'
-[02:36:23] [assert:40]
-   ❌ FAIL: ConMas Server page loaded</div>
-<div class="video-name">&#x1F3AC; <a class="video-link" href="https://app.bitrise.io/build/e35e5d06-c457-4f09-a0a5-b8182d8fca01?tab=artifacts" target="_blank">iphone-17-pro-home_comnas_server_section-20260402-023110.mp4</a></div>
+<div class="logblock">[02:43:23] [log_step:129]
+   📣 Enabling 'change server when local reports exist'
+[02:43:24] [log_error:57]
+   ❌ Popover switch not found: 'Enable to change server when local reports exist'
+[02:43:24] [log_step:133]
+   📣 Saving connection
+[02:43:24] [log_step:155]
+   📣 Tapping nav button 'Save' in 'Input Connection'
+[02:43:24] [log_error:157]
+   ❌ Nav button not found: 'Save' in nav bar 'Input Connection'
+[02:43:24] [log_step:137]
+   📣 Selecting connection 'NEXT-SERVER'
+[02:43:52] [log_error:139]
+   ❌ Connection 'NEXT-SERVER' not found in list after saving
+[02:44:04] [log_step:36]
+   📣 ConMas Server not visible — dismissing alert and retrying
+[02:44:05] [log_error:74]
+   ❌ axe_touch_delay: element not found: 'Cancel'
+[02:44:27] [log_error:40]
+   ❌ ConMas Server tab not found after retry</div>
+<div class="video-name">&#x1F3AC; <a class="video-link" href="https://app.bitrise.io/build/e35e5d06-c457-4f09-a0a5-b8182d8fca01?tab=artifacts" target="_blank">iphone-17-pro-freetext_focus-20260402-023629.mp4</a></div>
 </div>
 </div>
 </div>
 </div>
 <div class="card-row">
 <div class="step-num fail">3</div>
-<div class="card fail" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;_search_document() {&#10;  local query=&quot;$1&quot;&#10;  log_step &quot;Waiting for search field...&quot;&#10;  if ! wait_for_template_search_box 10; then&#10;    log_error &quot;Search field did not appear&quot;&#10;    return 1&#10;  fi&#10;  sleep 0.4&#10;  tap_search_field_and_type &quot;$query&quot;&#10;}&#10;log_step &quot;Waiting for Home screen...&quot;&#10;wait_for_home_screen 10&#10;tap_alert_button_if_present &quot;$LABEL_ALERT_BTN_CANCEL&quot;&#10;setup_server_login &quot;$SERVER_NAME_SCAN&quot;&#10;log_step &quot;Tapping ConMas Server tab&quot;&#10;axe_touch_delay --label &quot;$LABEL_CONMAS_SERVER&quot;&#10;assert &quot;ConMas Server page loaded&quot; wait_for_element_having_label &quot;$LABEL_ALL_REPORTS&quot; 10&#10;log_step &quot;Tapping All Reports&quot;&#10;axe_touch_delay --label &quot;$LABEL_ALL_REPORTS&quot;&#10;sleep 1&#10;_search_document &quot;$DOCUMENT_SCAN_UNIQUE&quot;&#10;assert_visible_label_contains &quot;$DOCUMENT_SCAN_UNIQUE_LABEL&quot; 15&#10;sleep 3&#10;log_step &quot;Going back to Home&quot;&#10;tap_nav_button &quot;$NAV_ID_ALL_REPORTS&quot; &quot;$LABEL_NAV_BTN_BACK&quot;&#10;assert &quot;Back to library&quot; wait_for_element_having_label &quot;$LABEL_ALL_REPORTS&quot; 10&#10;setup_server_login &quot;$SERVER_NAME_NEXT&quot;&#10;log_step &quot;Tapping ConMas Server tab&quot;&#10;axe_touch_delay --label &quot;$LABEL_CONMAS_SERVER&quot;">
+<div class="card fail" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;_ft_cluster_x() { echo &quot;$SCREEN_CENTER_X&quot;; }&#10;_ft_cluster_y() {&#10;  if _is_ipad; then echo &quot;$SCREEN_A_QUARTER_Y&quot;&#10;  else          echo &quot;$(( SCREEN_A_QUARTER_Y + 100 ))&quot;&#10;  fi&#10;}&#10;create_new_report_of &quot;$TEMPLATE_FREETEXT&quot; || exit 1&#10;log_step &quot;Tapping FreeText cluster to focus it&quot;&#10;axe_tap -x &quot;$(_ft_cluster_x)&quot; -y &quot;$(_ft_cluster_y)&quot;&#10;sleep 0.4&#10;assert_visible &quot;$LABEL_FT_EDIT_MODE_INACTIVE&quot;&#10;log_step &quot;Long pressing on FreeText cluster to open context menu&quot;&#10;axe_long_press -x &quot;$(_ft_cluster_x)&quot; -y &quot;$(_ft_cluster_y)&quot;&#10;sleep 1.5&#10;assert_app_running   # context menu should now be visible&#10;log_step &quot;Verifying context menu options&quot;&#10;assert_visible &quot;$LABEL_FT_CONTEXT_CAMERA&quot;&#10;assert_visible &quot;$LABEL_FT_CONTEXT_LIBRARY&quot;&#10;log_step &quot;Dismissing context menu (tap outside)&quot;&#10;tap_below_top_toolbar&#10;sleep 1&#10;log_step &quot;Entering drawing mode&quot;&#10;ft_enter_edit_mode&#10;assert_visible &quot;$LABEL_FT_EDIT_MODE_ACTIVE&quot;&#10;log_step &quot;Drawing strokes&quot;&#10;if _is_ipad; then&#10;  draw_slash_row 380 80 80 80&#10;else&#10;  draw_slash_row 380 50 25 20&#10;fi&#10;sleep 0.3&#10;if _is_ipad; then&#10;  draw_curve \&#10;    80 500  200 460  3">
 <div class="card-top">
 <span class="chev">&#x25B6;</span>
 <span class="status-pill fail">&#x274C; FAIL</span>
-<span class="card-name">change_server_connection.sh</span>
-<span class="card-badge">1/2 assertions</span>
-<span class="dur-badge">&#x23F1; 5m 23s</span>
+<span class="card-name">freetext_long_press.sh</span>
+<span class="dur-badge">&#x23F1; 1m 45s</span>
 </div>
 <div class="card-body">
 <div class="card-body-inner">
@@ -163,31 +174,20 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-seri
 <div class="ai-label">&#x2728; AI Summary</div>
 <div class="ai-status"></div>
 <div class="ai-text" style="display:none"></div></div>
-<div class="asserts">
-<div class="aline ok">   ✅ PASS: ConMas Server page loaded</div>
-<div class="aline ng">   ❌ FAIL: element with label containing: "SCAN_UITEST_UNIQUE_DOCUMENT"</div>
-</div>
-<div class="logblock">[02:41:12] [log_error:37]
+<div class="logblock">[02:45:29] [log_step:22]
+   📣 Waiting for alert Confirmation - Data in editing exists
+[02:45:58] [log_step:35]
+   📣 Waiting for Home screen...
+[02:46:55] [log_error:37]
    ❌ Home screen did not appear
-[02:41:12] [log_step:41]
-   📣 Tapping ConMas Server tab
-[02:41:13] [log_error:74]
-   ❌ axe_touch_delay: element not found: 'ConMas Server'
-[02:42:23] [assert:43]
-   ✅ PASS: ConMas Server page loaded
-[02:42:23] [log_step:45]
-   📣 Tapping All Reports
-[02:42:24]
-   axe_touch at (201, 246) with delay 0.1s (label='All Reports')
-[02:42:27] [log_step:21]
-   📣 Waiting for search field...
-[02:42:59]
-   axe_touch at (179, 146) with delay 0.1s (label='')
-[02:43:00] [log_step:186]
-   📣 Typing search query: SCAN_UITEST_UNIQUE
-[02:44:34] [assert_visible_label_contains:51]
-   ❌ FAIL: element with label containing: "SCAN_UITEST_UNIQUE_DOCUMENT"</div>
-<div class="video-name">&#x1F3AC; <a class="video-link" href="https://app.bitrise.io/build/e35e5d06-c457-4f09-a0a5-b8182d8fca01?tab=artifacts" target="_blank">iphone-17-pro-change_server_connection-20260402-023725.mp4</a></div>
+[02:47:01] [log_step:36]
+   📣 ConMas Server not visible — dismissing alert and retrying
+Error: Cannot run accessibility commands against 1892631B-0B9A-4A67-B8B9-53175692E0C7 | iPhone 17 Pro | Shutdown | iPhone 17 Pro | OS 'iOS 26.2'  as it is not booted
+[02:47:01] [log_error:74]
+   ❌ axe_touch_delay: element not found: 'Cancel'
+[02:47:13] [log_error:40]
+   ❌ ConMas Server tab not found after retry</div>
+<div class="video-name">&#x1F3AC; <a class="video-link" href="https://app.bitrise.io/build/e35e5d06-c457-4f09-a0a5-b8182d8fca01?tab=artifacts" target="_blank">iphone-17-pro-freetext_long_press-20260402-024525.mp4</a></div>
 </div>
 </div>
 </div>
@@ -195,1164 +195,1368 @@ body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-seri
 </div>
 <div class="log-section">
 <div class="log-toggle"><span class="chev">&#x25B6;</span>&nbsp; Show full run log</div>
-<div class="logblock full-log">[02:18:51] [log_step:85]
+<div class="logblock full-log">[02:17:06] [log_step:85]
    📣 📦 Installing app from: /Users/vagrant/git/i-reporter-automation/resources/i-Reporter.app
-[02:19:13] [log_step:89]
+[02:17:29] [log_step:89]
    📣 🔐 Configuring permissions for jp.conmas.i-Reporter...
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-▶  freetext_split_undo.sh
+▶  freetext_draw.sh
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Recording simulator 1892631B-0B9A-4A67-B8B9-53175692E0C7 to /Users/vagrant/git/i-reporter-automation/videos/iphone-17-pro-freetext_split_undo-20260402-022105.mp4
+Recording simulator 1892631B-0B9A-4A67-B8B9-53175692E0C7 to /Users/vagrant/git/i-reporter-automation/videos/iphone-17-pro-freetext_draw-20260402-021844.mp4
 Press Ctrl+C to stop recording
-[02:21:08]
+[02:18:47]
    🔍 Looking up booted simulator: "iPhone 17 Pro"
-[02:21:08]
+[02:18:47]
    ✅ Using persisted UDID: 1892631B-0B9A-4A67-B8B9-53175692E0C7
 IOServiceMatchingfailed for: AppleM2ScalerParavirtDriver
-[02:22:11]
-   🪪 Injected TerminalID: DUMMY-AUTOMATION-TEST
-[02:22:11]
+[02:18:49]
    🚀 Launching app: jp.conmas.i-Reporter
-jp.conmas.i-Reporter: 16117
-[02:22:36]
-   ✅ App "jp.conmas.i-Reporter" launched.
-[02:22:44] [log_step:22]
+An error was encountered processing the command (domain=FBSOpenApplicationServiceErrorDomain, code=4):
+Simulator device failed to launch jp.conmas.i-Reporter.
+Underlying error (domain=FBSOpenApplicationServiceErrorDomain, code=4):
+	The request to open "jp.conmas.i-Reporter" failed.
+[02:18:51]
+   ❌ Failed to launch "jp.conmas.i-Reporter". Is it installed on the simulator?
+[02:18:52] [log_step:22]
    📣 Waiting for alert Confirmation - Data in editing exists
-[02:22:56] [log_step:35]
+[02:22:46] [log_step:35]
    📣 Waiting for Home screen...
-[02:24:58] [log_error:37]
-   ❌ Home screen did not appear
-[02:29:17] [log_step:36]
+[02:22:50]
+   axe_touch at (38, 84) with delay 0.1s (label='settings')
+[02:22:52] [log_step:71]
+   📣 Navigating to Server settings
+[02:22:53]
+   axe_touch at (201, 173) with delay 0.1s (label='Server')
+[02:22:55] [log_step:80]
+   📣 Checking if 'NEXT-SERVER' is already selected...
+[02:23:07] [log_step:97]
+   📣 Server 'NEXT-SERVER' not selected — opening Server connection list
+[02:23:08]
+   axe_touch at (201, 173) with delay 0.1s (label='')
+[02:23:09] [log_step:110]
+   📣 Selecting connection 'NEXT-SERVER'
+[02:24:52] [log_step:112]
+   📣 Connection 'NEXT-SERVER' not found — creating it
+[02:24:52] [log_step:114]
+   📣 Tapping Add new connection
+[02:24:54]
+   axe_touch at (201, 277) with delay 0.1s (label='Add new connection')
+[02:24:55] [log_step:122]
+   📣 Filling in connection form for 'NEXT-SERVER'
+[02:25:46]
+   axe_touch at (201, 194) with delay 0.1s (label='Server connection')
+[02:26:16] [log_step:20]
+   📣 Filling in field Server connection with value NEXT-SERVER
+[02:29:03]
+   axe_touch at (201, 238) with delay 0.1s (label='Connect to')
+[02:29:14] [log_step:20]
+   📣 Filling in field Connect to with value https://ircl-sup001kcy.conmas-i-reporter.com/ConMasWebNEXT/Rests/ConMasIReporter.aspx
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error: CLIError(errorDescription: "Simulator with UDID 1892631B-0B9A-4A67-B8B9-53175692E0C7 is not booted. Current state: FBiOSTargetState(rawValue: 4)")
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+[02:31:11] [log_error:15]
+   ❌ Form field not found: User ID
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+[02:32:25] [log_error:15]
+   ❌ Form field not found: Password
+[02:32:25] [log_step:129]
+   📣 Enabling 'change server when local reports exist'
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+[02:32:26] [log_error:57]
+   ❌ Popover switch not found: 'Enable to change server when local reports exist'
+[02:32:26] [log_step:133]
+   📣 Saving connection
+[02:32:26] [log_step:155]
+   📣 Tapping nav button 'Save' in 'Input Connection'
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+[02:32:27] [log_error:157]
+   ❌ Nav button not found: 'Save' in nav bar 'Input Connection'
+[02:32:27] [log_step:137]
+   📣 Selecting connection 'NEXT-SERVER'
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+[02:34:56] [log_error:139]
+   ❌ Connection 'NEXT-SERVER' not found in list after saving
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+[02:35:08] [log_step:36]
    📣 ConMas Server not visible — dismissing alert and retrying
-[02:29:18] [log_error:74]
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+[02:35:08] [log_error:74]
    ❌ axe_touch_delay: element not found: 'Cancel'
-[02:29:41] [log_error:40]
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+[02:35:22] [log_error:40]
    ❌ ConMas Server tab not found after retry
-Recording saved to /Users/vagrant/git/i-reporter-automation/videos/iphone-17-pro-freetext_split_undo-20260402-022105.mp4
-/Users/vagrant/git/i-reporter-automation/videos/iphone-17-pro-freetext_split_undo-20260402-022105.mp4
-❌ FAIL  freetext_split_undo.sh  (0/0 assertions passed, exit 1, 425s)
-[02:29:48] [log_step:110]
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Recording saved to /Users/vagrant/git/i-reporter-automation/videos/iphone-17-pro-freetext_draw-20260402-021844.mp4
+/Users/vagrant/git/i-reporter-automation/videos/iphone-17-pro-freetext_draw-20260402-021844.mp4
+❌ FAIL  freetext_draw.sh  (0/0 assertions passed, exit 1, 991s)
+[02:35:27] [log_step:110]
    📣 🔄 Shutting down simulator for clean reboot...
-[02:29:58] [log_step:113]
-   📣 🚀 Rebooting simulator...
-Monitoring boot status for iPhone 17 Pro (1892631B-0B9A-4A67-B8B9-53175692E0C7).
-[2026-04-02 02:30:12 +0000] Status=1, isTerminal=NO, Elapsed=00:12.
-	Waiting on BackBoard
-
-[2026-04-02 02:30:25 +0000] Status=4294967295, isTerminal=YES, Elapsed=00:25.
-	Finished
-
-[02:31:07] [log_step:122]
-   📣 ✅ Simulator ready.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-▶  home_comnas_server_section.sh
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Recording simulator 1892631B-0B9A-4A67-B8B9-53175692E0C7 to /Users/vagrant/git/i-reporter-automation/videos/iphone-17-pro-home_comnas_server_section-20260402-023110.mp4
-Press Ctrl+C to stop recording
-[02:31:11]
-   🔍 Looking up booted simulator: "iPhone 17 Pro"
-[02:31:11]
-   ✅ Using persisted UDID: 1892631B-0B9A-4A67-B8B9-53175692E0C7
-IOServiceMatchingfailed for: AppleM2ScalerParavirtDriver
-[02:31:12]
-   🪪 Injected TerminalID: DUMMY-AUTOMATION-TEST
-[02:31:12]
-   🚀 Launching app: jp.conmas.i-Reporter
-jp.conmas.i-Reporter: 23230
-[02:31:15]
-   ✅ App "jp.conmas.i-Reporter" launched.
-[02:31:17] [log_step:24]
-   📣 Waiting for Home screen...
-[02:32:13] [log_step:35]
-   📣 Waiting for Home screen...
-[02:34:51] [log_error:37]
-   ❌ Home screen did not appear
-[02:34:51] [log_step:36]
-   📣 Tapping ConMas Server tab
-[02:34:52] [log_error:74]
-   ❌ axe_touch_delay: element not found: 'ConMas Server'
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-[02:36:23] [assert:40]
-   ❌ FAIL: ConMas Server page loaded
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Recording saved to /Users/vagrant/git/i-reporter-automation/videos/iphone-17-pro-home_comnas_server_section-20260402-023110.mp4
-/Users/vagrant/git/i-reporter-automation/videos/iphone-17-pro-home_comnas_server_section-20260402-023110.mp4
-❌ FAIL  home_comnas_server_section.sh  (0/1 assertions passed, exit 1, 308s)
-[02:36:27] [log_step:110]
-   📣 🔄 Shutting down simulator for clean reboot...
-[02:36:32] [log_step:113]
+[02:35:36] [log_step:113]
    📣 🚀 Rebooting simulator...
 Monitoring boot status for iPhone 17 Pro (1892631B-0B9A-4A67-B8B9-53175692E0C7).
 Device already booted, nothing to do.
 
-[02:37:18] [log_step:122]
+[02:36:27] [log_step:122]
    📣 ✅ Simulator ready.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-▶  change_server_connection.sh
+▶  freetext_focus.sh
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Recording simulator 1892631B-0B9A-4A67-B8B9-53175692E0C7 to /Users/vagrant/git/i-reporter-automation/videos/iphone-17-pro-change_server_connection-20260402-023725.mp4
-Press Ctrl+C to stop recording
-[02:38:04]
+Error: CLIError(errorDescription: "Simulator 1892631B-0B9A-4A67-B8B9-53175692E0C7 is not booted. Current state: FBiOSTargetStateString(_rawValue: Shutting Down)")
+[02:36:31]
    🔍 Looking up booted simulator: "iPhone 17 Pro"
-[02:38:05]
+[02:36:31]
    ✅ Using persisted UDID: 1892631B-0B9A-4A67-B8B9-53175692E0C7
-IOServiceMatchingfailed for: AppleM2ScalerParavirtDriver
-[02:39:03]
-   🪪 Injected TerminalID: DUMMY-AUTOMATION-TEST
-[02:39:03]
+[02:36:33]
    🚀 Launching app: jp.conmas.i-Reporter
-jp.conmas.i-Reporter: 30682
-[02:39:11]
-   ✅ App "jp.conmas.i-Reporter" launched.
-[02:39:13] [log_step:32]
+An error was encountered processing the command (domain=com.apple.CoreSimulator.SimError, code=405):
+Unable to lookup in current state: Booting
+[02:36:35]
+   ❌ Failed to launch "jp.conmas.i-Reporter". Is it installed on the simulator?
+[02:37:09] [log_step:22]
+   📣 Waiting for alert Confirmation - Data in editing exists
+[02:39:02] [log_step:35]
    📣 Waiting for Home screen...
-[02:40:17] [log_step:35]
-   📣 Waiting for Home screen...
-[02:41:12] [log_error:37]
-   ❌ Home screen did not appear
-[02:41:12] [log_step:41]
-   📣 Tapping ConMas Server tab
-[02:41:13] [log_error:74]
-   ❌ axe_touch_delay: element not found: 'ConMas Server'
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-[02:42:23] [assert:43]
-   ✅ PASS: ConMas Server page loaded
-[02:42:23] [log_step:45]
-   📣 Tapping All Reports
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-[02:42:24]
-   axe_touch at (201, 246) with delay 0.1s (label='All Reports')
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-[02:42:27] [log_step:21]
-   📣 Waiting for search field...
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-[02:42:59]
-   axe_touch at (179, 146) with delay 0.1s (label='')
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-[02:43:00] [log_step:186]
-   📣 Typing search query: SCAN_UITEST_UNIQUE
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-[02:44:34] [assert_visible_label_contains:51]
-   ❌ FAIL: element with label containing: "SCAN_UITEST_UNIQUE_DOCUMENT"
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
+[02:39:29]
+   axe_touch at (38, 84) with delay 0.1s (label='settings')
+[02:39:33] [log_step:71]
+   📣 Navigating to Server settings
+[02:39:37]
+   axe_touch at (201, 173) with delay 0.1s (label='Server')
+[02:39:40] [log_step:80]
+   📣 Checking if 'NEXT-SERVER' is already selected...
+[02:40:32] [log_step:97]
+   📣 Server 'NEXT-SERVER' not selected — opening Server connection list
+[02:40:40]
+   axe_touch at (201, 173) with delay 0.1s (label='')
+[02:40:43] [log_step:110]
+   📣 Selecting connection 'NEXT-SERVER'
+[02:40:53] [log_step:112]
+   📣 Connection 'NEXT-SERVER' not found — creating it
+[02:40:54] [log_step:114]
+   📣 Tapping Add new connection
+[02:40:56]
+   axe_touch at (201, 277) with delay 0.1s (label='Add new connection')
+[02:41:01] [log_step:122]
+   📣 Filling in connection form for 'NEXT-SERVER'
+[02:41:04]
+   axe_touch at (201, 194) with delay 0.1s (label='Server connection')
+[02:41:07] [log_step:20]
+   📣 Filling in field Server connection with value NEXT-SERVER
+[02:41:18]
+   axe_touch at (201, 238) with delay 0.1s (label='Connect to')
+[02:41:21] [log_step:20]
+   📣 Filling in field Connect to with value https://ircl-sup001kcy.conmas-i-reporter.com/ConMasWebNEXT/Rests/ConMasIReporter.aspx
+Error: CLIError(errorDescription: "Simulator with UDID 1892631B-0B9A-4A67-B8B9-53175692E0C7 is not booted. Current state: FBiOSTargetState(rawValue: 4)")
+[02:42:57] [log_error:15]
+   ❌ Form field not found: User ID
+[02:43:23] [log_error:15]
+   ❌ Form field not found: Password
+[02:43:23] [log_step:129]
+   📣 Enabling 'change server when local reports exist'
+[02:43:24] [log_error:57]
+   ❌ Popover switch not found: 'Enable to change server when local reports exist'
+[02:43:24] [log_step:133]
+   📣 Saving connection
+[02:43:24] [log_step:155]
+   📣 Tapping nav button 'Save' in 'Input Connection'
+[02:43:24] [log_error:157]
+   ❌ Nav button not found: 'Save' in nav bar 'Input Connection'
+[02:43:24] [log_step:137]
+   📣 Selecting connection 'NEXT-SERVER'
+[02:43:52] [log_error:139]
+   ❌ Connection 'NEXT-SERVER' not found in list after saving
+[02:44:04] [log_step:36]
+   📣 ConMas Server not visible — dismissing alert and retrying
+[02:44:05] [log_error:74]
+   ❌ axe_touch_delay: element not found: 'Cancel'
+[02:44:27] [log_error:40]
+   ❌ ConMas Server tab not found after retry
 Error: CLIError(errorDescription: "Simulator with UDID 1892631B-0B9A-4A67-B8B9-53175692E0C7 is not booted. Current state: FBiOSTargetState(rawValue: 1)")
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Error capturing frame: No Image available to encode
-Recording saved to /Users/vagrant/git/i-reporter-automation/videos/iphone-17-pro-change_server_connection-20260402-023725.mp4
-/Users/vagrant/git/i-reporter-automation/videos/iphone-17-pro-change_server_connection-20260402-023725.mp4
-❌ FAIL  change_server_connection.sh  (1/2 assertions passed, exit 1, 323s)
+❌ FAIL  freetext_focus.sh  (0/0 assertions passed, exit 1, 472s)
+[02:44:30] [log_step:110]
+   📣 🔄 Shutting down simulator for clean reboot...
+[02:44:33] [log_step:113]
+   📣 🚀 Rebooting simulator...
+Monitoring boot status for iPhone 17 Pro (1892631B-0B9A-4A67-B8B9-53175692E0C7).
+Device already booted, nothing to do.
+
+[02:45:22] [log_step:122]
+   📣 ✅ Simulator ready.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶  freetext_long_press.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Error: CLIError(errorDescription: "Simulator 1892631B-0B9A-4A67-B8B9-53175692E0C7 is not booted. Current state: FBiOSTargetStateString(_rawValue: Shutdown)")
+[02:45:26]
+   🔍 Looking up booted simulator: "iPhone 17 Pro"
+[02:45:26]
+   ✅ Using persisted UDID: 1892631B-0B9A-4A67-B8B9-53175692E0C7
+[02:45:27]
+   🚀 Launching app: jp.conmas.i-Reporter
+An error was encountered processing the command (domain=com.apple.CoreSimulator.SimError, code=405):
+Unable to lookup in current state: Shutdown
+[02:45:28]
+   ❌ Failed to launch "jp.conmas.i-Reporter". Is it installed on the simulator?
+[02:45:29] [log_step:22]
+   📣 Waiting for alert Confirmation - Data in editing exists
+[02:45:58] [log_step:35]
+   📣 Waiting for Home screen...
+[02:46:55] [log_error:37]
+   ❌ Home screen did not appear
+[02:47:01] [log_step:36]
+   📣 ConMas Server not visible — dismissing alert and retrying
+Error: Cannot run accessibility commands against 1892631B-0B9A-4A67-B8B9-53175692E0C7 | iPhone 17 Pro | Shutdown | iPhone 17 Pro | OS 'iOS 26.2'  as it is not booted
+[02:47:01] [log_error:74]
+   ❌ axe_touch_delay: element not found: 'Cancel'
+[02:47:13] [log_error:40]
+   ❌ ConMas Server tab not found after retry
+Error: CLIError(errorDescription: "Simulator with UDID 1892631B-0B9A-4A67-B8B9-53175692E0C7 is not booted. Current state: FBiOSTargetState(rawValue: 1)")
+❌ FAIL  freetext_long_press.sh  (0/0 assertions passed, exit 1, 105s)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   Tests:      ✅ 0 passed  ❌ 3 failed  (total: 3)
-  Assertions: ✅ 1 passed  ❌ 2 failed  (total: 3)
-  Duration:   23m 52s
+  Assertions: ✅ 0 passed  ❌ 0 failed  (total: 0)
+  Duration:   28m 43s
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 </div></div>
 </div>
