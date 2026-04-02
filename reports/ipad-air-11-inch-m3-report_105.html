@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>i-Reporter UI Test Report</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23fff' d='M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z'/></svg>">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:#0f172a;line-height:1.45;-webkit-font-smoothing:antialiased}
+.page{max-width:940px;margin:0 auto;padding:28px 16px 52px}
+.header{background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 65%,#60a5fa 100%);border-radius:16px;padding:28px 32px;margin-bottom:16px;color:#fff;position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none}
+.header::after{content:'';position:absolute;bottom:-60px;left:-20px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
+.header h1{font-size:1.8rem;font-weight:800;letter-spacing:-.035em;position:relative}
+.header p{color:rgba(255,255,255,.72);font-size:.95rem;margin-top:6px;position:relative}
+.banner{border-radius:12px;padding:15px 22px;margin-bottom:16px;font-size:1.05rem;font-weight:700;border:1.5px solid transparent;display:flex;align-items:center;gap:8px}
+.banner.pass{background:#f0fdf4;color:#15803d;border-color:#86efac}
+.banner.fail{background:#fff1f2;color:#b91c1c;border-color:#fca5a5}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:22px}
+.stat{background:#fff;border-radius:12px;padding:18px 12px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.07);border:1px solid #e2e8f0}
+.stat-icon{font-size:1.4rem;line-height:1;margin-bottom:8px}
+.stat .val{font-size:1.9rem;font-weight:800;line-height:1.05;letter-spacing:-.02em}
+.stat .lbl{font-size:.68rem;color:#94a3b8;margin-top:5px;text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+.stat.green .val{color:#16a34a}.stat.red .val{color:#dc2626}.stat.blue .val{color:#2563eb}.stat.slate .val{color:#64748b}.stat.purple .val{color:#7c3aed}
+.cards-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;margin:0 0 10px 38px}
+.cards{display:flex;flex-direction:column;gap:7px}
+.card-row{display:flex;align-items:flex-start;gap:8px}
+.step-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;flex-shrink:0;margin-top:12px;letter-spacing:0}
+.step-num.pass{background:#dcfce7;color:#15803d}
+.step-num.fail{background:#fee2e2;color:#b91c1c}
+.card{background:#fff;border-radius:12px;padding:13px 18px;flex:1;border:1px solid #e2e8f0;border-left:4px solid transparent;box-shadow:0 1px 4px rgba(0,0,0,.06);transition:box-shadow .15s,border-color .15s}
+.card:hover{box-shadow:0 4px 16px rgba(0,0,0,.1)}
+.card.pass{border-left-color:#22c55e}.card.fail{border-left-color:#ef4444}
+.card-top{display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none;-webkit-user-select:none}
+.chev{font-size:.58rem;color:#94a3b8;flex-shrink:0;width:10px;transition:transform .22s ease}
+.status-pill{font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.04em;white-space:nowrap;flex-shrink:0}
+.status-pill.pass{background:#dcfce7;color:#15803d}
+.status-pill.fail{background:#fee2e2;color:#b91c1c}
+.card-name{font-weight:700;font-size:.97rem;flex:1;color:#0f172a;transition:color .12s}
+.card-top:hover .card-name{color:#2563eb}
+.card-badge{font-size:.76rem;color:#64748b;background:#f1f5f9;padding:2px 10px;border-radius:20px;white-space:nowrap;border:1px solid #e2e8f0;flex-shrink:0}
+.dur-badge{font-size:.76rem;color:#7c3aed;background:#f5f3ff;padding:2px 10px;border-radius:20px;white-space:nowrap;border:1px solid #ede9fe;flex-shrink:0}
+.card-body{overflow:hidden;max-height:0;transition:max-height .3s ease}
+.card-body-inner{padding-top:14px}
+.ai-summary{background:linear-gradient(135deg,#faf5ff,#f5f3ff);border-left:3px solid #8b5cf6;border-radius:0 8px 8px 0;padding:11px 15px;margin-bottom:12px}
+.ai-label{display:inline-flex;align-items:center;gap:6px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#fff;background:#7c3aed;padding:2px 10px;border-radius:20px;margin-bottom:8px}
+.ai-tool-tag{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#7c3aed;background:#ede9fe;padding:1px 7px;border-radius:10px}
+.ai-status{font-size:.875rem;color:#7c3aed;font-style:italic;min-height:1.2em}
+.ai-text{font-size:.875rem;color:#3b1f6e;white-space:pre-line;line-height:1.65}
+.asserts{display:flex;flex-direction:column;gap:3px;margin-bottom:10px}
+.aline{font-size:.83rem;padding:4px 10px;border-radius:5px;font-family:ui-monospace,'Cascadia Code',Menlo,monospace;border-left:2px solid transparent}
+.aline.ok{color:#166534;background:#f0fdf4;border-left-color:#86efac}
+.aline.ng{color:#991b1b;background:#fff1f2;border-left-color:#fca5a5}
+.logblock{background:#0f172a;color:#8da3b8;border-radius:8px;padding:14px 16px;font-family:ui-monospace,'Cascadia Code',Menlo,monospace;font-size:.78rem;line-height:1.7;white-space:pre-wrap;word-break:break-all;max-height:300px;overflow-y:auto;margin-top:8px}
+.video-name{margin-top:12px;font-size:.8rem;font-weight:600;color:#334155;font-family:ui-monospace,'Cascadia Code',Menlo,monospace;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;padding:5px 11px;display:flex;align-items:center;gap:6px}
+.video-link{color:#334155;text-decoration:none;border-bottom:1.5px solid #94a3b8;transition:color .12s,border-color .12s}
+.video-link:hover{color:#2563eb;border-bottom-color:#2563eb}
+.log-section{margin-top:30px}
+.log-toggle{font-size:.88rem;font-weight:600;color:#64748b;cursor:pointer;user-select:none;-webkit-user-select:none;padding:10px 0;display:flex;align-items:center;gap:7px;transition:color .12s}
+.log-toggle:hover{color:#1e293b}
+.logblock.full-log{display:none;max-height:600px}
+.logblock.full-log.open{display:block}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="header">
+  <h1>i-Reporter UI Test Report</h1>
+  <p>2026-04-02 03:22:29 UTC &nbsp;&bull;&nbsp; &#x23F1; 14m 24s total run time</p>
+</div>
+<div class="banner fail">&#x274C;&nbsp;&nbsp;4 of 4 tests failed &nbsp;&mdash;&nbsp; 0 passed</div>
+<div class="stats">
+  <div class="stat red"><div class="stat-icon">&#x2705;</div><div class="val">0</div><div class="lbl">Tests Passed</div></div>
+  <div class="stat red"><div class="stat-icon">&#x274C;</div><div class="val">4</div><div class="lbl">Tests Failed</div></div>
+  <div class="stat blue"><div class="stat-icon">&#x1F3AF;</div><div class="val">0</div><div class="lbl">Assertions OK</div></div>
+  <div class="stat red"><div class="stat-icon">&#x26A0;&#xFE0F;</div><div class="val">1</div><div class="lbl">Assertions Failed</div></div>
+  <div class="stat purple"><div class="stat-icon">&#x23F1;</div><div class="val">14m 24s</div><div class="lbl">Run Time</div></div>
+</div>
+<div class="cards-label">Test Runs — execution order</div>
+<div class="cards">
+<div class="card-row">
+<div class="step-num fail">1</div>
+<div class="card fail" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;_search_document() {&#10;  local query=&quot;$1&quot;&#10;  log_step &quot;Waiting for search field...&quot;&#10;  if ! wait_for_template_search_box 10; then&#10;    log_error &quot;Search field did not appear&quot;&#10;    return 1&#10;  fi&#10;  sleep 0.4&#10;  tap_search_field_and_type &quot;$query&quot;&#10;}&#10;log_step &quot;Waiting for Home screen...&quot;&#10;wait_for_home_screen 10&#10;tap_alert_button_if_present &quot;$LABEL_ALERT_BTN_CANCEL&quot;&#10;setup_server_login &quot;$SERVER_NAME_SCAN&quot;&#10;log_step &quot;Tapping ConMas Server tab&quot;&#10;axe_touch_delay --label &quot;$LABEL_CONMAS_SERVER&quot;&#10;assert &quot;ConMas Server page loaded&quot; wait_for_element_having_label &quot;$LABEL_ALL_REPORTS&quot; 10&#10;log_step &quot;Tapping All Reports&quot;&#10;axe_touch_delay --label &quot;$LABEL_ALL_REPORTS&quot;&#10;sleep 1&#10;_search_document &quot;$DOCUMENT_SCAN_UNIQUE&quot;&#10;assert_visible_label_contains &quot;$DOCUMENT_SCAN_UNIQUE_LABEL&quot; 15&#10;sleep 3&#10;log_step &quot;Going back to Home&quot;&#10;tap_nav_button &quot;$NAV_ID_ALL_REPORTS&quot; &quot;$LABEL_NAV_BTN_BACK&quot;&#10;assert &quot;Back to library&quot; wait_for_element_having_label &quot;$LABEL_ALL_REPORTS&quot; 10&#10;setup_server_login &quot;$SERVER_NAME_NEXT&quot;&#10;log_step &quot;Tapping ConMas Server tab&quot;&#10;axe_touch_delay --label &quot;$LABEL_CONMAS_SERVER&quot;">
+<div class="card-top">
+<span class="chev">&#x25B6;</span>
+<span class="status-pill fail">&#x274C; FAIL</span>
+<span class="card-name">change_server_connection.sh</span>
+<span class="card-badge">0/1 assertions</span>
+<span class="dur-badge">&#x23F1; 1m 22s</span>
+</div>
+<div class="card-body">
+<div class="card-body-inner">
+<div class="ai-summary">
+<div class="ai-label">&#x2728; AI Summary</div>
+<div class="ai-status"></div>
+<div class="ai-text" style="display:none"></div></div>
+<div class="asserts">
+<div class="aline ng">   ❌ FAIL: ConMas Server page loaded</div>
+</div>
+<div class="logblock">[03:12:17] [log_step:32]
+   📣 Waiting for Home screen...
+[03:12:32] [log_step:35]
+   📣 Waiting for Home screen...
+[03:12:35] [log_step:155]
+   📣 Tapping nav button 'settings' in 'Home'
+[03:12:36] [log_error:157]
+   ❌ Nav button not found: 'settings' in nav bar 'Home'
+[03:12:36] [log_step:41]
+   📣 Tapping ConMas Server tab
+[03:12:37] [log_error:74]
+   ❌ axe_touch_delay: element not found: 'ConMas Server'
+[03:13:17] [assert:43]
+   ❌ FAIL: ConMas Server page loaded</div>
+<div class="video-name">&#x1F3AC; <a class="video-link" href="https://app.bitrise.io/build/700d1b5e-97b1-4fa4-9f87-be60cca7ecf4?tab=artifacts" target="_blank">ipad-air-11-inch-m3-change_server_connection-20260402-030808.mp4</a></div>
+</div>
+</div>
+</div>
+</div>
+<div class="card-row">
+<div class="step-num fail">2</div>
+<div class="card fail" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;create_new_report_of &quot;$TEMPLATE_SIGNATUREPAD&quot; || exit 1&#10;log_step &quot;Tapping SignaturePad cluster to enter signing mode&quot;&#10;tap_on_top_left_center 0 50&#10;sleep 1&#10;if ! _ios_lt &quot;26.0&quot;; then&#10;  assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_CLEAR&quot;&#10;fi&#10;assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_CANCEL&quot;&#10;assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_COMMENT&quot;&#10;assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_DONE&quot;&#10;log_step &quot;Drawing signature — row 1 (thin strokes)&quot;&#10;draw_slash_row 380 55 20 45&#10;sleep 0.3&#10;log_step &quot;Drawing signature — row 2 (medium strokes)&quot;&#10;draw_slash_row 430 55 30 20&#10;sleep 0.3&#10;log_step &quot;Drawing signature — row 3 (wide strokes)&quot;&#10;draw_slash_row 480 50 40 25&#10;sleep 0.3&#10;log_step &quot;Drawing a continuous curve across the pad&quot;&#10;draw_curve \&#10;  120 430  280 380  440 420  400 380  360 430  340 480  250 550&#10;sleep 0.3&#10;assert_app_running&#10;log_step &quot;✅ Done!&quot;">
+<div class="card-top">
+<span class="chev">&#x25B6;</span>
+<span class="status-pill fail">&#x274C; FAIL</span>
+<span class="card-name">signaturepad_draw.sh</span>
+<span class="dur-badge">&#x23F1; 43s</span>
+</div>
+<div class="card-body">
+<div class="card-body-inner">
+<div class="ai-summary">
+<div class="ai-label">&#x2728; AI Summary</div>
+<div class="ai-status"></div>
+<div class="ai-text" style="display:none"></div></div>
+<div class="logblock">[03:14:30] [log_step:22]
+   📣 Waiting for alert Confirmation - Data in editing exists
+[03:14:38] [log_step:35]
+   📣 Waiting for Home screen...
+[03:14:57] [log_error:37]
+   ❌ Home screen did not appear
+[03:15:03] [log_step:36]
+   📣 ConMas Server not visible — dismissing alert and retrying
+Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog
+[03:15:04] [log_error:74]
+   ❌ axe_touch_delay: element not found: 'Cancel'
+[03:15:11] [log_error:40]
+   ❌ ConMas Server tab not found after retry</div>
+<div class="video-name">&#x1F3AC; <a class="video-link" href="https://app.bitrise.io/build/700d1b5e-97b1-4fa4-9f87-be60cca7ecf4?tab=artifacts" target="_blank">ipad-air-11-inch-m3-signaturepad_draw-20260402-031415.mp4</a></div>
+</div>
+</div>
+</div>
+</div>
+<div class="card-row">
+<div class="step-num fail">3</div>
+<div class="card fail" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;create_new_report_of &quot;$TEMPLATE_SIGNATUREPAD&quot; || exit 1&#10;log_step &quot;Tapping SignaturePad cluster to enter signing mode&quot;&#10;tap_on_top_left_center 0 50&#10;sleep 1&#10;if ! _ios_lt &quot;26.0&quot;; then&#10;  assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_CLEAR&quot;&#10;fi&#10;assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_CANCEL&quot;&#10;assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_COMMENT&quot;&#10;assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_DONE&quot;&#10;log_step &quot;Drawing strokes&quot;&#10;draw_slash_row 300 30 25 20&#10;sleep 0.3&#10;draw_slash_row 420 30 25 20&#10;sleep 0.3&#10;draw_curve \&#10;  120 430  280 380  440 420  400 380  360 430  340 480  250 550&#10;sleep 0.3&#10;assert_app_running&#10;if ! _ios_lt &quot;26.0&quot;; then&#10;  log_step &quot;Tapping Clear to erase all drawings&quot;&#10;  tap_sp_toolbar_button &quot;$LABEL_SP_BTN_CLEAR&quot;&#10;  sleep 0.5&#10;fi&#10;assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_DONE&quot;&#10;assert_app_running&#10;log_step &quot;✅ Done!&quot;">
+<div class="card-top">
+<span class="chev">&#x25B6;</span>
+<span class="status-pill fail">&#x274C; FAIL</span>
+<span class="card-name">signaturepad_erase.sh</span>
+<span class="dur-badge">&#x23F1; 3m 4s</span>
+</div>
+<div class="card-body">
+<div class="card-body-inner">
+<div class="ai-summary">
+<div class="ai-label">&#x2728; AI Summary</div>
+<div class="ai-status"></div>
+<div class="ai-text" style="display:none"></div></div>
+<div class="logblock">[03:18:09] [log_step:129]
+   📣 Enabling 'change server when local reports exist'
+[03:18:09] [log_error:57]
+   ❌ Popover switch not found: 'Enable to change server when local reports exist'
+[03:18:09] [log_step:133]
+   📣 Saving connection
+[03:18:09] [log_step:155]
+   📣 Tapping nav button 'Save' in 'Input Connection'
+[03:18:13] [log_error:157]
+   ❌ Nav button not found: 'Save' in nav bar 'Input Connection'
+[03:18:13] [log_step:137]
+   📣 Selecting connection 'NEXT-SERVER'
+[03:18:33] [log_error:139]
+   ❌ Connection 'NEXT-SERVER' not found in list after saving
+[03:18:41] [log_step:36]
+   📣 ConMas Server not visible — dismissing alert and retrying
+[03:18:41] [log_error:74]
+   ❌ axe_touch_delay: element not found: 'Cancel'
+[03:18:51] [log_error:40]
+   ❌ ConMas Server tab not found after retry</div>
+<div class="video-name">&#x1F3AC; <a class="video-link" href="https://app.bitrise.io/build/700d1b5e-97b1-4fa4-9f87-be60cca7ecf4?tab=artifacts" target="_blank">ipad-air-11-inch-m3-signaturepad_erase-20260402-031546.mp4</a></div>
+</div>
+</div>
+</div>
+</div>
+<div class="card-row">
+<div class="step-num fail">4</div>
+<div class="card fail" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;create_new_report_of &quot;$TEMPLATE_SIGNATUREPAD&quot; || exit 1&#10;log_step &quot;Tapping SignaturePad cluster to enter signing mode&quot;&#10;tap_on_top_left_center 0 50&#10;sleep 1&#10;if ! _ios_lt &quot;26.0&quot;; then&#10;  assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_CLEAR&quot;&#10;fi&#10;assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_CANCEL&quot;&#10;assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_COMMENT&quot;&#10;assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_DONE&quot;&#10;log_step &quot;Drawing signature&quot;&#10;draw_curve \&#10;  120 430  280 380  440 420  400 380  360 430  340 480  250 550&#10;sleep 0.3&#10;log_step &quot;Tapping Done to save signature&quot;&#10;tap_sp_toolbar_button &quot;$LABEL_SP_BTN_DONE&quot;&#10;sleep 1&#10;wait_for_report_view 6 || { log_error &quot;Report view did not appear after creating new report&quot;; return 1; }&#10;assert_app_running&#10;log_step &quot;Long-pressing on SignaturePad cluster to open context menu&quot;&#10;axe_long_press -x &quot;$SCREEN_A_QUARTER_X&quot; -y &quot;$(( SCREEN_A_QUARTER_Y + 50 ))&quot;&#10;sleep 1.5&#10;log_step &quot;Tapping Clear to remove the captured signature&quot;&#10;axe_tap --label &quot;$LABEL_CLUSTER_CONTEXT_CLEAR&quot;&#10;sleep 3&#10;assert_app_running&#10;log_step &quot;Tapping Signat">
+<div class="card-top">
+<span class="chev">&#x25B6;</span>
+<span class="status-pill fail">&#x274C; FAIL</span>
+<span class="card-name">signaturepad_save.sh</span>
+<span class="dur-badge">&#x23F1; 2m 58s</span>
+</div>
+<div class="card-body">
+<div class="card-body-inner">
+<div class="ai-summary">
+<div class="ai-label">&#x2728; AI Summary</div>
+<div class="ai-status"></div>
+<div class="ai-text" style="display:none"></div></div>
+<div class="logblock">[03:21:26] [log_step:133]
+   📣 Saving connection
+[03:21:26] [log_step:155]
+   📣 Tapping nav button 'Save' in 'Input Connection'
+[03:21:26] [log_error:157]
+   ❌ Nav button not found: 'Save' in nav bar 'Input Connection'
+[03:21:26] [log_step:137]
+   📣 Selecting connection 'NEXT-SERVER'
+[03:22:00] [log_error:139]
+   ❌ Connection 'NEXT-SERVER' not found in list after saving
+[03:22:05] [log_step:36]
+   📣 ConMas Server not visible — dismissing alert and retrying
+[03:22:06] [log_error:74]
+   ❌ axe_touch_delay: element not found: 'Cancel'
+[03:22:07]
+   axe_touch at (340, 1135) with delay 0.1s (label='ConMas Server')
+[03:22:11] [log_step:48]
+   📣 Tapping Create New
+[03:22:27] [log_error:53]
+   ❌ Create New did not appear</div>
+<div class="video-name">&#x1F3AC; <a class="video-link" href="https://app.bitrise.io/build/700d1b5e-97b1-4fa4-9f87-be60cca7ecf4?tab=artifacts" target="_blank">ipad-air-11-inch-m3-signaturepad_save-20260402-031927.mp4</a></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="log-section">
+<div class="log-toggle"><span class="chev">&#x25B6;</span>&nbsp; Show full run log</div>
+<div class="logblock full-log">[03:07:44] [log_step:85]
+   📣 📦 Installing app from: /Users/vagrant/git/i-reporter-automation/resources/i-Reporter.app
+[03:07:57] [log_step:89]
+   📣 🔐 Configuring permissions for jp.conmas.i-Reporter...
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶  change_server_connection.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Recording simulator E89EBA69-0817-4AD1-A1B1-917B76A9D7F7 to /Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-change_server_connection-20260402-030808.mp4
+Press Ctrl+C to stop recording
+[03:08:11]
+   🔍 Looking up booted simulator: "iPad Air 11-inch (M3)"
+[03:08:11]
+   ✅ Using persisted UDID: E89EBA69-0817-4AD1-A1B1-917B76A9D7F7
+[03:08:13]
+   🪪 Injected TerminalID: DUMMY-AUTOMATION-TEST
+[03:08:13]
+   🚀 Launching app: jp.conmas.i-Reporter
+IOServiceMatchingfailed for: AppleM2ScalerParavirtDriver
+jp.conmas.i-Reporter: 16120
+[03:11:53]
+   ✅ App "jp.conmas.i-Reporter" launched.
+[03:12:17] [log_step:32]
+   📣 Waiting for Home screen...
+[03:12:32] [log_step:35]
+   📣 Waiting for Home screen...
+[03:12:35] [log_step:155]
+   📣 Tapping nav button 'settings' in 'Home'
+[03:12:36] [log_error:157]
+   ❌ Nav button not found: 'settings' in nav bar 'Home'
+[03:12:36] [log_step:41]
+   📣 Tapping ConMas Server tab
+[03:12:37] [log_error:74]
+   ❌ axe_touch_delay: element not found: 'ConMas Server'
+[03:13:17] [assert:43]
+   ❌ FAIL: ConMas Server page loaded
+Recording saved to /Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-change_server_connection-20260402-030808.mp4
+/Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-change_server_connection-20260402-030808.mp4
+❌ FAIL  change_server_connection.sh  (0/1 assertions passed, exit 1, 82s)
+[03:13:20] [log_step:110]
+   📣 🔄 Shutting down simulator for clean reboot...
+[03:13:26] [log_step:113]
+   📣 🚀 Rebooting simulator...
+Monitoring boot status for iPad Air 11-inch (M3) (E89EBA69-0817-4AD1-A1B1-917B76A9D7F7).
+Device already booted, nothing to do.
+
+[03:14:12] [log_step:122]
+   📣 ✅ Simulator ready.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶  signaturepad_draw.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Recording simulator E89EBA69-0817-4AD1-A1B1-917B76A9D7F7 to /Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-signaturepad_draw-20260402-031415.mp4
+Press Ctrl+C to stop recording
+[03:14:21]
+   🔍 Looking up booted simulator: "iPad Air 11-inch (M3)"
+[03:14:21]
+   ✅ Using persisted UDID: E89EBA69-0817-4AD1-A1B1-917B76A9D7F7
+IOServiceMatchingfailed for: AppleM2ScalerParavirtDriver
+[03:14:24]
+   🪪 Injected TerminalID: DUMMY-AUTOMATION-TEST
+[03:14:24]
+   🚀 Launching app: jp.conmas.i-Reporter
+jp.conmas.i-Reporter: 19169
+[03:14:28]
+   ✅ App "jp.conmas.i-Reporter" launched.
+[03:14:30] [log_step:22]
+   📣 Waiting for alert Confirmation - Data in editing exists
+[03:14:38] [log_step:35]
+   📣 Waiting for Home screen...
+[03:14:57] [log_error:37]
+   ❌ Home screen did not appear
+[03:15:03] [log_step:36]
+   📣 ConMas Server not visible — dismissing alert and retrying
+Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog
+[03:15:04] [log_error:74]
+   ❌ axe_touch_delay: element not found: 'Cancel'
+[03:15:11] [log_error:40]
+   ❌ ConMas Server tab not found after retry
+Recording saved to /Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-signaturepad_draw-20260402-031415.mp4
+/Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-signaturepad_draw-20260402-031415.mp4
+❌ FAIL  signaturepad_draw.sh  (0/0 assertions passed, exit 1, 43s)
+[03:15:14] [log_step:110]
+   📣 🔄 Shutting down simulator for clean reboot...
+[03:15:19] [log_step:113]
+   📣 🚀 Rebooting simulator...
+Monitoring boot status for iPad Air 11-inch (M3) (E89EBA69-0817-4AD1-A1B1-917B76A9D7F7).
+Device already booted, nothing to do.
+
+[03:15:43] [log_step:122]
+   📣 ✅ Simulator ready.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶  signaturepad_erase.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Error: CLIError(errorDescription: "Simulator E89EBA69-0817-4AD1-A1B1-917B76A9D7F7 is not booted. Current state: FBiOSTargetStateString(_rawValue: Shutting Down)")
+[03:15:46]
+   🔍 Looking up booted simulator: "iPad Air 11-inch (M3)"
+[03:15:46]
+   ✅ Using persisted UDID: E89EBA69-0817-4AD1-A1B1-917B76A9D7F7
+[03:15:47]
+   🚀 Launching app: jp.conmas.i-Reporter
+An error was encountered processing the command (domain=com.apple.CoreSimulator.SimError, code=405):
+Unable to lookup in current state: Shutting Down
+[03:15:47]
+   ❌ Failed to launch "jp.conmas.i-Reporter". Is it installed on the simulator?
+[03:15:48] [log_step:22]
+   📣 Waiting for alert Confirmation - Data in editing exists
+[03:16:14] [log_step:35]
+   📣 Waiting for Home screen...
+[03:16:25] [log_step:155]
+   📣 Tapping nav button 'settings' in 'Home'
+[03:16:26]
+   axe_touch at (40, 54) with delay 0.1s (label='')
+[03:16:28] [log_step:71]
+   📣 Navigating to Server settings
+[03:16:37]
+   axe_touch at (170, 143) with delay 0.1s (label='Server')
+[03:16:39] [log_step:80]
+   📣 Checking if 'NEXT-SERVER' is already selected...
+[03:16:49] [log_step:97]
+   📣 Server 'NEXT-SERVER' not selected — opening Server connection list
+[03:16:50]
+   axe_touch at (575, 143) with delay 0.1s (label='')
+[03:16:51] [log_step:110]
+   📣 Selecting connection 'NEXT-SERVER'
+[03:16:58] [log_step:112]
+   📣 Connection 'NEXT-SERVER' not found — creating it
+[03:16:58] [log_step:114]
+   📣 Tapping Add new connection
+[03:16:59]
+   axe_touch at (575, 247) with delay 0.1s (label='Add new connection')
+[03:17:00] [log_step:122]
+   📣 Filling in connection form for 'NEXT-SERVER'
+[03:17:01]
+   axe_touch at (410, 386) with delay 0.1s (label='Server connection')
+[03:17:03] [log_step:20]
+   📣 Filling in field Server connection with value NEXT-SERVER
+[03:17:13]
+   axe_touch at (410, 430) with delay 0.1s (label='Connect to')
+[03:17:15] [log_step:20]
+   📣 Filling in field Connect to with value https://ircl-sup001kcy.conmas-i-reporter.com/ConMasWebNEXT/Rests/ConMasIReporter.aspx
+Error: CLIError(errorDescription: "Simulator with UDID E89EBA69-0817-4AD1-A1B1-917B76A9D7F7 is not booted. Current state: FBiOSTargetState(rawValue: 4)")
+[03:17:55] [log_error:15]
+   ❌ Form field not found: User ID
+[03:18:09] [log_error:15]
+   ❌ Form field not found: Password
+[03:18:09] [log_step:129]
+   📣 Enabling 'change server when local reports exist'
+[03:18:09] [log_error:57]
+   ❌ Popover switch not found: 'Enable to change server when local reports exist'
+[03:18:09] [log_step:133]
+   📣 Saving connection
+[03:18:09] [log_step:155]
+   📣 Tapping nav button 'Save' in 'Input Connection'
+[03:18:13] [log_error:157]
+   ❌ Nav button not found: 'Save' in nav bar 'Input Connection'
+[03:18:13] [log_step:137]
+   📣 Selecting connection 'NEXT-SERVER'
+[03:18:33] [log_error:139]
+   ❌ Connection 'NEXT-SERVER' not found in list after saving
+[03:18:41] [log_step:36]
+   📣 ConMas Server not visible — dismissing alert and retrying
+[03:18:41] [log_error:74]
+   ❌ axe_touch_delay: element not found: 'Cancel'
+[03:18:51] [log_error:40]
+   ❌ ConMas Server tab not found after retry
+❌ FAIL  signaturepad_erase.sh  (0/0 assertions passed, exit 1, 184s)
+[03:18:53] [log_step:110]
+   📣 🔄 Shutting down simulator for clean reboot...
+[03:18:56] [log_step:113]
+   📣 🚀 Rebooting simulator...
+An error was encountered processing the command (domain=com.apple.CoreSimulator.SimError, code=405):
+Unable to boot device in current state: Booted
+Monitoring boot status for iPad Air 11-inch (M3) (E89EBA69-0817-4AD1-A1B1-917B76A9D7F7).
+Device already booted, nothing to do.
+
+[03:19:25] [log_step:122]
+   📣 ✅ Simulator ready.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶  signaturepad_save.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Recording simulator E89EBA69-0817-4AD1-A1B1-917B76A9D7F7 to /Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-signaturepad_save-20260402-031927.mp4
+Press Ctrl+C to stop recording
+[03:19:27]
+   🔍 Looking up booted simulator: "iPad Air 11-inch (M3)"
+[03:19:27]
+   ✅ Using persisted UDID: E89EBA69-0817-4AD1-A1B1-917B76A9D7F7
+IOServiceMatchingfailed for: AppleM2ScalerParavirtDriver
+[03:19:28]
+   🪪 Injected TerminalID: DUMMY-AUTOMATION-TEST
+[03:19:28]
+   🚀 Launching app: jp.conmas.i-Reporter
+jp.conmas.i-Reporter: 27623
+[03:19:29]
+   ✅ App "jp.conmas.i-Reporter" launched.
+[03:19:31] [log_step:22]
+   📣 Waiting for alert Confirmation - Data in editing exists
+[03:19:39] [log_step:35]
+   📣 Waiting for Home screen...
+[03:19:43] [log_step:155]
+   📣 Tapping nav button 'settings' in 'Home'
+[03:19:44]
+   axe_touch at (40, 54) with delay 0.1s (label='')
+[03:19:46] [log_step:71]
+   📣 Navigating to Server settings
+[03:19:47]
+   axe_touch at (170, 143) with delay 0.1s (label='Server')
+[03:19:48] [log_step:80]
+   📣 Checking if 'NEXT-SERVER' is already selected...
+[03:19:57] [log_step:97]
+   📣 Server 'NEXT-SERVER' not selected — opening Server connection list
+[03:19:58]
+   axe_touch at (575, 143) with delay 0.1s (label='')
+[03:19:58] [log_step:110]
+   📣 Selecting connection 'NEXT-SERVER'
+[03:20:06] [log_step:112]
+   📣 Connection 'NEXT-SERVER' not found — creating it
+[03:20:06] [log_step:114]
+   📣 Tapping Add new connection
+[03:20:07]
+   axe_touch at (575, 247) with delay 0.1s (label='Add new connection')
+[03:20:08] [log_step:122]
+   📣 Filling in connection form for 'NEXT-SERVER'
+[03:20:09]
+   axe_touch at (410, 386) with delay 0.1s (label='Server connection')
+[03:20:11] [log_step:20]
+   📣 Filling in field Server connection with value NEXT-SERVER
+[03:20:21]
+   axe_touch at (410, 430) with delay 0.1s (label='Connect to')
+[03:20:23] [log_step:20]
+   📣 Filling in field Connect to with value https://ircl-sup001kcy.conmas-i-reporter.com/ConMasWebNEXT/Rests/ConMasIReporter.aspx
+Error capturing frame: No Image available to encode
+Error: CLIError(errorDescription: "Simulator with UDID E89EBA69-0817-4AD1-A1B1-917B76A9D7F7 is not booted. Current state: FBiOSTargetState(rawValue: 1)")
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+[03:21:09] [log_error:15]
+   ❌ Form field not found: User ID
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+[03:21:25] [log_error:15]
+   ❌ Form field not found: Password
+[03:21:25] [log_step:129]
+   📣 Enabling 'change server when local reports exist'
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+[03:21:26] [log_error:57]
+   ❌ Popover switch not found: 'Enable to change server when local reports exist'
+[03:21:26] [log_step:133]
+   📣 Saving connection
+[03:21:26] [log_step:155]
+   📣 Tapping nav button 'Save' in 'Input Connection'
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+[03:21:26] [log_error:157]
+   ❌ Nav button not found: 'Save' in nav bar 'Input Connection'
+[03:21:26] [log_step:137]
+   📣 Selecting connection 'NEXT-SERVER'
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+[03:22:00] [log_error:139]
+   ❌ Connection 'NEXT-SERVER' not found in list after saving
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+[03:22:05] [log_step:36]
+   📣 ConMas Server not visible — dismissing alert and retrying
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+[03:22:06] [log_error:74]
+   ❌ axe_touch_delay: element not found: 'Cancel'
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+[03:22:07]
+   axe_touch at (340, 1135) with delay 0.1s (label='ConMas Server')
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+[03:22:11] [log_step:48]
+   📣 Tapping Create New
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+[03:22:27] [log_error:53]
+   ❌ Create New did not appear
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Error capturing frame: No Image available to encode
+Recording saved to /Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-signaturepad_save-20260402-031927.mp4
+/Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-signaturepad_save-20260402-031927.mp4
+❌ FAIL  signaturepad_save.sh  (0/0 assertions passed, exit 1, 178s)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Tests:      ✅ 0 passed  ❌ 4 failed  (total: 4)
+  Assertions: ✅ 0 passed  ❌ 1 failed  (total: 1)
+  Duration:   14m 24s
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+</div></div>
+</div>
+<script>
+var _groqKey='YOUR_GROQ_API_KEY';
+async function _loadAiSummary(card){
+  var src=card.dataset.source;
+  if(!src)return;
+  var aiDiv=card.querySelector('.ai-summary');
+  if(!aiDiv||aiDiv.dataset.loaded)return;
+  aiDiv.dataset.loaded='1';
+  var st=aiDiv.querySelector('.ai-status'),tx=aiDiv.querySelector('.ai-text'),lb=aiDiv.querySelector('.ai-label');
+  st.textContent='Generating\u2026';
+  var prompt='iOS UI automation test source (bash):\n```\n'+src+'\n```\nReply with exactly:\nPURPOSE: one sentence stating what feature this test verifies.\nSTEPS:\n\u2022 action/verification (3-5 bullets, no extra text)';
+  try{
+    if(!_groqKey)throw new Error('no key');
+    var r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Authorization':'Bearer '+_groqKey,'Content-Type':'application/json'},body:JSON.stringify({model:'meta-llama/llama-4-scout-17b-16e-instruct',messages:[{role:'user',content:prompt}],max_tokens:200})});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    var result=(await r.json()).choices[0].message.content;
+    st.style.display='none';
+    tx.textContent=result;
+    tx.style.display='';
+    lb.innerHTML='&#x2728; AI Summary <span class="ai-tool-tag">Groq</span>';
+    var body=card.querySelector('.card-body');
+    if(body)body.style.maxHeight=body.scrollHeight+'px';
+  }catch(e){st.textContent='AI summary unavailable.';}
+}
+document.querySelectorAll('.card-top').forEach(function(t){
+  t.addEventListener('click',function(){
+    var card=this.closest('.card');
+    var b=this.parentElement.querySelector('.card-body');
+    var c=this.querySelector('.chev');
+    if(!b)return;
+    if(b.style.maxHeight&&b.style.maxHeight!='0px'){
+      b.style.maxHeight='0';
+      if(c)c.style.transform='';
+    }else{
+      b.style.maxHeight=b.scrollHeight+'px';
+      if(c)c.style.transform='rotate(90deg)';
+      if(card)_loadAiSummary(card);
+    }
+  });
+});
+var lt=document.querySelector('.log-toggle');
+if(lt){
+  lt.addEventListener('click',function(){
+    var l=document.querySelector('.logblock.full-log');
+    var c=this.querySelector('.chev');
+    if(!l)return;
+    l.classList.toggle('open');
+    if(c)c.style.transform=l.classList.contains('open')?'rotate(90deg)':'';
+  });
+}
+</script>
+</body>
+</html>
