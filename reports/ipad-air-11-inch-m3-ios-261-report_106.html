@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>i-Reporter UI Test Report</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23fff' d='M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z'/></svg>">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:#0f172a;line-height:1.45;-webkit-font-smoothing:antialiased}
+.page{max-width:940px;margin:0 auto;padding:28px 16px 52px}
+.header{background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 65%,#60a5fa 100%);border-radius:16px;padding:28px 32px;margin-bottom:16px;color:#fff;position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none}
+.header::after{content:'';position:absolute;bottom:-60px;left:-20px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
+.header h1{font-size:1.8rem;font-weight:800;letter-spacing:-.035em;position:relative}
+.header p{color:rgba(255,255,255,.72);font-size:.95rem;margin-top:6px;position:relative}
+.banner{border-radius:12px;padding:15px 22px;margin-bottom:16px;font-size:1.05rem;font-weight:700;border:1.5px solid transparent;display:flex;align-items:center;gap:8px}
+.banner.pass{background:#f0fdf4;color:#15803d;border-color:#86efac}
+.banner.fail{background:#fff1f2;color:#b91c1c;border-color:#fca5a5}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:22px}
+.stat{background:#fff;border-radius:12px;padding:18px 12px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.07);border:1px solid #e2e8f0}
+.stat-icon{font-size:1.4rem;line-height:1;margin-bottom:8px}
+.stat .val{font-size:1.9rem;font-weight:800;line-height:1.05;letter-spacing:-.02em}
+.stat .lbl{font-size:.68rem;color:#94a3b8;margin-top:5px;text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+.stat.green .val{color:#16a34a}.stat.red .val{color:#dc2626}.stat.blue .val{color:#2563eb}.stat.slate .val{color:#64748b}.stat.purple .val{color:#7c3aed}
+.cards-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;margin:0 0 10px 38px}
+.cards{display:flex;flex-direction:column;gap:7px}
+.card-row{display:flex;align-items:flex-start;gap:8px}
+.step-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;flex-shrink:0;margin-top:12px;letter-spacing:0}
+.step-num.pass{background:#dcfce7;color:#15803d}
+.step-num.fail{background:#fee2e2;color:#b91c1c}
+.card{background:#fff;border-radius:12px;padding:13px 18px;flex:1;border:1px solid #e2e8f0;border-left:4px solid transparent;box-shadow:0 1px 4px rgba(0,0,0,.06);transition:box-shadow .15s,border-color .15s}
+.card:hover{box-shadow:0 4px 16px rgba(0,0,0,.1)}
+.card.pass{border-left-color:#22c55e}.card.fail{border-left-color:#ef4444}
+.card-top{display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none;-webkit-user-select:none}
+.chev{font-size:.58rem;color:#94a3b8;flex-shrink:0;width:10px;transition:transform .22s ease}
+.status-pill{font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.04em;white-space:nowrap;flex-shrink:0}
+.status-pill.pass{background:#dcfce7;color:#15803d}
+.status-pill.fail{background:#fee2e2;color:#b91c1c}
+.card-name{font-weight:700;font-size:.97rem;flex:1;color:#0f172a;transition:color .12s}
+.card-top:hover .card-name{color:#2563eb}
+.card-badge{font-size:.76rem;color:#64748b;background:#f1f5f9;padding:2px 10px;border-radius:20px;white-space:nowrap;border:1px solid #e2e8f0;flex-shrink:0}
+.dur-badge{font-size:.76rem;color:#7c3aed;background:#f5f3ff;padding:2px 10px;border-radius:20px;white-space:nowrap;border:1px solid #ede9fe;flex-shrink:0}
+.card-body{overflow:hidden;max-height:0;transition:max-height .3s ease}
+.card-body-inner{padding-top:14px}
+.ai-summary{background:linear-gradient(135deg,#faf5ff,#f5f3ff);border-left:3px solid #8b5cf6;border-radius:0 8px 8px 0;padding:11px 15px;margin-bottom:12px}
+.ai-label{display:inline-flex;align-items:center;gap:6px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#fff;background:#7c3aed;padding:2px 10px;border-radius:20px;margin-bottom:8px}
+.ai-tool-tag{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#7c3aed;background:#ede9fe;padding:1px 7px;border-radius:10px}
+.ai-status{font-size:.875rem;color:#7c3aed;font-style:italic;min-height:1.2em}
+.ai-text{font-size:.875rem;color:#3b1f6e;white-space:pre-line;line-height:1.65}
+.asserts{display:flex;flex-direction:column;gap:3px;margin-bottom:10px}
+.aline{font-size:.83rem;padding:4px 10px;border-radius:5px;font-family:ui-monospace,'Cascadia Code',Menlo,monospace;border-left:2px solid transparent}
+.aline.ok{color:#166534;background:#f0fdf4;border-left-color:#86efac}
+.aline.ng{color:#991b1b;background:#fff1f2;border-left-color:#fca5a5}
+.logblock{background:#0f172a;color:#8da3b8;border-radius:8px;padding:14px 16px;font-family:ui-monospace,'Cascadia Code',Menlo,monospace;font-size:.78rem;line-height:1.7;white-space:pre-wrap;word-break:break-all;max-height:300px;overflow-y:auto;margin-top:8px}
+.video-name{margin-top:12px;font-size:.8rem;font-weight:600;color:#334155;font-family:ui-monospace,'Cascadia Code',Menlo,monospace;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;padding:5px 11px;display:flex;align-items:center;gap:6px}
+.video-link{color:#334155;text-decoration:none;border-bottom:1.5px solid #94a3b8;transition:color .12s,border-color .12s}
+.video-link:hover{color:#2563eb;border-bottom-color:#2563eb}
+.log-section{margin-top:30px}
+.log-toggle{font-size:.88rem;font-weight:600;color:#64748b;cursor:pointer;user-select:none;-webkit-user-select:none;padding:10px 0;display:flex;align-items:center;gap:7px;transition:color .12s}
+.log-toggle:hover{color:#1e293b}
+.logblock.full-log{display:none;max-height:600px}
+.logblock.full-log.open{display:block}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="header">
+  <h1>i-Reporter UI Test Report</h1>
+  <p>2026-04-02 04:01:41 UTC &nbsp;&bull;&nbsp; &#x23F1; 20m 53s total run time</p>
+</div>
+<div class="banner pass">&#x2705;&nbsp;&nbsp;All 6 tests passed</div>
+<div class="stats">
+  <div class="stat green"><div class="stat-icon">&#x2705;</div><div class="val">6</div><div class="lbl">Tests Passed</div></div>
+  <div class="stat slate"><div class="stat-icon">&#x274C;</div><div class="val">0</div><div class="lbl">Tests Failed</div></div>
+  <div class="stat blue"><div class="stat-icon">&#x1F3AF;</div><div class="val">52</div><div class="lbl">Assertions OK</div></div>
+  <div class="stat slate"><div class="stat-icon">&#x26A0;&#xFE0F;</div><div class="val">0</div><div class="lbl">Assertions Failed</div></div>
+  <div class="stat purple"><div class="stat-icon">&#x23F1;</div><div class="val">20m 53s</div><div class="lbl">Run Time</div></div>
+</div>
+<div class="cards-label">Test Runs — execution order</div>
+<div class="cards">
+<div class="card-row">
+<div class="step-num pass">1</div>
+<div class="card pass" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;create_new_report_of &quot;$TEMPLATE_FREETEXT&quot; || exit 1&#10;log_step &quot;Tapping FreeText cluster&quot;&#10;if _is_ipad; then&#10;    tap_on_first_half_center   # focus the FreeText cluster&#10;else&#10;    axe_tap -x &quot;$SCREEN_CENTER_X&quot; -y &quot;$(( SCREEN_A_QUARTER_Y + 100 ))&quot;&#10;fi&#10;sleep 0.4 # wait for the animations to finish&#10;ft_enter_edit_mode           # turns on drawing mode&#10;assert_visible &quot;$LABEL_FT_EDIT_MODE_ACTIVE&quot;   # drawing mode is now active&#10;draw_slash_row 450 30 50 30&#10;sleep 0.3&#10;assert_app_running   # verify no crash during drawing&#10;ft_exit_edit_mode           # turns off drawing mode&#10;assert_absent &quot;$LABEL_FT_EDIT_MODE_ACTIVE&quot; 3  # drawing mode has exited&#10;if _is_ipad; then&#10;    tap_top_toolbar_button &quot;$TOOLBAR_BTN_MORE&quot;&#10;    sleep 0.4  # wait for More popover to appear&#10;    log_step &quot;Turning on Split display&quot;&#10;    tap_split_display_switch&#10;    sleep 3&#10;    log_step &quot;Select a dummy point to split&quot;&#10;    tap_screen_center&#10;    sleep 0.1&#10;    log_step &quot;Re-opening More popover to toggle Split display off&quot;&#10;    tap_top_toolbar_button &quot;$TOOLBAR_BTN_MORE&quot;&#10;    sleep 0.4&#10;    log_step ">
+<div class="card-top">
+<span class="chev">&#x25B6;</span>
+<span class="status-pill pass">&#x2705; PASS</span>
+<span class="card-name">freetext_split_undo.sh</span>
+<span class="card-badge">5/5 assertions</span>
+<span class="dur-badge">&#x23F1; 5m 34s</span>
+</div>
+<div class="card-body">
+<div class="card-body-inner">
+<div class="ai-summary">
+<div class="ai-label">&#x2728; AI Summary</div>
+<div class="ai-status"></div>
+<div class="ai-text" style="display:none"></div></div>
+<div class="asserts">
+<div class="aline ok">   ✅ PASS: element visible: "free on"</div>
+<div class="aline ok">   ✅ PASS: app is running</div>
+<div class="aline ok">   ✅ PASS: element absent: "free on"</div>
+<div class="aline ok">   ✅ PASS: app is running</div>
+<div class="aline ok">   ✅ PASS: app is running</div>
+</div>
+<div class="video-name">&#x1F3AC; <a class="video-link" href="https://app.bitrise.io/build/b3d5a8b6-8f82-4c76-9d97-cee85e8a8592?tab=artifacts" target="_blank">ipad-air-11-inch-m3-ios-261-freetext_split_undo-20260402-034050.mp4</a></div>
+</div>
+</div>
+</div>
+</div>
+<div class="card-row">
+<div class="step-num pass">2</div>
+<div class="card pass" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;log_step &quot;Waiting for Home screen...&quot;&#10;wait_for_home_screen 5&#10;tap_alert_button_if_present &quot;$LABEL_BUTTON_CANCEL&quot;&#10;setup_server_login&#10;log_step &quot;Tapping ConMas Server tab&quot;&#10;axe_touch_delay --label &quot;$LABEL_CONMAS_SERVER&quot;&#10;assert &quot;ConMas Server page loaded&quot; wait_for_element_having_label &quot;$LABEL_ALL_REPORTS&quot; 10&#10;assert_visible &quot;$LABEL_HOME_INFO&quot;&#10;assert_visible &quot;$LABEL_CREATE_NEW&quot;&#10;assert_visible &quot;$LABEL_ALL_REPORTS&quot;&#10;assert_visible &quot;$LABEL_BEFORE_INPUT&quot;&#10;assert_visible &quot;$LABEL_EDITING&quot;&#10;assert_visible &quot;$LABEL_COMPLETED&quot;&#10;assert_visible &quot;$LABEL_WAITING_FOR_APPROVAL&quot;&#10;assert_visible &quot;$LABEL_REJECTED&quot;&#10;assert_visible &quot;$LABEL_APPLYING&quot;&#10;assert_visible &quot;$LABEL_SCHEDULE&quot;&#10;assert_visible &quot;$LABEL_CUSTOM_MENU&quot;&#10;assert_visible &quot;$LABEL_COMMON_LIBRARY&quot;&#10;assert_visible &quot;$LABEL_CUSTOM_MASTER&quot;&#10;assert_visible &quot;$LABEL_THIS_DEVICE&quot;&#10;assert_visible &quot;$LABEL_CONMAS_SERVER&quot;&#10;log_step &quot;✅ Done!&quot;">
+<div class="card-top">
+<span class="chev">&#x25B6;</span>
+<span class="status-pill pass">&#x2705; PASS</span>
+<span class="card-name">home_comnas_server_section.sh</span>
+<span class="card-badge">16/16 assertions</span>
+<span class="dur-badge">&#x23F1; 1m 9s</span>
+</div>
+<div class="card-body">
+<div class="card-body-inner">
+<div class="ai-summary">
+<div class="ai-label">&#x2728; AI Summary</div>
+<div class="ai-status"></div>
+<div class="ai-text" style="display:none"></div></div>
+<div class="asserts">
+<div class="aline ok">   ✅ PASS: ConMas Server page loaded</div>
+<div class="aline ok">   ✅ PASS: element visible: "info"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Create New"</div>
+<div class="aline ok">   ✅ PASS: element visible: "All Reports"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Before Input"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Editing"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Completed"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Waiting for your approval"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Rejected"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Applying"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Schedule"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Custom Menu"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Common Library"</div>
+<div class="aline ok">   ✅ PASS: element visible: "Custom Master"</div>
+<div class="aline ok">   ✅ PASS: element visible: "This Device"</div>
+<div class="aline ok">   ✅ PASS: element visible: "ConMas Server"</div>
+</div>
+<div class="video-name">&#x1F3AC; <a class="video-link" href="https://app.bitrise.io/build/b3d5a8b6-8f82-4c76-9d97-cee85e8a8592?tab=artifacts" target="_blank">ipad-air-11-inch-m3-ios-261-home_comnas_server_section-20260402-034732.mp4</a></div>
+</div>
+</div>
+</div>
+</div>
+<div class="card-row">
+<div class="step-num pass">3</div>
+<div class="card pass" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;_search_document() {&#10;  local query=&quot;$1&quot;&#10;  log_step &quot;Waiting for search field...&quot;&#10;  if ! wait_for_template_search_box 10; then&#10;    log_error &quot;Search field did not appear&quot;&#10;    return 1&#10;  fi&#10;  sleep 0.4&#10;  tap_search_field_and_type &quot;$query&quot;&#10;}&#10;log_step &quot;Waiting for Home screen...&quot;&#10;wait_for_home_screen 10&#10;tap_alert_button_if_present &quot;$LABEL_ALERT_BTN_CANCEL&quot;&#10;setup_server_login &quot;$SERVER_NAME_SCAN&quot;&#10;log_step &quot;Tapping ConMas Server tab&quot;&#10;axe_touch_delay --label &quot;$LABEL_CONMAS_SERVER&quot;&#10;assert &quot;ConMas Server page loaded&quot; wait_for_element_having_label &quot;$LABEL_ALL_REPORTS&quot; 10&#10;log_step &quot;Tapping All Reports&quot;&#10;axe_touch_delay --label &quot;$LABEL_ALL_REPORTS&quot;&#10;sleep 1&#10;_search_document &quot;$DOCUMENT_SCAN_UNIQUE&quot;&#10;assert_visible_label_contains &quot;$DOCUMENT_SCAN_UNIQUE_LABEL&quot; 15&#10;sleep 3&#10;log_step &quot;Going back to Home&quot;&#10;tap_nav_button &quot;$NAV_ID_ALL_REPORTS&quot; &quot;$LABEL_NAV_BTN_BACK&quot;&#10;assert &quot;Back to library&quot; wait_for_element_having_label &quot;$LABEL_ALL_REPORTS&quot; 10&#10;setup_server_login &quot;$SERVER_NAME_NEXT&quot;&#10;log_step &quot;Tapping ConMas Server tab&quot;&#10;axe_touch_delay --label &quot;$LABEL_CONMAS_SERVER&quot;">
+<div class="card-top">
+<span class="chev">&#x25B6;</span>
+<span class="status-pill pass">&#x2705; PASS</span>
+<span class="card-name">change_server_connection.sh</span>
+<span class="card-badge">11/11 assertions</span>
+<span class="dur-badge">&#x23F1; 5m 49s</span>
+</div>
+<div class="card-body">
+<div class="card-body-inner">
+<div class="ai-summary">
+<div class="ai-label">&#x2728; AI Summary</div>
+<div class="ai-status"></div>
+<div class="ai-text" style="display:none"></div></div>
+<div class="asserts">
+<div class="aline ok">   ✅ PASS: ConMas Server page loaded</div>
+<div class="aline ok">   ✅ PASS: element with label containing: "SCAN_UITEST_UNIQUE_DOCUMENT"</div>
+<div class="aline ok">   ✅ PASS: Back to library</div>
+<div class="aline ok">   ✅ PASS: ConMas Server page loaded</div>
+<div class="aline ok">   ✅ PASS: element with label containing: "NEXT_UITEST_UNIQUE_DOCUMENT"</div>
+<div class="aline ok">   ✅ PASS: Back to library</div>
+<div class="aline ok">   ✅ PASS: ConMas Server page loaded</div>
+<div class="aline ok">   ✅ PASS: element with label containing: "SCAN_UITEST_UNIQUE_DOCUMENT"</div>
+<div class="aline ok">   ✅ PASS: Back to library</div>
+<div class="aline ok">   ✅ PASS: ConMas Server page loaded</div>
+<div class="aline ok">   ✅ PASS: element with label containing: "NEXT_UITEST_UNIQUE_DOCUMENT"</div>
+</div>
+<div class="video-name">&#x1F3AC; <a class="video-link" href="https://app.bitrise.io/build/b3d5a8b6-8f82-4c76-9d97-cee85e8a8592?tab=artifacts" target="_blank">ipad-air-11-inch-m3-ios-261-change_server_connection-20260402-034937.mp4</a></div>
+</div>
+</div>
+</div>
+</div>
+<div class="card-row">
+<div class="step-num pass">4</div>
+<div class="card pass" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;create_new_report_of &quot;$TEMPLATE_SIGNATUREPAD&quot; || exit 1&#10;log_step &quot;Tapping SignaturePad cluster to enter signing mode&quot;&#10;tap_on_top_left_center 0 50&#10;sleep 1&#10;if ! _ios_lt &quot;26.0&quot;; then&#10;  assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_CLEAR&quot;&#10;fi&#10;assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_CANCEL&quot;&#10;assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_COMMENT&quot;&#10;assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_DONE&quot;&#10;log_step &quot;Drawing signature — row 1 (thin strokes)&quot;&#10;draw_slash_row 380 55 20 45&#10;sleep 0.3&#10;log_step &quot;Drawing signature — row 2 (medium strokes)&quot;&#10;draw_slash_row 430 55 30 20&#10;sleep 0.3&#10;log_step &quot;Drawing signature — row 3 (wide strokes)&quot;&#10;draw_slash_row 480 50 40 25&#10;sleep 0.3&#10;log_step &quot;Drawing a continuous curve across the pad&quot;&#10;draw_curve \&#10;  120 430  280 380  440 420  400 380  360 430  340 480  250 550&#10;sleep 0.3&#10;assert_app_running&#10;log_step &quot;✅ Done!&quot;">
+<div class="card-top">
+<span class="chev">&#x25B6;</span>
+<span class="status-pill pass">&#x2705; PASS</span>
+<span class="card-name">signaturepad_draw.sh</span>
+<span class="card-badge">5/5 assertions</span>
+<span class="dur-badge">&#x23F1; 1m 47s</span>
+</div>
+<div class="card-body">
+<div class="card-body-inner">
+<div class="ai-summary">
+<div class="ai-label">&#x2728; AI Summary</div>
+<div class="ai-status"></div>
+<div class="ai-text" style="display:none"></div></div>
+<div class="asserts">
+<div class="aline ok">   ✅ PASS: SP toolbar button visible: "toolbar clear"</div>
+<div class="aline ok">   ✅ PASS: SP toolbar button visible: "Cancel"</div>
+<div class="aline ok">   ✅ PASS: SP toolbar button visible: "Comment"</div>
+<div class="aline ok">   ✅ PASS: SP toolbar button visible: "Done"</div>
+<div class="aline ok">   ✅ PASS: app is running</div>
+</div>
+<div class="video-name">&#x1F3AC; <a class="video-link" href="https://app.bitrise.io/build/b3d5a8b6-8f82-4c76-9d97-cee85e8a8592?tab=artifacts" target="_blank">ipad-air-11-inch-m3-ios-261-signaturepad_draw-20260402-035557.mp4</a></div>
+</div>
+</div>
+</div>
+</div>
+<div class="card-row">
+<div class="step-num pass">5</div>
+<div class="card pass" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;create_new_report_of &quot;$TEMPLATE_SIGNATUREPAD&quot; || exit 1&#10;log_step &quot;Tapping SignaturePad cluster to enter signing mode&quot;&#10;tap_on_top_left_center 0 50&#10;sleep 1&#10;if ! _ios_lt &quot;26.0&quot;; then&#10;  assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_CLEAR&quot;&#10;fi&#10;assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_CANCEL&quot;&#10;assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_COMMENT&quot;&#10;assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_DONE&quot;&#10;log_step &quot;Drawing strokes&quot;&#10;draw_slash_row 300 30 25 20&#10;sleep 0.3&#10;draw_slash_row 420 30 25 20&#10;sleep 0.3&#10;draw_curve \&#10;  120 430  280 380  440 420  400 380  360 430  340 480  250 550&#10;sleep 0.3&#10;assert_app_running&#10;if ! _ios_lt &quot;26.0&quot;; then&#10;  log_step &quot;Tapping Clear to erase all drawings&quot;&#10;  tap_sp_toolbar_button &quot;$LABEL_SP_BTN_CLEAR&quot;&#10;  sleep 0.5&#10;fi&#10;assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_DONE&quot;&#10;assert_app_running&#10;log_step &quot;✅ Done!&quot;">
+<div class="card-top">
+<span class="chev">&#x25B6;</span>
+<span class="status-pill pass">&#x2705; PASS</span>
+<span class="card-name">signaturepad_erase.sh</span>
+<span class="card-badge">7/7 assertions</span>
+<span class="dur-badge">&#x23F1; 1m 45s</span>
+</div>
+<div class="card-body">
+<div class="card-body-inner">
+<div class="ai-summary">
+<div class="ai-label">&#x2728; AI Summary</div>
+<div class="ai-status"></div>
+<div class="ai-text" style="display:none"></div></div>
+<div class="asserts">
+<div class="aline ok">   ✅ PASS: SP toolbar button visible: "toolbar clear"</div>
+<div class="aline ok">   ✅ PASS: SP toolbar button visible: "Cancel"</div>
+<div class="aline ok">   ✅ PASS: SP toolbar button visible: "Comment"</div>
+<div class="aline ok">   ✅ PASS: SP toolbar button visible: "Done"</div>
+<div class="aline ok">   ✅ PASS: app is running</div>
+<div class="aline ok">   ✅ PASS: SP toolbar button visible: "Done"</div>
+<div class="aline ok">   ✅ PASS: app is running</div>
+</div>
+<div class="video-name">&#x1F3AC; <a class="video-link" href="https://app.bitrise.io/build/b3d5a8b6-8f82-4c76-9d97-cee85e8a8592?tab=artifacts" target="_blank">ipad-air-11-inch-m3-ios-261-signaturepad_erase-20260402-035810.mp4</a></div>
+</div>
+</div>
+</div>
+</div>
+<div class="card-row">
+<div class="step-num pass">6</div>
+<div class="card pass" data-source="SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;$0&quot;)/../..&quot; &amp;&amp; pwd)&quot;&#10;source &quot;$SCRIPT_DIR/config.sh&quot;&#10;source &quot;$SCRIPT_DIR/constants.sh&quot;&#10;source &quot;$SCRIPT_DIR/helpers.sh&quot;&#10;create_new_report_of &quot;$TEMPLATE_SIGNATUREPAD&quot; || exit 1&#10;log_step &quot;Tapping SignaturePad cluster to enter signing mode&quot;&#10;tap_on_top_left_center 0 50&#10;sleep 1&#10;if ! _ios_lt &quot;26.0&quot;; then&#10;  assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_CLEAR&quot;&#10;fi&#10;assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_CANCEL&quot;&#10;assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_COMMENT&quot;&#10;assert_sp_toolbar_button_visible &quot;$LABEL_SP_BTN_DONE&quot;&#10;log_step &quot;Drawing signature&quot;&#10;draw_curve \&#10;  120 430  280 380  440 420  400 380  360 430  340 480  250 550&#10;sleep 0.3&#10;log_step &quot;Tapping Done to save signature&quot;&#10;tap_sp_toolbar_button &quot;$LABEL_SP_BTN_DONE&quot;&#10;sleep 1&#10;wait_for_report_view 6 || { log_error &quot;Report view did not appear after creating new report&quot;; return 1; }&#10;assert_app_running&#10;log_step &quot;Long-pressing on SignaturePad cluster to open context menu&quot;&#10;axe_long_press -x &quot;$SCREEN_A_QUARTER_X&quot; -y &quot;$(( SCREEN_A_QUARTER_Y + 50 ))&quot;&#10;sleep 1.5&#10;log_step &quot;Tapping Clear to remove the captured signature&quot;&#10;axe_tap --label &quot;$LABEL_CLUSTER_CONTEXT_CLEAR&quot;&#10;sleep 3&#10;assert_app_running&#10;log_step &quot;Tapping Signat">
+<div class="card-top">
+<span class="chev">&#x25B6;</span>
+<span class="status-pill pass">&#x2705; PASS</span>
+<span class="card-name">signaturepad_save.sh</span>
+<span class="card-badge">8/8 assertions</span>
+<span class="dur-badge">&#x23F1; 1m 7s</span>
+</div>
+<div class="card-body">
+<div class="card-body-inner">
+<div class="ai-summary">
+<div class="ai-label">&#x2728; AI Summary</div>
+<div class="ai-status"></div>
+<div class="ai-text" style="display:none"></div></div>
+<div class="asserts">
+<div class="aline ok">   ✅ PASS: SP toolbar button visible: "toolbar clear"</div>
+<div class="aline ok">   ✅ PASS: SP toolbar button visible: "Cancel"</div>
+<div class="aline ok">   ✅ PASS: SP toolbar button visible: "Comment"</div>
+<div class="aline ok">   ✅ PASS: SP toolbar button visible: "Done"</div>
+<div class="aline ok">   ✅ PASS: app is running</div>
+<div class="aline ok">   ✅ PASS: app is running</div>
+<div class="aline ok">   ✅ PASS: SP toolbar button visible: "Done"</div>
+<div class="aline ok">   ✅ PASS: app is running</div>
+</div>
+<div class="video-name">&#x1F3AC; <a class="video-link" href="https://app.bitrise.io/build/b3d5a8b6-8f82-4c76-9d97-cee85e8a8592?tab=artifacts" target="_blank">ipad-air-11-inch-m3-ios-261-signaturepad_save-20260402-040030.mp4</a></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="log-section">
+<div class="log-toggle"><span class="chev">&#x25B6;</span>&nbsp; Show full run log</div>
+<div class="logblock full-log">[03:40:33] [log_step:85]
+   📣 📦 Installing app from: /Users/vagrant/git/i-reporter-automation/resources/i-Reporter.app
+[03:40:43] [log_step:89]
+   📣 🔐 Configuring permissions for jp.conmas.i-Reporter...
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶  freetext_split_undo.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Recording simulator 91C6F086-4FB0-4347-B2D2-9D09C5ABFF64 to /Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-ios-261-freetext_split_undo-20260402-034050.mp4
+Press Ctrl+C to stop recording
+[03:40:52]
+   🔍 Looking up booted simulator: "iPad Air 11-inch (M3)"
+[03:40:52]
+   ✅ Using persisted UDID: 91C6F086-4FB0-4347-B2D2-9D09C5ABFF64
+IOServiceMatchingfailed for: AppleM2ScalerParavirtDriver
+[03:40:53]
+   🪪 Injected TerminalID: DUMMY-AUTOMATION-TEST
+[03:40:53]
+   🚀 Launching app: jp.conmas.i-Reporter
+jp.conmas.i-Reporter: 13632
+[03:41:26]
+   ✅ App "jp.conmas.i-Reporter" launched.
+[03:41:29] [log_step:22]
+   📣 Waiting for alert Confirmation - Data in editing exists
+[03:41:57] [log_step:35]
+   📣 Waiting for Home screen...
+[03:42:03] [log_step:155]
+   📣 Tapping nav button 'settings' in 'Home'
+[03:42:04]
+   axe_touch at (40, 54) with delay 0.1s (label='')
+[03:42:05] [log_step:71]
+   📣 Navigating to Server settings
+[03:42:06]
+   axe_touch at (170, 143) with delay 0.1s (label='Server')
+[03:42:08] [log_step:80]
+   📣 Checking if 'NEXT-SERVER' is already selected...
+[03:42:17] [log_step:97]
+   📣 Server 'NEXT-SERVER' not selected — opening Server connection list
+[03:42:17]
+   axe_touch at (575, 143) with delay 0.1s (label='')
+[03:42:18] [log_step:110]
+   📣 Selecting connection 'NEXT-SERVER'
+[03:42:25] [log_step:112]
+   📣 Connection 'NEXT-SERVER' not found — creating it
+[03:42:25] [log_step:114]
+   📣 Tapping Add new connection
+[03:42:25]
+   axe_touch at (575, 247) with delay 0.1s (label='Add new connection')
+[03:42:26] [log_step:122]
+   📣 Filling in connection form for 'NEXT-SERVER'
+[03:42:28]
+   axe_touch at (410, 386) with delay 0.1s (label='Server connection')
+[03:42:29] [log_step:20]
+   📣 Filling in field Server connection with value NEXT-SERVER
+[03:42:41]
+   axe_touch at (410, 397) with delay 0.1s (label='Connect to')
+[03:42:43] [log_step:20]
+   📣 Filling in field Connect to with value https://ircl-sup001kcy.conmas-i-reporter.com/ConMasWebNEXT/Rests/ConMasIReporter.aspx
+[03:43:21]
+   axe_touch at (410, 518) with delay 0.1s (label='User ID')
+[03:43:23] [log_step:20]
+   📣 Filling in field User ID with value a-testuser
+[03:43:29]
+   axe_touch at (410, 529) with delay 0.1s (label='Password')
+[03:43:31] [log_step:20]
+   📣 Filling in field Password with value password
+[03:43:34] [log_step:129]
+   📣 Enabling 'change server when local reports exist'
+[03:43:35] [log_step:62]
+   📣 Tapping switch 'Enable to change server when local reports exist'
+[03:43:35]
+   axe_touch at (643, 573) with delay 0.1s (label='')
+[03:43:36] [log_step:133]
+   📣 Saving connection
+[03:43:36] [log_step:155]
+   📣 Tapping nav button 'Save' in 'Input Connection'
+[03:43:44]
+   axe_touch at (655, 269) with delay 0.1s (label='')
+[03:43:45] [log_step:137]
+   📣 Selecting connection 'NEXT-SERVER'
+[03:43:47] [log_step:145]
+   📣 Activating 'NEXT-SERVER' connection
+[03:43:47]
+   axe_touch at (575, 211) with delay 0.1s (label='NEXT-SERVER')
+[03:43:52] [log_step:249]
+   📣 Alert button 'Change' appeared — tapping
+✓ Tap at (484.0, 682.0) completed successfully
+[03:43:55]
+   axe_touch at (372, 54) with delay 0.1s (label='Back')
+[03:43:58] [log_step:99]
+   📣 Turning 'Auto login' on
+[03:43:58]
+   axe_touch at (747, 187) with delay 0.1s (label='')
+[03:44:01]
+   axe_touch at (48, 54) with delay 0.1s (label='Close')
+[03:44:04] [log_step:33]
+   📣 Tapping Library: ConMas Server
+[03:44:04]
+   axe_touch at (340, 1135) with delay 0.1s (label='ConMas Server')
+[03:44:08] [log_step:48]
+   📣 Tapping Create New
+✓ Tap at (217.5, 134.0) completed successfully
+[03:44:18] [log_step:57]
+   📣 Waiting for template search box...
+[03:44:25]
+   axe_touch at (199, 120) with delay 0.1s (label='')
+[03:44:26] [log_step:186]
+   📣 Typing search query: IRDPM-20308_freetext
+[03:44:37] [log_step:66]
+   📣 Waiting for search results for 'IRDPM-20308_freetext'...
+[03:44:39] [log_step:68]
+   📣 Tapping first search result
+[03:44:40]
+   axe_touch at (218, 305) with delay 0.1s (label='')
+[03:44:43] [log_step:76]
+   📣 Waiting for Document Preview...
+[03:44:44] [log_step:78]
+   📣 Tapping Create New on Document Preview
+[03:44:44]
+   axe_touch at (488, 626) with delay 0.1s (label='Create New')
+[03:44:46] [log_step:90]
+   📣 Waiting for report view...
+[03:44:51] [log_step:29]
+   📣 Tapping FreeText cluster
+✓ Tap at (410.0, 295.0) completed successfully
+[03:44:54]
+   axe_touch at (775, 106) with delay 0.1s (label='free off')
+[03:44:55] [assert_visible:37]
+   ✅ PASS: element visible: "free on"
+[03:44:55] [log_step:197]
+   📣 Drawing 12 slashes at row y=450
+[03:44:55] [log_step:201]
+   📣 Drawing slash #0 start: (50, 475), end: (80, 425)
+[03:44:57] [log_step:201]
+   📣 Drawing slash #1 start: (110, 475), end: (140, 425)
+[03:44:59] [log_step:201]
+   📣 Drawing slash #2 start: (170, 475), end: (200, 425)
+[03:45:01] [log_step:201]
+   📣 Drawing slash #3 start: (230, 475), end: (260, 425)
+[03:45:03] [log_step:201]
+   📣 Drawing slash #4 start: (290, 475), end: (320, 425)
+[03:45:05] [log_step:201]
+   📣 Drawing slash #5 start: (350, 475), end: (380, 425)
+[03:45:07] [log_step:201]
+   📣 Drawing slash #6 start: (410, 475), end: (440, 425)
+[03:45:09] [log_step:201]
+   📣 Drawing slash #7 start: (470, 475), end: (500, 425)
+[03:45:11] [log_step:201]
+   📣 Drawing slash #8 start: (530, 475), end: (560, 425)
+[03:45:13] [log_step:201]
+   📣 Drawing slash #9 start: (590, 475), end: (620, 425)
+[03:45:15] [log_step:201]
+   📣 Drawing slash #10 start: (650, 475), end: (680, 425)
+[03:45:17] [log_step:201]
+   📣 Drawing slash #11 start: (710, 475), end: (740, 425)
+[03:45:20] [assert_app_running:42]
+   ✅ PASS: app is running
+[03:45:21]
+   axe_touch at (775, 106) with delay 0.1s (label='free on')
+[03:45:29] [assert_absent:45]
+   ✅ PASS: element absent: "free on"
+[03:45:30] [log_step:98]
+   📣 Tapping top toolbar button: More
+[03:45:45]
+   axe_touch at (778, 64) with delay 0.1s (label='')
+[03:45:46] [log_step:51]
+   📣 Turning on Split display
+[03:45:47] [log_step:62]
+   📣 Tapping switch 'Split display'
+[03:45:47]
+   axe_touch at (754, 350) with delay 0.1s (label='')
+[03:45:51] [log_step:55]
+   📣 Select a dummy point to split
+✓ Tap at (410.0, 590.0) completed successfully
+[03:45:51] [log_step:59]
+   📣 Re-opening More popover to toggle Split display off
+[03:45:51] [log_step:98]
+   📣 Tapping top toolbar button: More
+[03:46:28]
+   axe_touch at (778, 64) with delay 0.1s (label='')
+[03:46:29] [log_step:63]
+   📣 Turning off Split display
+[03:46:31] [log_step:62]
+   📣 Tapping switch 'Split display'
+[03:46:31]
+   axe_touch at (754, 350) with delay 0.1s (label='')
+[03:46:32] [log_step:98]
+   📣 Tapping top toolbar button: arrow.left.and.right.square
+[03:46:47]
+   axe_touch at (721, 64) with delay 0.1s (label='')
+[03:46:49] [log_step:70]
+   📣 Undo #1 — items should disappear
+[03:46:49] [log_step:98]
+   📣 Tapping top toolbar button: undo
+[03:46:53]
+   axe_touch at (188, 64) with delay 0.1s (label='')
+[03:46:55] [assert_app_running:73]
+   ✅ PASS: app is running
+[03:46:55] [log_step:75]
+   📣 Undo #2 — app should survive (regression: used to crash here)
+[03:46:55] [log_step:98]
+   📣 Tapping top toolbar button: undo
+[03:46:59]
+   axe_touch at (188, 64) with delay 0.1s (label='')
+[03:47:01] [assert_app_running:78]
+   ✅ PASS: app is running
+[03:47:01] [log_step:80]
+   📣 ✅ Done!
+Recording saved to /Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-ios-261-freetext_split_undo-20260402-034050.mp4
+/Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-ios-261-freetext_split_undo-20260402-034050.mp4
+✅ PASS  freetext_split_undo.sh  (5/5 assertions passed, 334s)
+[03:47:05] [log_step:110]
+   📣 🔄 Shutting down simulator for clean reboot...
+[03:47:08] [log_step:113]
+   📣 🚀 Rebooting simulator...
+Monitoring boot status for iPad Air 11-inch (M3) (91C6F086-4FB0-4347-B2D2-9D09C5ABFF64).
+Device already booted, nothing to do.
+
+[03:47:30] [log_step:122]
+   📣 ✅ Simulator ready.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶  home_comnas_server_section.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Recording simulator 91C6F086-4FB0-4347-B2D2-9D09C5ABFF64 to /Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-ios-261-home_comnas_server_section-20260402-034732.mp4
+Press Ctrl+C to stop recording
+[03:47:32]
+   🔍 Looking up booted simulator: "iPad Air 11-inch (M3)"
+[03:47:32]
+   ✅ Using persisted UDID: 91C6F086-4FB0-4347-B2D2-9D09C5ABFF64
+IOServiceMatchingfailed for: AppleM2ScalerParavirtDriver
+[03:47:33]
+   🪪 Injected TerminalID: DUMMY-AUTOMATION-TEST
+[03:47:33]
+   🚀 Launching app: jp.conmas.i-Reporter
+jp.conmas.i-Reporter: 22183
+[03:47:54]
+   ✅ App "jp.conmas.i-Reporter" launched.
+[03:48:07] [log_step:24]
+   📣 Waiting for Home screen...
+[03:48:40] [log_step:249]
+   📣 Alert button 'Cancel' appeared — tapping
+✓ Tap at (336.0, 642.0) completed successfully
+[03:48:41] [log_step:35]
+   📣 Waiting for Home screen...
+[03:48:43] [log_step:155]
+   📣 Tapping nav button 'settings' in 'Home'
+[03:48:43]
+   axe_touch at (40, 54) with delay 0.1s (label='')
+[03:48:45] [log_step:71]
+   📣 Navigating to Server settings
+[03:48:46]
+   axe_touch at (170, 143) with delay 0.1s (label='Server')
+[03:48:48] [log_step:80]
+   📣 Checking if 'NEXT-SERVER' is already selected...
+[03:48:48] [log_step:82]
+   📣 Server 'NEXT-SERVER' already selected — ensuring Auto login is enabled
+[03:48:49] [log_step:102]
+   📣 Switch 'Auto login' is already on — skipping
+[03:48:51]
+   axe_touch at (48, 54) with delay 0.1s (label='Close')
+[03:48:53] [log_step:36]
+   📣 Tapping ConMas Server tab
+[03:48:53]
+   axe_touch at (340, 1135) with delay 0.1s (label='ConMas Server')
+[03:48:59] [assert:40]
+   ✅ PASS: ConMas Server page loaded
+[03:49:00] [assert_visible:47]
+   ✅ PASS: element visible: "info"
+[03:49:01] [assert_visible:53]
+   ✅ PASS: element visible: "Create New"
+[03:49:01] [assert_visible:59]
+   ✅ PASS: element visible: "All Reports"
+[03:49:01] [assert_visible:60]
+   ✅ PASS: element visible: "Before Input"
+[03:49:02] [assert_visible:61]
+   ✅ PASS: element visible: "Editing"
+[03:49:02] [assert_visible:62]
+   ✅ PASS: element visible: "Completed"
+[03:49:02] [assert_visible:63]
+   ✅ PASS: element visible: "Waiting for your approval"
+[03:49:03] [assert_visible:64]
+   ✅ PASS: element visible: "Rejected"
+[03:49:03] [assert_visible:65]
+   ✅ PASS: element visible: "Applying"
+[03:49:03] [assert_visible:66]
+   ✅ PASS: element visible: "Schedule"
+[03:49:04] [assert_visible:72]
+   ✅ PASS: element visible: "Custom Menu"
+[03:49:04] [assert_visible:73]
+   ✅ PASS: element visible: "Common Library"
+[03:49:04] [assert_visible:74]
+   ✅ PASS: element visible: "Custom Master"
+[03:49:05] [assert_visible:80]
+   ✅ PASS: element visible: "This Device"
+[03:49:05] [assert_visible:81]
+   ✅ PASS: element visible: "ConMas Server"
+[03:49:05] [log_step:83]
+   📣 ✅ Done!
+Recording saved to /Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-ios-261-home_comnas_server_section-20260402-034732.mp4
+/Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-ios-261-home_comnas_server_section-20260402-034732.mp4
+✅ PASS  home_comnas_server_section.sh  (16/16 assertions passed, 69s)
+[03:49:08] [log_step:110]
+   📣 🔄 Shutting down simulator for clean reboot...
+[03:49:12] [log_step:113]
+   📣 🚀 Rebooting simulator...
+Monitoring boot status for iPad Air 11-inch (M3) (91C6F086-4FB0-4347-B2D2-9D09C5ABFF64).
+Device already booted, nothing to do.
+
+[03:49:36] [log_step:122]
+   📣 ✅ Simulator ready.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶  change_server_connection.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Recording simulator 91C6F086-4FB0-4347-B2D2-9D09C5ABFF64 to /Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-ios-261-change_server_connection-20260402-034937.mp4
+Press Ctrl+C to stop recording
+[03:49:38]
+   🔍 Looking up booted simulator: "iPad Air 11-inch (M3)"
+[03:49:38]
+   ✅ Using persisted UDID: 91C6F086-4FB0-4347-B2D2-9D09C5ABFF64
+IOServiceMatchingfailed for: AppleM2ScalerParavirtDriver
+[03:49:39]
+   🪪 Injected TerminalID: DUMMY-AUTOMATION-TEST
+[03:49:39]
+   🚀 Launching app: jp.conmas.i-Reporter
+jp.conmas.i-Reporter: 24227
+[03:49:40]
+   ✅ App "jp.conmas.i-Reporter" launched.
+[03:49:42] [log_step:32]
+   📣 Waiting for Home screen...
+[03:49:52] [log_step:35]
+   📣 Waiting for Home screen...
+[03:49:53] [log_step:155]
+   📣 Tapping nav button 'settings' in 'Home'
+[03:49:54]
+   axe_touch at (40, 54) with delay 0.1s (label='')
+[03:49:56] [log_step:71]
+   📣 Navigating to Server settings
+[03:49:56]
+   axe_touch at (170, 143) with delay 0.1s (label='Server')
+[03:49:58] [log_step:80]
+   📣 Checking if 'SCAN-SERVER' is already selected...
+[03:50:05] [log_step:97]
+   📣 Server 'SCAN-SERVER' not selected — opening Server connection list
+[03:50:05]
+   axe_touch at (575, 143) with delay 0.1s (label='')
+[03:50:06] [log_step:110]
+   📣 Selecting connection 'SCAN-SERVER'
+[03:50:10] [log_step:112]
+   📣 Connection 'SCAN-SERVER' not found — creating it
+[03:50:10] [log_step:114]
+   📣 Tapping Add new connection
+[03:50:11]
+   axe_touch at (575, 307) with delay 0.1s (label='Add new connection')
+[03:50:12] [log_step:122]
+   📣 Filling in connection form for 'SCAN-SERVER'
+[03:50:14]
+   axe_touch at (410, 386) with delay 0.1s (label='Server connection')
+[03:50:16] [log_step:20]
+   📣 Filling in field Server connection with value SCAN-SERVER
+[03:50:25]
+   axe_touch at (410, 430) with delay 0.1s (label='Connect to')
+[03:50:26] [log_step:20]
+   📣 Filling in field Connect to with value https://ircl-sup001kcy.conmas-i-reporter.com/ConMasWebSCAN/Rests/ConMasIReporter.aspx
+[03:51:00]
+   axe_touch at (410, 518) with delay 0.1s (label='User ID')
+[03:51:01] [log_step:20]
+   📣 Filling in field User ID with value a-testuser
+[03:51:06]
+   axe_touch at (410, 562) with delay 0.1s (label='Password')
+[03:51:07] [log_step:20]
+   📣 Filling in field Password with value password
+[03:51:10] [log_step:129]
+   📣 Enabling 'change server when local reports exist'
+[03:51:10] [log_step:62]
+   📣 Tapping switch 'Enable to change server when local reports exist'
+[03:51:10]
+   axe_touch at (643, 606) with delay 0.1s (label='')
+[03:51:11] [log_step:133]
+   📣 Saving connection
+[03:51:11] [log_step:155]
+   📣 Tapping nav button 'Save' in 'Input Connection'
+[03:51:14]
+   axe_touch at (655, 302) with delay 0.1s (label='')
+[03:51:16] [log_step:137]
+   📣 Selecting connection 'SCAN-SERVER'
+[03:51:16] [log_step:145]
+   📣 Activating 'SCAN-SERVER' connection
+[03:51:17]
+   axe_touch at (575, 271) with delay 0.1s (label='SCAN-SERVER')
+[03:51:21] [log_step:249]
+   📣 Alert button 'Change' appeared — tapping
+✓ Tap at (484.0, 682.0) completed successfully
+[03:51:24]
+   axe_touch at (372, 54) with delay 0.1s (label='Back')
+[03:51:25] [log_step:102]
+   📣 Switch 'Auto login' is already on — skipping
+[03:51:26]
+   axe_touch at (48, 54) with delay 0.1s (label='Close')
+[03:51:28] [log_step:41]
+   📣 Tapping ConMas Server tab
+[03:51:28]
+   axe_touch at (340, 1135) with delay 0.1s (label='ConMas Server')
+[03:51:51] [assert:43]
+   ✅ PASS: ConMas Server page loaded
+[03:51:51] [log_step:45]
+   📣 Tapping All Reports
+[03:51:51]
+   axe_touch at (217, 216) with delay 0.1s (label='All Reports')
+[03:51:53] [log_step:21]
+   📣 Waiting for search field...
+[03:51:55]
+   axe_touch at (199, 120) with delay 0.1s (label='')
+[03:51:55] [log_step:186]
+   📣 Typing search query: SCAN_UITEST_UNIQUE
+[03:52:08] [assert_visible_label_contains:51]
+   ✅ PASS: element with label containing: "SCAN_UITEST_UNIQUE_DOCUMENT"
+[03:52:12] [log_step:54]
+   📣 Going back to Home
+[03:52:12] [log_step:155]
+   📣 Tapping nav button 'Back' in 'All Reports'
+[03:52:12]
+   axe_touch at (34, 54) with delay 0.1s (label='')
+[03:52:13] [assert:56]
+   ✅ PASS: Back to library
+[03:52:13] [log_step:35]
+   📣 Waiting for Home screen...
+[03:52:14] [log_step:155]
+   📣 Tapping nav button 'settings' in 'Home'
+[03:52:15]
+   axe_touch at (40, 54) with delay 0.1s (label='')
+[03:52:16] [log_step:71]
+   📣 Navigating to Server settings
+[03:52:17]
+   axe_touch at (170, 143) with delay 0.1s (label='Server')
+[03:52:18] [log_step:80]
+   📣 Checking if 'NEXT-SERVER' is already selected...
+[03:52:26] [log_step:97]
+   📣 Server 'NEXT-SERVER' not selected — opening Server connection list
+[03:52:26]
+   axe_touch at (575, 143) with delay 0.1s (label='')
+[03:52:27] [log_step:110]
+   📣 Selecting connection 'NEXT-SERVER'
+[03:52:27] [log_step:145]
+   📣 Activating 'NEXT-SERVER' connection
+[03:52:28]
+   axe_touch at (575, 211) with delay 0.1s (label='NEXT-SERVER')
+[03:52:32] [log_step:249]
+   📣 Alert button 'Change' appeared — tapping
+✓ Tap at (484.0, 682.0) completed successfully
+[03:52:35]
+   axe_touch at (372, 54) with delay 0.1s (label='Back')
+[03:52:36] [log_step:102]
+   📣 Switch 'Auto login' is already on — skipping
+[03:52:38]
+   axe_touch at (48, 54) with delay 0.1s (label='Close')
+[03:52:39] [log_step:62]
+   📣 Tapping ConMas Server tab
+[03:52:40]
+   axe_touch at (340, 1135) with delay 0.1s (label='ConMas Server')
+[03:52:51] [assert:64]
+   ✅ PASS: ConMas Server page loaded
+[03:52:51] [log_step:66]
+   📣 Tapping All Reports
+[03:52:51]
+   axe_touch at (217, 216) with delay 0.1s (label='All Reports')
+[03:52:53] [log_step:21]
+   📣 Waiting for search field...
+[03:52:57]
+   axe_touch at (199, 120) with delay 0.1s (label='')
+[03:52:58] [log_step:186]
+   📣 Typing search query: NEXT_UITEST_UNIQUE
+[03:53:11] [assert_visible_label_contains:72]
+   ✅ PASS: element with label containing: "NEXT_UITEST_UNIQUE_DOCUMENT"
+[03:53:15] [log_step:75]
+   📣 Going back to Home
+[03:53:15] [log_step:155]
+   📣 Tapping nav button 'Back' in 'All Reports'
+[03:53:15]
+   axe_touch at (34, 54) with delay 0.1s (label='')
+[03:53:16] [assert:77]
+   ✅ PASS: Back to library
+[03:53:16] [log_step:35]
+   📣 Waiting for Home screen...
+[03:53:17] [log_step:155]
+   📣 Tapping nav button 'settings' in 'Home'
+[03:53:18]
+   axe_touch at (40, 54) with delay 0.1s (label='')
+[03:53:19] [log_step:71]
+   📣 Navigating to Server settings
+[03:53:20]
+   axe_touch at (170, 143) with delay 0.1s (label='Server')
+[03:53:22] [log_step:80]
+   📣 Checking if 'SCAN-SERVER' is already selected...
+[03:53:28] [log_step:97]
+   📣 Server 'SCAN-SERVER' not selected — opening Server connection list
+[03:53:29]
+   axe_touch at (575, 143) with delay 0.1s (label='')
+[03:53:29] [log_step:110]
+   📣 Selecting connection 'SCAN-SERVER'
+[03:53:31] [log_step:145]
+   📣 Activating 'SCAN-SERVER' connection
+[03:53:31]
+   axe_touch at (575, 271) with delay 0.1s (label='SCAN-SERVER')
+[03:53:35] [log_step:249]
+   📣 Alert button 'Change' appeared — tapping
+✓ Tap at (484.0, 682.0) completed successfully
+[03:53:38]
+   axe_touch at (372, 54) with delay 0.1s (label='Back')
+[03:53:40] [log_step:102]
+   📣 Switch 'Auto login' is already on — skipping
+[03:53:41]
+   axe_touch at (48, 54) with delay 0.1s (label='Close')
+[03:53:43] [log_step:83]
+   📣 Tapping ConMas Server tab
+[03:53:43]
+   axe_touch at (340, 1135) with delay 0.1s (label='ConMas Server')
+[03:54:05] [assert:85]
+   ✅ PASS: ConMas Server page loaded
+[03:54:05] [log_step:87]
+   📣 Tapping All Reports
+[03:54:06]
+   axe_touch at (217, 216) with delay 0.1s (label='All Reports')
+[03:54:08] [log_step:21]
+   📣 Waiting for search field...
+[03:54:10]
+   axe_touch at (199, 120) with delay 0.1s (label='')
+[03:54:11] [log_step:186]
+   📣 Typing search query: SCAN_UITEST_UNIQUE
+[03:54:24] [assert_visible_label_contains:93]
+   ✅ PASS: element with label containing: "SCAN_UITEST_UNIQUE_DOCUMENT"
+[03:54:27] [log_step:96]
+   📣 Going back to Home
+[03:54:27] [log_step:155]
+   📣 Tapping nav button 'Back' in 'All Reports'
+[03:54:27]
+   axe_touch at (34, 54) with delay 0.1s (label='')
+[03:54:29] [assert:98]
+   ✅ PASS: Back to library
+[03:54:29] [log_step:35]
+   📣 Waiting for Home screen...
+[03:54:30] [log_step:155]
+   📣 Tapping nav button 'settings' in 'Home'
+[03:54:31]
+   axe_touch at (40, 54) with delay 0.1s (label='')
+[03:54:32] [log_step:71]
+   📣 Navigating to Server settings
+[03:54:33]
+   axe_touch at (170, 143) with delay 0.1s (label='Server')
+[03:54:34] [log_step:80]
+   📣 Checking if 'NEXT-SERVER' is already selected...
+[03:54:41] [log_step:97]
+   📣 Server 'NEXT-SERVER' not selected — opening Server connection list
+[03:54:41]
+   axe_touch at (575, 143) with delay 0.1s (label='')
+[03:54:42] [log_step:110]
+   📣 Selecting connection 'NEXT-SERVER'
+[03:54:43] [log_step:145]
+   📣 Activating 'NEXT-SERVER' connection
+[03:54:43]
+   axe_touch at (575, 211) with delay 0.1s (label='NEXT-SERVER')
+[03:54:47] [log_step:249]
+   📣 Alert button 'Change' appeared — tapping
+✓ Tap at (484.0, 682.0) completed successfully
+[03:54:50]
+   axe_touch at (372, 54) with delay 0.1s (label='Back')
+[03:54:52] [log_step:102]
+   📣 Switch 'Auto login' is already on — skipping
+[03:54:53]
+   axe_touch at (48, 54) with delay 0.1s (label='Close')
+[03:54:55] [log_step:104]
+   📣 Tapping ConMas Server tab
+[03:54:55]
+   axe_touch at (340, 1135) with delay 0.1s (label='ConMas Server')
+[03:55:06] [assert:106]
+   ✅ PASS: ConMas Server page loaded
+[03:55:06] [log_step:108]
+   📣 Tapping All Reports
+[03:55:06]
+   axe_touch at (217, 216) with delay 0.1s (label='All Reports')
+[03:55:08] [log_step:21]
+   📣 Waiting for search field...
+[03:55:12]
+   axe_touch at (199, 120) with delay 0.1s (label='')
+[03:55:13] [log_step:186]
+   📣 Typing search query: NEXT_UITEST_UNIQUE
+[03:55:26] [assert_visible_label_contains:114]
+   ✅ PASS: element with label containing: "NEXT_UITEST_UNIQUE_DOCUMENT"
+[03:55:29] [log_step:117]
+   📣 ✅ Done!
+Recording saved to /Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-ios-261-change_server_connection-20260402-034937.mp4
+/Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-ios-261-change_server_connection-20260402-034937.mp4
+✅ PASS  change_server_connection.sh  (11/11 assertions passed, 349s)
+[03:55:32] [log_step:110]
+   📣 🔄 Shutting down simulator for clean reboot...
+[03:55:34] [log_step:113]
+   📣 🚀 Rebooting simulator...
+Monitoring boot status for iPad Air 11-inch (M3) (91C6F086-4FB0-4347-B2D2-9D09C5ABFF64).
+Device already booted, nothing to do.
+
+[03:55:56] [log_step:122]
+   📣 ✅ Simulator ready.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶  signaturepad_draw.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Recording simulator 91C6F086-4FB0-4347-B2D2-9D09C5ABFF64 to /Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-ios-261-signaturepad_draw-20260402-035557.mp4
+Press Ctrl+C to stop recording
+[03:55:58]
+   🔍 Looking up booted simulator: "iPad Air 11-inch (M3)"
+[03:55:58]
+   ✅ Using persisted UDID: 91C6F086-4FB0-4347-B2D2-9D09C5ABFF64
+IOServiceMatchingfailed for: AppleM2ScalerParavirtDriver
+[03:55:59]
+   🪪 Injected TerminalID: DUMMY-AUTOMATION-TEST
+[03:55:59]
+   🚀 Launching app: jp.conmas.i-Reporter
+jp.conmas.i-Reporter: 30219
+[03:55:59]
+   ✅ App "jp.conmas.i-Reporter" launched.
+[03:56:01] [log_step:22]
+   📣 Waiting for alert Confirmation - Data in editing exists
+[03:56:08] [log_step:35]
+   📣 Waiting for Home screen...
+[03:56:09] [log_step:155]
+   📣 Tapping nav button 'settings' in 'Home'
+[03:56:09]
+   axe_touch at (40, 54) with delay 0.1s (label='')
+[03:56:11] [log_step:71]
+   📣 Navigating to Server settings
+[03:56:12]
+   axe_touch at (170, 143) with delay 0.1s (label='Server')
+[03:56:13] [log_step:80]
+   📣 Checking if 'NEXT-SERVER' is already selected...
+[03:56:13] [log_step:82]
+   📣 Server 'NEXT-SERVER' already selected — ensuring Auto login is enabled
+[03:56:13] [log_step:102]
+   📣 Switch 'Auto login' is already on — skipping
+[03:56:14]
+   axe_touch at (48, 54) with delay 0.1s (label='Close')
+[03:56:16] [log_step:33]
+   📣 Tapping Library: ConMas Server
+[03:56:17]
+   axe_touch at (340, 1135) with delay 0.1s (label='ConMas Server')
+[03:56:20] [log_step:48]
+   📣 Tapping Create New
+✓ Tap at (217.5, 134.0) completed successfully
+[03:56:24] [log_step:57]
+   📣 Waiting for template search box...
+[03:56:29]
+   axe_touch at (199, 120) with delay 0.1s (label='')
+[03:56:30] [log_step:186]
+   📣 Typing search query: IRDPM-16728_inspection
+[03:56:40] [log_step:66]
+   📣 Waiting for search results for 'IRDPM-16728_inspection'...
+[03:56:41] [log_step:68]
+   📣 Tapping first search result
+[03:56:41]
+   axe_touch at (218, 305) with delay 0.1s (label='')
+[03:56:44] [log_step:76]
+   📣 Waiting for Document Preview...
+[03:56:45] [log_step:78]
+   📣 Tapping Create New on Document Preview
+[03:56:45]
+   axe_touch at (488, 612) with delay 0.1s (label='Create New')
+[03:56:46] [log_step:90]
+   📣 Waiting for report view...
+[03:56:50] [log_step:26]
+   📣 Tapping SignaturePad cluster to enter signing mode
+✓ Tap at (205.0, 345.0) completed successfully
+[03:56:52] [assert_sp_toolbar_button_visible:31]
+   ✅ PASS: SP toolbar button visible: "toolbar clear"
+[03:56:53] [assert_sp_toolbar_button_visible:33]
+   ✅ PASS: SP toolbar button visible: "Cancel"
+[03:56:54] [assert_sp_toolbar_button_visible:34]
+   ✅ PASS: SP toolbar button visible: "Comment"
+[03:56:55] [assert_sp_toolbar_button_visible:35]
+   ✅ PASS: SP toolbar button visible: "Done"
+[03:56:55] [log_step:37]
+   📣 Drawing signature — row 1 (thin strokes)
+[03:56:55] [log_step:197]
+   📣 Drawing 7 slashes at row y=380
+[03:56:55] [log_step:201]
+   📣 Drawing slash #0 start: (50, 390), end: (105, 370)
+[03:56:57] [log_step:201]
+   📣 Drawing slash #1 start: (150, 390), end: (205, 370)
+[03:56:59] [log_step:201]
+   📣 Drawing slash #2 start: (250, 390), end: (305, 370)
+[03:57:01] [log_step:201]
+   📣 Drawing slash #3 start: (350, 390), end: (405, 370)
+[03:57:02] [log_step:201]
+   📣 Drawing slash #4 start: (450, 390), end: (505, 370)
+[03:57:04] [log_step:201]
+   📣 Drawing slash #5 start: (550, 390), end: (605, 370)
+[03:57:06] [log_step:201]
+   📣 Drawing slash #6 start: (650, 390), end: (705, 370)
+[03:57:08] [log_step:41]
+   📣 Drawing signature — row 2 (medium strokes)
+[03:57:08] [log_step:197]
+   📣 Drawing 9 slashes at row y=430
+[03:57:08] [log_step:201]
+   📣 Drawing slash #0 start: (50, 445), end: (105, 415)
+[03:57:10] [log_step:201]
+   📣 Drawing slash #1 start: (125, 445), end: (180, 415)
+[03:57:12] [log_step:201]
+   📣 Drawing slash #2 start: (200, 445), end: (255, 415)
+[03:57:14] [log_step:201]
+   📣 Drawing slash #3 start: (275, 445), end: (330, 415)
+[03:57:16] [log_step:201]
+   📣 Drawing slash #4 start: (350, 445), end: (405, 415)
+[03:57:18] [log_step:201]
+   📣 Drawing slash #5 start: (425, 445), end: (480, 415)
+[03:57:19] [log_step:201]
+   📣 Drawing slash #6 start: (500, 445), end: (555, 415)
+[03:57:21] [log_step:201]
+   📣 Drawing slash #7 start: (575, 445), end: (630, 415)
+[03:57:23] [log_step:201]
+   📣 Drawing slash #8 start: (650, 445), end: (705, 415)
+[03:57:25] [log_step:45]
+   📣 Drawing signature — row 3 (wide strokes)
+[03:57:25] [log_step:197]
+   📣 Drawing 9 slashes at row y=480
+[03:57:25] [log_step:201]
+   📣 Drawing slash #0 start: (50, 500), end: (100, 460)
+[03:57:27] [log_step:201]
+   📣 Drawing slash #1 start: (125, 500), end: (175, 460)
+[03:57:29] [log_step:201]
+   📣 Drawing slash #2 start: (200, 500), end: (250, 460)
+[03:57:31] [log_step:201]
+   📣 Drawing slash #3 start: (275, 500), end: (325, 460)
+[03:57:33] [log_step:201]
+   📣 Drawing slash #4 start: (350, 500), end: (400, 460)
+[03:57:35] [log_step:201]
+   📣 Drawing slash #5 start: (425, 500), end: (475, 460)
+[03:57:36] [log_step:201]
+   📣 Drawing slash #6 start: (500, 500), end: (550, 460)
+[03:57:38] [log_step:201]
+   📣 Drawing slash #7 start: (575, 500), end: (625, 460)
+[03:57:40] [log_step:201]
+   📣 Drawing slash #8 start: (650, 500), end: (700, 460)
+[03:57:42] [log_step:49]
+   📣 Drawing a continuous curve across the pad
+[03:57:46] [assert_app_running:54]
+   ✅ PASS: app is running
+[03:57:46] [log_step:56]
+   📣 ✅ Done!
+Recording saved to /Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-ios-261-signaturepad_draw-20260402-035557.mp4
+/Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-ios-261-signaturepad_draw-20260402-035557.mp4
+✅ PASS  signaturepad_draw.sh  (5/5 assertions passed, 107s)
+[03:57:48] [log_step:110]
+   📣 🔄 Shutting down simulator for clean reboot...
+[03:57:50] [log_step:113]
+   📣 🚀 Rebooting simulator...
+Monitoring boot status for iPad Air 11-inch (M3) (91C6F086-4FB0-4347-B2D2-9D09C5ABFF64).
+Device already booted, nothing to do.
+
+[03:58:09] [log_step:122]
+   📣 ✅ Simulator ready.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶  signaturepad_erase.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Recording simulator 91C6F086-4FB0-4347-B2D2-9D09C5ABFF64 to /Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-ios-261-signaturepad_erase-20260402-035810.mp4
+Press Ctrl+C to stop recording
+IOServiceMatchingfailed for: AppleM2ScalerParavirtDriver
+[03:58:11]
+   🔍 Looking up booted simulator: "iPad Air 11-inch (M3)"
+[03:58:11]
+   ✅ Using persisted UDID: 91C6F086-4FB0-4347-B2D2-9D09C5ABFF64
+[03:58:16]
+   🪪 Injected TerminalID: DUMMY-AUTOMATION-TEST
+[03:58:16]
+   🚀 Launching app: jp.conmas.i-Reporter
+jp.conmas.i-Reporter: 32524
+[03:58:17]
+   ✅ App "jp.conmas.i-Reporter" launched.
+[03:58:18] [log_step:22]
+   📣 Waiting for alert Confirmation - Data in editing exists
+[03:58:20] [log_step:249]
+   📣 Alert button 'Cancel' appeared — tapping
+✓ Tap at (336.0, 642.0) completed successfully
+[03:58:22] [log_step:35]
+   📣 Waiting for Home screen...
+[03:58:23] [log_step:155]
+   📣 Tapping nav button 'settings' in 'Home'
+[03:58:23]
+   axe_touch at (40, 54) with delay 0.1s (label='')
+[03:58:25] [log_step:71]
+   📣 Navigating to Server settings
+[03:58:26]
+   axe_touch at (170, 143) with delay 0.1s (label='Server')
+[03:58:27] [log_step:80]
+   📣 Checking if 'NEXT-SERVER' is already selected...
+[03:58:27] [log_step:82]
+   📣 Server 'NEXT-SERVER' already selected — ensuring Auto login is enabled
+[03:58:28] [log_step:102]
+   📣 Switch 'Auto login' is already on — skipping
+[03:58:28]
+   axe_touch at (48, 54) with delay 0.1s (label='Close')
+[03:58:31] [log_step:33]
+   📣 Tapping Library: ConMas Server
+[03:58:31]
+   axe_touch at (340, 1135) with delay 0.1s (label='ConMas Server')
+[03:58:35] [log_step:48]
+   📣 Tapping Create New
+✓ Tap at (217.5, 134.0) completed successfully
+[03:58:38] [log_step:57]
+   📣 Waiting for template search box...
+[03:58:44]
+   axe_touch at (199, 120) with delay 0.1s (label='')
+[03:58:44] [log_step:186]
+   📣 Typing search query: IRDPM-16728_inspection
+[03:58:54] [log_step:66]
+   📣 Waiting for search results for 'IRDPM-16728_inspection'...
+[03:58:56] [log_step:68]
+   📣 Tapping first search result
+[03:58:56]
+   axe_touch at (218, 305) with delay 0.1s (label='')
+[03:58:59] [log_step:76]
+   📣 Waiting for Document Preview...
+[03:58:59] [log_step:78]
+   📣 Tapping Create New on Document Preview
+[03:59:00]
+   axe_touch at (488, 612) with delay 0.1s (label='Create New')
+[03:59:01] [log_step:90]
+   📣 Waiting for report view...
+[03:59:05] [log_step:28]
+   📣 Tapping SignaturePad cluster to enter signing mode
+✓ Tap at (205.0, 345.0) completed successfully
+[03:59:07] [assert_sp_toolbar_button_visible:33]
+   ✅ PASS: SP toolbar button visible: "toolbar clear"
+[03:59:08] [assert_sp_toolbar_button_visible:35]
+   ✅ PASS: SP toolbar button visible: "Cancel"
+[03:59:09] [assert_sp_toolbar_button_visible:36]
+   ✅ PASS: SP toolbar button visible: "Comment"
+[03:59:09] [assert_sp_toolbar_button_visible:37]
+   ✅ PASS: SP toolbar button visible: "Done"
+[03:59:09] [log_step:39]
+   📣 Drawing strokes
+[03:59:09] [log_step:197]
+   📣 Drawing 14 slashes at row y=300
+[03:59:09] [log_step:201]
+   📣 Drawing slash #0 start: (50, 312), end: (80, 288)
+[03:59:11] [log_step:201]
+   📣 Drawing slash #1 start: (100, 312), end: (130, 288)
+[03:59:12] [log_step:201]
+   📣 Drawing slash #2 start: (150, 312), end: (180, 288)
+[03:59:14] [log_step:201]
+   📣 Drawing slash #3 start: (200, 312), end: (230, 288)
+[03:59:16] [log_step:201]
+   📣 Drawing slash #4 start: (250, 312), end: (280, 288)
+[03:59:18] [log_step:201]
+   📣 Drawing slash #5 start: (300, 312), end: (330, 288)
+[03:59:19] [log_step:201]
+   📣 Drawing slash #6 start: (350, 312), end: (380, 288)
+[03:59:21] [log_step:201]
+   📣 Drawing slash #7 start: (400, 312), end: (430, 288)
+[03:59:22] [log_step:201]
+   📣 Drawing slash #8 start: (450, 312), end: (480, 288)
+[03:59:24] [log_step:201]
+   📣 Drawing slash #9 start: (500, 312), end: (530, 288)
+[03:59:26] [log_step:201]
+   📣 Drawing slash #10 start: (550, 312), end: (580, 288)
+[03:59:27] [log_step:201]
+   📣 Drawing slash #11 start: (600, 312), end: (630, 288)
+[03:59:29] [log_step:201]
+   📣 Drawing slash #12 start: (650, 312), end: (680, 288)
+[03:59:31] [log_step:201]
+   📣 Drawing slash #13 start: (700, 312), end: (730, 288)
+[03:59:33] [log_step:197]
+   📣 Drawing 14 slashes at row y=420
+[03:59:33] [log_step:201]
+   📣 Drawing slash #0 start: (50, 432), end: (80, 408)
+[03:59:34] [log_step:201]
+   📣 Drawing slash #1 start: (100, 432), end: (130, 408)
+[03:59:36] [log_step:201]
+   📣 Drawing slash #2 start: (150, 432), end: (180, 408)
+[03:59:37] [log_step:201]
+   📣 Drawing slash #3 start: (200, 432), end: (230, 408)
+[03:59:39] [log_step:201]
+   📣 Drawing slash #4 start: (250, 432), end: (280, 408)
+[03:59:41] [log_step:201]
+   📣 Drawing slash #5 start: (300, 432), end: (330, 408)
+[03:59:42] [log_step:201]
+   📣 Drawing slash #6 start: (350, 432), end: (380, 408)
+[03:59:44] [log_step:201]
+   📣 Drawing slash #7 start: (400, 432), end: (430, 408)
+[03:59:46] [log_step:201]
+   📣 Drawing slash #8 start: (450, 432), end: (480, 408)
+[03:59:47] [log_step:201]
+   📣 Drawing slash #9 start: (500, 432), end: (530, 408)
+[03:59:49] [log_step:201]
+   📣 Drawing slash #10 start: (550, 432), end: (580, 408)
+[03:59:50] [log_step:201]
+   📣 Drawing slash #11 start: (600, 432), end: (630, 408)
+[03:59:52] [log_step:201]
+   📣 Drawing slash #12 start: (650, 432), end: (680, 408)
+[03:59:54] [log_step:201]
+   📣 Drawing slash #13 start: (700, 432), end: (730, 408)
+[03:59:59] [assert_app_running:48]
+   ✅ PASS: app is running
+[03:59:59] [log_step:51]
+   📣 Tapping Clear to erase all drawings
+[03:59:59] [log_step:242]
+   📣 Tapping SignaturePad toolbar button: toolbar clear
+[04:00:00]
+   axe_touch at (42, 1133) with delay 0.1s (label='')
+[04:00:02] [assert_sp_toolbar_button_visible:57]
+   ✅ PASS: SP toolbar button visible: "Done"
+[04:00:02] [assert_app_running:58]
+   ✅ PASS: app is running
+[04:00:02] [log_step:60]
+   📣 ✅ Done!
+Recording saved to /Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-ios-261-signaturepad_erase-20260402-035810.mp4
+/Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-ios-261-signaturepad_erase-20260402-035810.mp4
+✅ PASS  signaturepad_erase.sh  (7/7 assertions passed, 105s)
+[04:00:05] [log_step:110]
+   📣 🔄 Shutting down simulator for clean reboot...
+[04:00:07] [log_step:113]
+   📣 🚀 Rebooting simulator...
+Monitoring boot status for iPad Air 11-inch (M3) (91C6F086-4FB0-4347-B2D2-9D09C5ABFF64).
+Device already booted, nothing to do.
+
+[04:00:28] [log_step:122]
+   📣 ✅ Simulator ready.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+▶  signaturepad_save.sh
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Recording simulator 91C6F086-4FB0-4347-B2D2-9D09C5ABFF64 to /Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-ios-261-signaturepad_save-20260402-040030.mp4
+Press Ctrl+C to stop recording
+[04:00:30]
+   🔍 Looking up booted simulator: "iPad Air 11-inch (M3)"
+[04:00:30]
+   ✅ Using persisted UDID: 91C6F086-4FB0-4347-B2D2-9D09C5ABFF64
+IOServiceMatchingfailed for: AppleM2ScalerParavirtDriver
+[04:00:31]
+   🪪 Injected TerminalID: DUMMY-AUTOMATION-TEST
+[04:00:31]
+   🚀 Launching app: jp.conmas.i-Reporter
+jp.conmas.i-Reporter: 34921
+[04:00:31]
+   ✅ App "jp.conmas.i-Reporter" launched.
+[04:00:32] [log_step:22]
+   📣 Waiting for alert Confirmation - Data in editing exists
+[04:00:34] [log_step:249]
+   📣 Alert button 'Cancel' appeared — tapping
+✓ Tap at (336.0, 642.0) completed successfully
+[04:00:35] [log_step:35]
+   📣 Waiting for Home screen...
+[04:00:36] [log_step:155]
+   📣 Tapping nav button 'settings' in 'Home'
+[04:00:37]
+   axe_touch at (40, 54) with delay 0.1s (label='')
+[04:00:38] [log_step:71]
+   📣 Navigating to Server settings
+[04:00:39]
+   axe_touch at (170, 143) with delay 0.1s (label='Server')
+[04:00:40] [log_step:80]
+   📣 Checking if 'NEXT-SERVER' is already selected...
+[04:00:40] [log_step:82]
+   📣 Server 'NEXT-SERVER' already selected — ensuring Auto login is enabled
+[04:00:41] [log_step:102]
+   📣 Switch 'Auto login' is already on — skipping
+[04:00:41]
+   axe_touch at (48, 54) with delay 0.1s (label='Close')
+[04:00:43] [log_step:33]
+   📣 Tapping Library: ConMas Server
+[04:00:44]
+   axe_touch at (340, 1135) with delay 0.1s (label='ConMas Server')
+[04:00:47] [log_step:48]
+   📣 Tapping Create New
+✓ Tap at (217.5, 134.0) completed successfully
+[04:00:51] [log_step:57]
+   📣 Waiting for template search box...
+[04:00:56]
+   axe_touch at (199, 120) with delay 0.1s (label='')
+[04:00:57] [log_step:186]
+   📣 Typing search query: IRDPM-16728_inspection
+[04:01:08] [log_step:66]
+   📣 Waiting for search results for 'IRDPM-16728_inspection'...
+[04:01:09] [log_step:68]
+   📣 Tapping first search result
+[04:01:10]
+   axe_touch at (218, 305) with delay 0.1s (label='')
+[04:01:13] [log_step:76]
+   📣 Waiting for Document Preview...
+[04:01:13] [log_step:78]
+   📣 Tapping Create New on Document Preview
+[04:01:13]
+   axe_touch at (488, 612) with delay 0.1s (label='Create New')
+[04:01:14] [log_step:90]
+   📣 Waiting for report view...
+[04:01:18] [log_step:30]
+   📣 Tapping SignaturePad cluster to enter signing mode
+✓ Tap at (205.0, 345.0) completed successfully
+[04:01:20] [assert_sp_toolbar_button_visible:35]
+   ✅ PASS: SP toolbar button visible: "toolbar clear"
+[04:01:21] [assert_sp_toolbar_button_visible:37]
+   ✅ PASS: SP toolbar button visible: "Cancel"
+[04:01:22] [assert_sp_toolbar_button_visible:38]
+   ✅ PASS: SP toolbar button visible: "Comment"
+[04:01:23] [assert_sp_toolbar_button_visible:39]
+   ✅ PASS: SP toolbar button visible: "Done"
+[04:01:23] [log_step:41]
+   📣 Drawing signature
+[04:01:26] [log_step:46]
+   📣 Tapping Done to save signature
+[04:01:26] [log_step:242]
+   📣 Tapping SignaturePad toolbar button: Done
+[04:01:26]
+   axe_touch at (778, 1133) with delay 0.1s (label='')
+[04:01:29] [assert_app_running:51]
+   ✅ PASS: app is running
+[04:01:29] [log_step:55]
+   📣 Long-pressing on SignaturePad cluster to open context menu
+[04:01:29]
+   axe_touch at (205, 345) with delay 1s (label='')
+[04:01:32] [log_step:60]
+   📣 Tapping Clear to remove the captured signature
+✓ Tap at (354.0, 333.0) completed successfully
+[04:01:36] [assert_app_running:64]
+   ✅ PASS: app is running
+[04:01:36] [log_step:67]
+   📣 Tapping SignaturePad cluster to re-enter signing mode
+✓ Tap at (205.0, 345.0) completed successfully
+[04:01:38] [assert_sp_toolbar_button_visible:71]
+   ✅ PASS: SP toolbar button visible: "Done"
+[04:01:38] [assert_app_running:72]
+   ✅ PASS: app is running
+[04:01:38] [log_step:74]
+   📣 ✅ Done!
+Recording saved to /Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-ios-261-signaturepad_save-20260402-040030.mp4
+/Users/vagrant/git/i-reporter-automation/videos/ipad-air-11-inch-m3-ios-261-signaturepad_save-20260402-040030.mp4
+✅ PASS  signaturepad_save.sh  (8/8 assertions passed, 67s)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Tests:      ✅ 6 passed  ❌ 0 failed  (total: 6)
+  Assertions: ✅ 52 passed  ❌ 0 failed  (total: 52)
+  Duration:   20m 53s
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+</div></div>
+</div>
+<script>
+var _groqKey='YOUR_GROQ_API_KEY';
+async function _loadAiSummary(card){
+  var src=card.dataset.source;
+  if(!src)return;
+  var aiDiv=card.querySelector('.ai-summary');
+  if(!aiDiv||aiDiv.dataset.loaded)return;
+  aiDiv.dataset.loaded='1';
+  var st=aiDiv.querySelector('.ai-status'),tx=aiDiv.querySelector('.ai-text'),lb=aiDiv.querySelector('.ai-label');
+  st.textContent='Generating\u2026';
+  var prompt='iOS UI automation test source (bash):\n```\n'+src+'\n```\nReply with exactly:\nPURPOSE: one sentence stating what feature this test verifies.\nSTEPS:\n\u2022 action/verification (3-5 bullets, no extra text)';
+  try{
+    if(!_groqKey)throw new Error('no key');
+    var r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Authorization':'Bearer '+_groqKey,'Content-Type':'application/json'},body:JSON.stringify({model:'meta-llama/llama-4-scout-17b-16e-instruct',messages:[{role:'user',content:prompt}],max_tokens:200})});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    var result=(await r.json()).choices[0].message.content;
+    st.style.display='none';
+    tx.textContent=result;
+    tx.style.display='';
+    lb.innerHTML='&#x2728; AI Summary <span class="ai-tool-tag">Groq</span>';
+    var body=card.querySelector('.card-body');
+    if(body)body.style.maxHeight=body.scrollHeight+'px';
+  }catch(e){st.textContent='AI summary unavailable.';}
+}
+document.querySelectorAll('.card-top').forEach(function(t){
+  t.addEventListener('click',function(){
+    var card=this.closest('.card');
+    var b=this.parentElement.querySelector('.card-body');
+    var c=this.querySelector('.chev');
+    if(!b)return;
+    if(b.style.maxHeight&&b.style.maxHeight!='0px'){
+      b.style.maxHeight='0';
+      if(c)c.style.transform='';
+    }else{
+      b.style.maxHeight=b.scrollHeight+'px';
+      if(c)c.style.transform='rotate(90deg)';
+      if(card)_loadAiSummary(card);
+    }
+  });
+});
+var lt=document.querySelector('.log-toggle');
+if(lt){
+  lt.addEventListener('click',function(){
+    var l=document.querySelector('.logblock.full-log');
+    var c=this.querySelector('.chev');
+    if(!l)return;
+    l.classList.toggle('open');
+    if(c)c.style.transform=l.classList.contains('open')?'rotate(90deg)':'';
+  });
+}
+</script>
+</body>
+</html>
