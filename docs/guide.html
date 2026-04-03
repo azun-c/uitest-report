@@ -107,6 +107,35 @@
     font-weight: 500; color: var(--text); backdrop-filter: blur(4px);
   }
 
+  /* ── No-tech banner ── */
+  .no-tech-banner {
+    display: flex; align-items: center; gap: 18px;
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
+    border-radius: 18px; padding: 22px 28px; margin-bottom: 32px;
+    box-shadow: 0 8px 32px rgba(79,93,232,.25);
+    position: relative; overflow: hidden;
+  }
+  .no-tech-banner::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 55% 80% at 90% 50%, rgba(192,132,252,.18) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 10% 50%, rgba(99,102,241,.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .no-tech-icon {
+    font-size: 2.4em; flex-shrink: 0; filter: drop-shadow(0 0 12px rgba(192,132,252,.6));
+  }
+  .no-tech-body { flex: 1; position: relative; }
+  .no-tech-kicker {
+    font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .12em;
+    color: #a78bfa; margin-bottom: 6px;
+  }
+  .no-tech-headline {
+    font-size: 1.35em; font-weight: 900; color: #fff; line-height: 1.2; margin-bottom: 6px;
+    letter-spacing: -.02em;
+  }
+  .no-tech-sub { font-size: 13px; color: #c4b5fd; line-height: 1.55; }
+
   /* ── Stats strip ── */
   .stats-strip {
     background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
@@ -369,6 +398,80 @@
   .sr-scale { opacity: 0; transform: scale(.92); transition: opacity .5s ease, transform .5s ease; }
   .sr-scale.revealed { opacity: 1; transform: scale(1); }
 
+  /* ── Event Pipeline ── */
+  .pipeline-layout {
+    display: grid; grid-template-columns: 300px 1fr;
+    gap: 32px; margin-top: 32px; align-items: start;
+  }
+  .layer-stack { display: flex; flex-direction: column; align-items: stretch; }
+  .layer-card {
+    border-radius: 12px; padding: 12px 16px;
+    border: 1px solid var(--border);
+    cursor: default; transition: transform .2s, box-shadow .2s;
+  }
+  .layer-card:hover { transform: translateX(5px); box-shadow: 0 6px 20px rgba(0,0,0,.08); }
+  .layer-badge {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .07em; margin-bottom: 5px; opacity: .7;
+  }
+  .layer-name { font-weight: 800; font-size: 13.5px; margin-bottom: 3px; }
+  .layer-detail { font-size: 12px; color: var(--muted); line-height: 1.45; font-family: "SF Mono","Monaco",Consolas,monospace; }
+  .layer-test   { background: linear-gradient(135deg,#f0f9ff,#e0f2fe); border-color:#7dd3fc; }
+  .layer-ui     { background: linear-gradient(135deg,#f0fdf4,#dcfce7); border-color:#86efac; }
+  .layer-axe-sh { background: linear-gradient(135deg,#fefce8,#fef9c3); border-color:#fde047; }
+  .layer-axe-cli{ background: linear-gradient(135deg,#faf5ff,#f3e8ff); border-color:#c084fc; }
+  .layer-xct    { background: linear-gradient(135deg,#fff7ed,#ffedd5); border-color:#fb923c; }
+  .layer-sim    { background: linear-gradient(135deg,#eff6ff,#dbeafe); border-color:#93c5fd; }
+  .layer-app    { background: linear-gradient(135deg,#fdf2f8,#fce7f3); border-color:#f0abfc; }
+  .layer-con {
+    height: 22px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .layer-con-line {
+    width: 2px; flex: 1;
+    background: linear-gradient(180deg, var(--accent), var(--accent2));
+  }
+  .layer-con-arrow {
+    width: 0; height: 0;
+    border-left: 5px solid transparent; border-right: 5px solid transparent;
+    border-top: 7px solid var(--accent2);
+  }
+
+  .flow-panels { display: flex; flex-direction: column; gap: 16px; }
+  .flow-panel { border-radius: 14px; overflow: hidden; border: 1px solid var(--border); }
+  .flow-hdr {
+    padding: 11px 16px; font-weight: 800; font-size: 13px;
+    color: white; display: flex; align-items: center; gap: 8px;
+  }
+  .flow-hdr.tap  { background: linear-gradient(135deg,#0284c7,#0f766e); }
+  .flow-hdr.type { background: linear-gradient(135deg,#7c3aed,#db2777); }
+  .flow-body { background: var(--surface); }
+  .flow-step {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 9px 14px; font-size: 12.5px;
+  }
+  .flow-step + .flow-step { border-top: 1px solid var(--border); }
+  .flow-num {
+    width: 20px; height: 20px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 800; color: white; flex-shrink: 0; margin-top: 1px;
+  }
+  .flow-num.tap  { background: #0284c7; }
+  .flow-num.type { background: #7c3aed; }
+  .flow-txt { line-height: 1.5; }
+  .flow-txt code { font-size: 11px; background: var(--code-bg); border-radius: 3px; padding: 1px 5px; }
+  .flow-sub { font-size: 11px; color: var(--muted); display: block; margin-top: 2px; }
+  .flow-fork {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 8px 14px; font-size: 11.5px;
+    background: #fffbeb; border-top: 1px solid #fde68a; color: #92400e;
+  }
+  .flow-fork code { font-size: 11px; background: rgba(0,0,0,.06); border-radius: 3px; padding: 1px 5px; }
+
+  @media (max-width: 780px) {
+    .pipeline-layout { grid-template-columns: 1fr; }
+  }
+  /* ── end Event Pipeline ── */
+
   @media (max-width: 640px) {
     .feature-grid { grid-template-columns: 1fr 1fr; }
     .plain-grid { grid-template-columns: 1fr; }
@@ -376,9 +479,25 @@
     .stat-item { padding: 0 16px; }
     .stat-num  { font-size: 1.6em; }
   }
+
+  /* ── Scroll progress bar ── */
+  #progress-bar {
+    position: fixed; top: 0; left: 0; z-index: 200;
+    height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    pointer-events: none;
+    transition: width .08s linear;
+  }
+
+  /* ── Nav active link ── */
+  .top-nav-links a.active {
+    background: var(--surface2); color: var(--text);
+  }
 </style>
 </head>
 <body class="ja">
+
+<div id="progress-bar"></div>
 
 <!-- Sticky Nav -->
 <nav class="top-nav">
@@ -388,6 +507,7 @@
     <a href="#overview"><span class="lang-ja">機能</span><span class="lang-en">Features</span></a>
     <a href="#ci-flow"><span class="lang-ja">CIフロー</span><span class="lang-en">CI Flow</span></a>
     <a href="#lifecycle"><span class="lang-ja">ライフサイクル</span><span class="lang-en">Lifecycle</span></a>
+    <a href="#event-pipeline"><span class="lang-ja">イベント経路</span><span class="lang-en">Event Pipeline</span></a>
     <a href="#reporting"><span class="lang-ja">レポート</span><span class="lang-en">Reports</span></a>
     <a href="#publishing"><span class="lang-ja">公開</span><span class="lang-en">Publishing</span></a>
     <a href="#showcases"><span class="lang-ja">デモ動画</span><span class="lang-en">Show Cases</span></a>
@@ -426,7 +546,7 @@
 <!-- Stats strip -->
 <div class="stats-strip">
   <div class="stat-item sr d1">
-    <div class="stat-num">100%</div>
+    <div class="stat-num" data-count="100" data-suffix="%">100%</div>
     <div class="stat-label"><span class="lang-ja">完全自動</span><span class="lang-en">Automated</span></div>
   </div>
   <div class="stat-item sr d2">
@@ -438,7 +558,7 @@
     <div class="stat-label"><span class="lang-ja">AI要約</span><span class="lang-en">AI summaries</span></div>
   </div>
   <div class="stat-item sr d3">
-    <div class="stat-num">3段階</div>
+    <div class="stat-num"><span class="lang-ja">3段階</span><span class="lang-en">3-tier</span></div>
     <div class="stat-label"><span class="lang-ja">レポート公開</span><span class="lang-en">Report publishing</span></div>
   </div>
   <div class="stat-item sr d3">
@@ -456,10 +576,20 @@
       <span class="lang-ja">実際に何をするの？</span>
       <span class="lang-en">What does it actually do?</span>
     </h2>
-    <p class="section-lead sr d1">
-      <span class="lang-ja">技術的な知識がなくても大丈夫。3つのステップで全体像を説明します。</span>
-      <span class="lang-en">No technical background needed. Here's the whole picture in three steps.</span>
-    </p>
+    <div class="no-tech-banner sr d1">
+      <div class="no-tech-icon">🌟</div>
+      <div class="no-tech-body">
+        <div class="no-tech-kicker"><span class="lang-ja">最大のメリット</span><span class="lang-en">Biggest advantage</span></div>
+        <div class="no-tech-headline">
+          <span class="lang-ja">技術的な知識は一切不要。</span>
+          <span class="lang-en">No technical background needed.</span>
+        </div>
+        <div class="no-tech-sub">
+          <span class="lang-ja">3つのステップで全体像を説明します。Bash・iOS・自動化の知識がなくても、誰でも結果をすぐに確認できます。</span>
+          <span class="lang-en">Here's the whole picture in three steps. Anyone on the team can read the results — no Bash, iOS, or automation knowledge required.</span>
+        </div>
+      </div>
+    </div>
 
     <div class="plain-grid">
       <div class="plain-card sr d1">
@@ -701,6 +831,172 @@
     </div>
   </div>
 
+  <!-- Event Pipeline -->
+  <div class="section" id="event-pipeline">
+    <div class="section-eyebrow sr"><span class="lang-ja">内部の仕組み</span><span class="lang-en">Under the hood</span></div>
+    <h2 class="section-title sr d1">
+      <span class="lang-ja">イベント経路 — BashからSimulatorまで</span>
+      <span class="lang-en">Event Pipeline — Bash to Simulator</span>
+    </h2>
+    <p class="section-lead sr d1">
+      <span class="lang-ja">テストスクリプトの一行が、iOSアプリのタップやテキスト入力に変わるまでの全経路。7つの層を経由して最終的にアプリに届きます。</span>
+      <span class="lang-en">How a single line in a test script becomes a real tap or keystroke inside the iOS app — through seven distinct layers.</span>
+    </p>
+
+    <div class="pipeline-layout">
+
+      <!-- Left: layer stack -->
+      <div class="layer-stack sr sr-left">
+
+        <div class="layer-card layer-test">
+          <div class="layer-badge">🧪 Layer 1</div>
+          <div class="layer-name"><span class="lang-ja">テストスクリプト</span><span class="lang-en">Test Script</span></div>
+          <div class="layer-detail">tests/**/*.sh</div>
+        </div>
+        <div class="layer-con"><div class="layer-con-line"></div><div class="layer-con-arrow"></div></div>
+
+        <div class="layer-card layer-ui">
+          <div class="layer-badge">📐 Layer 2 — lib/ui.sh</div>
+          <div class="layer-name"><span class="lang-ja">高レベルヘルパー</span><span class="lang-en">High-level Helpers</span></div>
+          <div class="layer-detail">axe_touch_delay · ui_tap_template<br><span class="lang-ja">AXツリー照会 · フレーム座標計算</span><span class="lang-en">AX tree query · frame→coords</span></div>
+        </div>
+        <div class="layer-con"><div class="layer-con-line"></div><div class="layer-con-arrow"></div></div>
+
+        <div class="layer-card layer-axe-sh">
+          <div class="layer-badge">🔧 Layer 3 — lib/axe.sh</div>
+          <div class="layer-name"><span class="lang-ja">UDIDインジェクション</span><span class="lang-en">UDID Wrappers</span></div>
+          <div class="layer-detail">axe_tap · axe_touch · axe_type<br><span class="lang-ja">--udid $DEVICE_UDID を自動付与</span><span class="lang-en">auto-injects --udid $DEVICE_UDID</span></div>
+        </div>
+        <div class="layer-con"><div class="layer-con-line"></div><div class="layer-con-arrow"></div></div>
+
+        <div class="layer-card layer-axe-cli">
+          <div class="layer-badge">🌳 Layer 4 — AXe CLI</div>
+          <div class="layer-name"><span class="lang-ja">AXeバイナリ</span><span class="lang-en">AXe Binary</span></div>
+          <div class="layer-detail">axe tap / touch / key-combo<br>axe describe-ui / type</div>
+        </div>
+        <div class="layer-con"><div class="layer-con-line"></div><div class="layer-con-arrow"></div></div>
+
+        <div class="layer-card layer-xct">
+          <div class="layer-badge">🍎 Layer 5 — Apple Frameworks</div>
+          <div class="layer-name">CoreSimulator · XCTest</div>
+          <div class="layer-detail">Accessibility bridge<br>simctl pbcopy / HID injection</div>
+        </div>
+        <div class="layer-con"><div class="layer-con-line"></div><div class="layer-con-arrow"></div></div>
+
+        <div class="layer-card layer-sim">
+          <div class="layer-badge">📱 Layer 6</div>
+          <div class="layer-name">iOS Simulator</div>
+          <div class="layer-detail"><span class="lang-ja">仮想デバイス — タッチ/キー/クリップボード受信</span><span class="lang-en">Virtual device — receives touch, key & clipboard events</span></div>
+        </div>
+        <div class="layer-con"><div class="layer-con-line"></div><div class="layer-con-arrow"></div></div>
+
+        <div class="layer-card layer-app">
+          <div class="layer-badge">🗂 Layer 7</div>
+          <div class="layer-name">i-Reporter App</div>
+          <div class="layer-detail"><span class="lang-ja">UIKitイベント受信 · UI反応</span><span class="lang-en">Receives UIKit events and reacts</span></div>
+        </div>
+
+      </div><!-- /layer-stack -->
+
+      <!-- Right: annotated flow paths -->
+      <div class="flow-panels">
+
+        <!-- Flow A: Tap by label -->
+        <div class="flow-panel sr d1">
+          <div class="flow-hdr tap">
+            <span>👆</span>
+            <span><span class="lang-ja">フロー A — ラベルでタップ</span><span class="lang-en">Flow A — Tap by label</span></span>
+          </div>
+          <div class="flow-body">
+            <div class="flow-step">
+              <div class="flow-num tap">1</div>
+              <div class="flow-txt">
+                <code>axe_touch_delay --label "OK"</code>
+                <span class="flow-sub"><span class="lang-ja">テストスクリプトから呼び出し</span><span class="lang-en">called from test script</span></span>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-num tap">2</div>
+              <div class="flow-txt">
+                <strong>lib/ui.sh</strong> — <code>axe_describe_ui</code>
+                <span class="flow-sub"><span class="lang-ja">AXeがアクセシビリティツリー全体をJSONで取得</span><span class="lang-en">AXe fetches the full accessibility tree as JSON</span></span>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-num tap">3</div>
+              <div class="flow-txt">
+                <strong>jq</strong> — <code>select(.AXLabel == "OK")</code>
+                <span class="flow-sub"><span class="lang-ja">マッチした要素の<code>AXFrame</code>を抽出</span><span class="lang-en">extract <code>AXFrame {{x,y},{w,h}}</code> of the matched element</span></span>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-num tap">4</div>
+              <div class="flow-txt">
+                <strong>lib/ui.sh</strong> — <code>_ui_frame_center</code>
+                <span class="flow-sub"><code>cx = x + width/2 &nbsp;·&nbsp; cy = y + height/2</code></span>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-num tap">5</div>
+              <div class="flow-txt">
+                <strong>lib/axe.sh</strong> — <code>axe_touch -x cx -y cy --down --up</code>
+                <span class="flow-sub"><span class="lang-ja">--udid $DEVICE_UDID を付与してAXe CLIへ転送</span><span class="lang-en">injects --udid $DEVICE_UDID and forwards to AXe CLI</span></span>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-num tap">6</div>
+              <div class="flow-txt">
+                <strong>AXe CLI → CoreSimulator</strong>
+                <span class="flow-sub"><span class="lang-ja">HIDタッチイベントをSimulatorにインジェクト → Appのタップ処理が起動</span><span class="lang-en">HID touch event injected into Simulator → app's tap handler fires</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flow B: Type text -->
+        <div class="flow-panel sr d2">
+          <div class="flow-hdr type">
+            <span>⌨️</span>
+            <span><span class="lang-ja">フロー B — テキスト入力</span><span class="lang-en">Flow B — Type text</span></span>
+          </div>
+          <div class="flow-body">
+            <div class="flow-step">
+              <div class="flow-num type">1</div>
+              <div class="flow-txt">
+                <code>axe_type "Hello World"</code>
+                <span class="flow-sub"><span class="lang-ja">テストスクリプト、またはui.shの<code>tap_search_field_and_type</code>から呼び出し</span><span class="lang-en">called from test script or ui.sh's <code>tap_search_field_and_type</code></span></span>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-num type">2</div>
+              <div class="flow-txt">
+                <strong>lib/axe.sh</strong> — <code>xcrun simctl pbcopy $UDID</code>
+                <span class="flow-sub"><span class="lang-ja">テキストをSimulatorの専用クリップボードにコピー</span><span class="lang-en">copies text directly to the Simulator's isolated clipboard</span></span>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-num type">3</div>
+              <div class="flow-txt">
+                <strong>lib/axe.sh</strong> — <code>axe key-combo --modifiers 227 --key 25</code>
+                <span class="flow-sub"><span class="lang-ja">Cmd+V（HID keycode 25）をSimulatorに送信 → フォーカス中のフィールドにペースト</span><span class="lang-en">sends Cmd+V (HID keycode 25) to Simulator → pastes into focused field</span></span>
+              </div>
+            </div>
+            <div class="flow-fork">
+              <span>⚠️</span>
+              <div>
+                <span class="lang-ja"><code>simctl pbcopy</code> がタイムアウトした場合はフォールバック：</span>
+                <span class="lang-en">If <code>simctl pbcopy</code> times out, fallback:</span>
+                <br><code>axe type --stdin --udid $UDID</code>
+                <span style="margin-left:6px;opacity:.7;font-size:11px;"><span class="lang-ja">AXeが直接テキストをインジェクト</span><span class="lang-en">AXe injects text directly via Accessibility API</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /flow-panels -->
+    </div><!-- /pipeline-layout -->
+  </div>
+
   <!-- Reporting -->
   <div class="section" id="reporting">
     <div class="section-eyebrow sr"><span class="lang-ja">結果</span><span class="lang-en">Results</span></div>
@@ -852,13 +1148,70 @@
     <div class="showcase-grid">
       <div class="showcase-item sr d1">
         <div class="showcase-label">
+          <span class="showcase-badge" style="background:#e0f2fe;color:#0369a1;">🐛 <span class="lang-ja">デバッグ</span><span class="lang-en">Debug</span></span>
+          <span class="lang-ja">ライブデバッグ — インタラクティブシェル</span>
+          <span class="lang-en">Debug — live action in the debug shell</span>
+        </div>
+        <div class="showcase-embed sr-scale">
+          <iframe
+            src="https://drive.google.com/file/d/1mzRlOjNWHzzLUMUzTW4B9_s0hhM-2iAo/preview"
+            style="position:absolute;inset:0;width:100%;height:100%;border:none;"
+            allow="autoplay" allowfullscreen>
+          </iframe>
+        </div>
+        <div class="showcase-desc">
+          <span class="lang-ja"><code>debug-shell.sh</code>を使ってシミュレーターをリアルタイムで操作。<code>axe_tap</code>や<code>axe_describe_ui</code>をその場で試せます。</span>
+          <span class="lang-en">Using <code>debug-shell.sh</code> to interact with the simulator in real time — try <code>axe_tap</code>, <code>axe_describe_ui</code>, and more live.</span>
+        </div>
+      </div>
+
+      <div class="showcase-item sr d2">
+        <div class="showcase-label">
+          <span class="showcase-badge pass">▶️ <span class="lang-ja">シングル</span><span class="lang-en">Single</span></span>
+          <span class="lang-ja">全テストを1台のシミュレーターで実行</span>
+          <span class="lang-en">Run all tests with a single simulator</span>
+        </div>
+        <div class="showcase-embed sr-scale">
+          <iframe
+            src="https://drive.google.com/file/d/1zbEMkvqxSL6rYo0iCj-rDCffxEsDt4sz/preview"
+            style="position:absolute;inset:0;width:100%;height:100%;border:none;"
+            allow="autoplay" allowfullscreen>
+          </iframe>
+        </div>
+        <div class="showcase-desc">
+          <span class="lang-ja"><code>run-tests.sh</code>が全テストを順番に実行。シミュレーターの起動からSlack通知まで完全自動。</span>
+          <span class="lang-en"><code>run-tests.sh</code> runs all tests sequentially — from booting the simulator to posting results to Slack, fully automated.</span>
+        </div>
+      </div>
+
+      <div class="showcase-item sr d3">
+        <div class="showcase-label">
+          <span class="showcase-badge" style="background:#f3e8ff;color:#6d28d9;">⚡ <span class="lang-ja">並列</span><span class="lang-en">Parallel</span></span>
+          <span class="lang-ja">全テストを複数のシミュレーターで並列実行</span>
+          <span class="lang-en">Run all tests split across multiple simulators</span>
+        </div>
+        <div class="showcase-embed sr-scale">
+          <iframe
+            src="https://drive.google.com/file/d/1zmPR_rbMKdFV6PJ96QwVBcEeF9zlA25Z/preview"
+            style="position:absolute;inset:0;width:100%;height:100%;border:none;"
+            allow="autoplay" allowfullscreen>
+          </iframe>
+        </div>
+        <div class="showcase-desc">
+          <span class="lang-ja"><code>run-tests-multi.sh</code>がテストを複数のシミュレーターに振り分け、並列実行。全体の実行時間を大幅に短縮します。</span>
+          <span class="lang-en"><code>run-tests-multi.sh</code> distributes tests across multiple simulators and runs them in parallel — dramatically reducing total execution time.</span>
+        </div>
+      </div>
+
+      <div class="showcase-item sr d4">
+        <div class="showcase-label">
           <span class="showcase-badge pass">✅ <span class="lang-ja">成功</span><span class="lang-en">All pass</span></span>
           <span class="lang-ja">成功したテスト実行</span>
           <span class="lang-en">Successful test run</span>
         </div>
         <div class="showcase-embed sr-scale">
           <iframe
-            src="https://drive.google.com/file/d/1F5e2MiZptEAxRgS-gdiFp75P3OfhQGew/preview"
+            src="https://drive.google.com/file/d/1YLOnLoT-oN0mpJQ-kKryjrGcl2BJIXoj/preview"
             style="position:absolute;inset:0;width:100%;height:100%;border:none;"
             allow="autoplay" allowfullscreen>
           </iframe>
@@ -869,7 +1222,7 @@
         </div>
       </div>
 
-      <div class="showcase-item sr d2">
+      <div class="showcase-item sr d4">
         <div class="showcase-label">
           <span class="showcase-badge fail">❌ <span class="lang-ja">失敗</span><span class="lang-en">Failure</span></span>
           <span class="lang-ja">失敗のトラブルシューティング</span>
@@ -877,7 +1230,7 @@
         </div>
         <div class="showcase-embed sr-scale">
           <iframe
-            src="https://drive.google.com/file/d/1wAIo3s-byoh6eFibv_s0Oop_YXFK2P24/preview"
+            src="https://drive.google.com/file/d/1LOsY2uKDGIjTv430ZE1KlgKEpGulsSom/preview"
             style="position:absolute;inset:0;width:100%;height:100%;border:none;"
             allow="autoplay" allowfullscreen>
           </iframe>
@@ -927,6 +1280,56 @@
   document.querySelectorAll('.sr, .sr-left, .sr-scale').forEach(el => {
     revealObserver.observe(el);
   });
+
+  // ── Scroll progress bar ──
+  const progressBar = document.getElementById('progress-bar');
+  window.addEventListener('scroll', () => {
+    const scrolled = document.documentElement.scrollTop;
+    const total = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    progressBar.style.width = (total > 0 ? scrolled / total * 100 : 0) + '%';
+  }, { passive: true });
+
+  // ── Nav scroll-spy ──
+  const navLinks = document.querySelectorAll('.top-nav-links a');
+  const spySections = ['plain-english','overview','ci-flow','lifecycle','event-pipeline','reporting','publishing','showcases']
+    .map(id => document.getElementById(id)).filter(Boolean);
+
+  const spyObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id);
+        });
+      }
+    });
+  }, { threshold: 0.25, rootMargin: '-10% 0px -65% 0px' });
+
+  spySections.forEach(s => spyObserver.observe(s));
+
+  // ── Animated stat counters ──
+  function animateCount(el) {
+    const target = parseInt(el.dataset.count, 10);
+    const suffix = el.dataset.suffix || '';
+    const duration = 1200;
+    const start = performance.now();
+    (function step(now) {
+      const p = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(eased * target) + suffix;
+      if (p < 1) requestAnimationFrame(step);
+    })(start);
+  }
+
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCount(entry.target);
+        counterObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.stat-num[data-count]').forEach(el => counterObserver.observe(el));
 </script>
 </body>
 </html>
