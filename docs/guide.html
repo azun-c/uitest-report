@@ -1392,8 +1392,8 @@
           </iframe>
         </div>
         <div class="showcase-desc">
-          <span class="lang-ja"><code>run-tests-multi.sh</code>がテストを複数のシミュレーターに振り分け、並列実行。全体の実行時間を大幅に短縮します。</span>
-          <span class="lang-en"><code>run-tests-multi.sh</code> distributes tests across multiple simulators and runs them in parallel — dramatically reducing total execution time.</span>
+          <span class="lang-ja"><code>run-tests-multi.sh</code>がテストを複数のシミュレーターに並列実行。<b>splitモード</b>（デフォルト）でテストを振り分け、<b>fullモード</b>（<code>--mode full</code>）で全テストを各デバイスで実行。ファイルまたはディレクトリで実行対象を絞り込み可能。</span>
+          <span class="lang-en"><code>run-tests-multi.sh</code> runs tests across multiple simulators in parallel. <b>Split mode</b> (default) distributes tests across devices; <b>full mode</b> (<code>--mode full</code>) runs the complete suite on every device. Pass files or directories to narrow the test selection.</span>
         </div>
       </div>
 
